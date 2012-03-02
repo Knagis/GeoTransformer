@@ -44,7 +44,7 @@ namespace GeoTransformer.UnitTests.Gpx
 <author>
 <name>Dan Foster</name>
 <email id=""gpx2004"" domain=""topografix.com""/>
-<link href=""http://www.topografix.com"">
+<link href=""http://www.topografix.com/"">
 <text>TopoGrafix</text>
 </link>
 </author>
@@ -140,6 +140,8 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(23.525483M, gdoc.Metadata.Bounds.MaxLongitude);
 
             var result = gdoc.Serialize(new GeoTransformer.Gpx.GpxSerializationOptions() { GpxVersion = GeoTransformer.Gpx.GpxVersion.Gpx_1_0 });
+            Assert.AreEqual(9, result.Root.Elements().Count());
+            Assert.IsNotNull(result.Descendants(XmlExtensions.GpxSchema_1_0 + "urlname"));
         }
     }
 }

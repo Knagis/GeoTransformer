@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +76,7 @@ namespace GeoTransformer.Gpx
 
             var schema = options.GpxNamespace;
 
-            var root = new XElement(schema + "gpx", 
+            var root = new XElement(schema + "gpx",
                           new XAttribute("version", options.GpxVersion == GpxVersion.Gpx_1_0 ? "1.0" : "1.1"),
                           new XAttribute("creator", string.IsNullOrWhiteSpace(this.Metadata.Creator) ? ("GeoTransformer " + System.Windows.Forms.Application.ProductVersion) : this.Metadata.Creator)
                         );
@@ -118,7 +118,7 @@ namespace GeoTransformer.Gpx
             }
 
             foreach (var waypoint in this.Waypoints)
-                root.Add(null);
+                root.Add(waypoint.Serialize(options));
 
             foreach (var route in this.Routes)
                 root.Add(new XElement(route));
@@ -133,16 +133,27 @@ namespace GeoTransformer.Gpx
                     if (options.EnableUnsupportedExtensions)
                         foreach (var ext in this.Metadata.ExtensionAttributes)
                             root.Add(new XAttribute(ext));
-        
+
                     foreach (var ext in this.Metadata.ExtensionElements)
                         root.Add(new XElement(ext));
+
+                    foreach (var ext in this.ExtensionAttributes)
+                        root.Add(new XAttribute(ext));
+
+                    foreach (var ext in this.ExtensionElements)
+                        root.Add(new XElement(ext));
                 }
+                else
+                {
+                    foreach (var ext in this.ExtensionAttributes)
+                        root.Add(new XAttribute(ext));
 
-                foreach (var ext in this.ExtensionAttributes)
-                    root.Add(new XAttribute(ext));
-
-                foreach (var ext in this.ExtensionElements)
-                    root.Add(new XElement(ext));
+                    var extel = new XElement(options.GpxNamespace + "extensions");
+                    foreach (var ext in this.ExtensionElements)
+                        extel.Add(new XElement(ext));
+                    if (!extel.IsEmpty)
+                        root.Add(extel);
+                }
             }
 
             return new XDocument(new XDeclaration("1.0", "utf-8", "yes"), root);
