@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4CAF2A90-5C35-444D-867D-F8FE2CC324B5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GeoTransformer</RootNamespace>
+    <AssemblyName>GeoTransformer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icons\Layers.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Binaries\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.72.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationService.cs" />
+    <Compile Include="AutoUpdater.cs" />
+    <Compile Include="Data\LegacyDataImport.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\CacheViewers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Modules\CacheViewers.Designer.cs">
+      <DependentUpon>CacheViewers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ListViewers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Modules\ListViewers.Designer.cs">
+      <DependentUpon>ListViewers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ReleaseNotes.cs" />
+    <Compile Include="Transformers\SaveFiles.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps.cs" />
+    <Compile Include="TransformProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TransformProgress.Designer.cs">
+      <DependentUpon>TransformProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsbEject\Device.cs" />
+    <Compile Include="UsbEject\DeviceCapabilities.cs" />
+    <Compile Include="UsbEject\DeviceClass.cs" />
+    <Compile Include="UsbEject\DiskDeviceClass.cs" />
+    <Compile Include="UsbEject\Native.cs" />
+    <Compile Include="UsbEject\Volume.cs" />
+    <Compile Include="UsbEject\VolumeDeviceClass.cs" />
+    <Compile Include="WelcomeScreen\WelcomeScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WelcomeScreen\WelcomeScreen.Designer.cs">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\CacheViewers.resx">
+      <DependentUpon>CacheViewers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\ListViewers.resx">
+      <DependentUpon>ListViewers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TransformProgress.resx">
+      <DependentUpon>TransformProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WelcomeScreen\WelcomeScreen.resx">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Binaries\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="Binaries\ObjectListView.dll" />
+    <Content Include="Binaries\ObjectListView.XML" />
+    <Content Include="Binaries\System.Data.SQLite.dll" />
+    <Content Include="Icons\accept-icon.png" />
+    <None Include="..\GeoTransformer.licenseheader">
+      <Link>GeoTransformer.licenseheader</Link>
+    </None>
+    <None Include="Icons\Geocaching_LIVE_poweredby_128.png" />
+    <Content Include="Icons\Wizard.ico" />
+    <None Include="Icons\Actions-dialog-cancel-icon.png" />
+    <Content Include="Icons\Actions-document-save-icon.png" />
+    <Content Include="Icons\Actions-project-development-close-icon.png" />
+    <None Include="Icons\apply.png" />
+    <Content Include="Icons\Apps-clock-icon.png" />
+    <Content Include="Icons\Apps-internet-web-browser-icon.png" />
+    <None Include="Icons\btn_donateCC_LG.gif" />
+    <Content Include="Icons\Checklist.ico" />
+    <Content Include="Icons\delete-icon.png" />
+    <Content Include="Icons\Flag3RightBlue-2-icon.png" />
+    <Content Include="Icons\Folder-Blank-11-icon.png" />
+    <Content Include="Icons\folder-download-icon.png" />
+    <Content Include="Icons\geocaching.png" />
+    <None Include="Icons\Geocaching_LIVE_poweredby_64.png" />
+    <Content Include="Icons\gps-icon.png" />
+    <None Include="Icons\info-icon.png" />
+    <None Include="Icons\Latvia-icon.png" />
+    <None Include="Icons\Help.png" />
+    <Content Include="Icons\Layers-icon.png" />
+    <None Include="Icons\Map.png" />
+    <Content Include="Icons\node-tree-icon.png" />
+    <Content Include="Icons\PDA-icon.png" />
+    <None Include="Icons\Refresh16.png" />
+    <Content Include="Icons\Settings-icon.png" />
+    <None Include="Icons\Treasure.png" />
+    <Content Include="Icons\usb-icon.png" />
+    <Content Include="Icons\Layers.ico" />
+    <EmbeddedResource Include="WelcomeScreen\Screen1.rtf" />
+    <EmbeddedResource Include="WelcomeScreen\Screen2.rtf" />
+    <EmbeddedResource Include="WelcomeScreen\Screen3.rtf" />
+    <EmbeddedResource Include="WelcomeScreen\Screen4.rtf" />
+    <EmbeddedResource Include="WelcomeScreen\Screen4Basic.rtf" />
+    <EmbeddedResource Include="WelcomeScreen\Screen5.rtf" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GeoTransformer.Extensibility\GeoTransformer.Extensibility.csproj">
+      <Project>{6E59E27D-5635-4F44-B6AA-DDB9EF6CB216}</Project>
+      <Name>GeoTransformer.Extensibility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

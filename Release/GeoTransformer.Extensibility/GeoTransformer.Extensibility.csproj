@@ -1,0 +1,728 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6E59E27D-5635-4F44-B6AA-DDB9EF6CB216}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GeoTransformer</RootNamespace>
+    <AssemblyName>GeoTransformer.Extensibility</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\GeoTransformer.Extensibility.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\GeoTransformer.Extensibility.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\GeoTransformer.Extensibility.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\GeoTransformer.Extensibility.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\GeoTransformer\Binaries\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjectListView">
+      <HintPath>..\GeoTransformer\Binaries\ObjectListView.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\GeoTransformer\Binaries\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Private Items\BingMapsApiKeys.cs">
+      <Link>Viewers\BingMaps\BingMapsApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\Private Items\BingTranslatorApiKeys.cs">
+      <Link>Transformers\Translator\BingTranslatorApiKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\Private Items\GeoNamesKeys.cs">
+      <Link>Coordinates\GeoNamesKeys.cs</Link>
+    </Compile>
+    <Compile Include="Coordinates\GeoNames.cs" />
+    <Compile Include="Coordinates\Wgs84Point.cs" />
+    <Compile Include="Data\TableVersionTable.cs" />
+    <Compile Include="Extensions\Category.cs" />
+    <Compile Include="Extensions\GeocachingService\Configuration.cs" />
+    <Compile Include="Extensions\GeocachingService\ConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Extensions\GeocachingService\ConfigurationControl.Designer.cs">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\GeocachingService\AuthenticationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Extensions\GeocachingService\AuthenticationForm.Designer.cs">
+      <DependentUpon>AuthenticationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\GeocachingService\GeocachingService.cs" />
+    <Compile Include="Extensions\GeocachingService\LiveClient.cs" />
+    <Compile Include="Extensions\GeocachingService\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Extensions\GeocachingService\WizardControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Extensions\GeocachingService\WizardControl.Designer.cs">
+      <DependentUpon>WizardControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\IHasCategory.cs" />
+    <Compile Include="Extensions\ITopLevelTabPage.cs" />
+    <Compile Include="Extensions\ExtensionEditorDataTable.cs" />
+    <Compile Include="Extensions\IApplicationService.cs" />
+    <Compile Include="Extensions\IEditor.cs" />
+    <Compile Include="Extensions\IExtension.cs" />
+    <Compile Include="Extensions\ILocalStorage.cs" />
+    <Compile Include="Extensions\ISaveData.cs" />
+    <Compile Include="Extensions\ITransformer.cs" />
+    <Compile Include="Extensions\ITransformerWithPopup.cs" />
+    <Compile Include="Gpx\GpxBounds.cs" />
+    <Compile Include="Gpx\GpxCopyright.cs" />
+    <Compile Include="Gpx\GpxDocument.cs" />
+    <Compile Include="Gpx\GpxElementBase.cs" />
+    <Compile Include="Gpx\GpxLink.cs" />
+    <Compile Include="Gpx\GpxMetadata.cs" />
+    <Compile Include="Gpx\GpxPerson.cs" />
+    <Compile Include="Gpx\GpxSerializationOptions.cs" />
+    <Compile Include="Gpx\GpxVersion.cs" />
+    <Compile Include="Gpx\GpxWaypoint.cs" />
+    <Compile Include="Gpx\ObservableCollection.cs" />
+    <Compile Include="Gpx\ObservableElement.cs" />
+    <Compile Include="Service References\GeocachingService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\AdditionalHints\AdditionalHints.cs" />
+    <Compile Include="Transformers\AdditionalHints\EditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\AdditionalHints\EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\EditorExtensions\ClearEditorExtensions.cs" />
+    <Compile Include="Transformers\EditorExtensions\SaveEditorExtensions.cs" />
+    <Compile Include="Transformers\EditorExtensions\LoadEditorExtensions.cs" />
+    <Compile Include="Transformers\LoadFromLiveApi\ConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\LoadFromLiveApi\ConfigurationControl.Designer.cs">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\LoadFromLiveApi\FilterEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Transformers\LoadFromLiveApi\FilterEditor.Designer.cs">
+      <DependentUpon>FilterEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\LoadFromLiveApi\LoadFromLiveApi.cs" />
+    <Compile Include="Transformers\LoadFromLiveApi\Query.cs" />
+    <Compile Include="Transformers\LoadLocalFiles\LoadFiles.cs" />
+    <Compile Include="Transformers\LoadLocalFiles\Options.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\LoadLocalFiles\Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\LoadLocalFiles\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\MarkSolved\EditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\MarkSolved\EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\MarkSolved\MarkSolved.cs" />
+    <Compile Include="Transformers\PocketQueryDownload\PocketQueryDownload.cs" />
+    <Compile Include="Transformers\PocketQueryDownload\PocketQueryDownloadOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\PocketQueryDownload\PocketQueryDownloadOptions.Designer.cs">
+      <DependentUpon>PocketQueryDownloadOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\PocketQueryDownload\PocketQueryWizardControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\PocketQueryDownload\PocketQueryWizardControl.Designer.cs">
+      <DependentUpon>PocketQueryWizardControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\PocketQueryDownload\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Transformers\StatusMessageEventArgs.cs" />
+    <Compile Include="Transformers\TransformerOptions.cs" />
+    <Compile Include="Transformers\UpdateCoordinates\EditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\UpdateCoordinates\EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\UpdateCoordinates\UpdateCoordinates.cs" />
+    <Compile Include="Transformers\WaypointEnhancer\WaypointEnhancer.cs" />
+    <Compile Include="UI\CacheTypeIcons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CacheTypeIcons.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\ControlExtensions.cs" />
+    <Compile Include="Data\IExtensionTable.cs" />
+    <Compile Include="Data\TransformerSchema\MovedCacheTable.cs" />
+    <Compile Include="Data\TransformerSchema\RecentPublishFoldersTable.cs" />
+    <Compile Include="Data\TransformerSchema\SettingsTable.cs" />
+    <Compile Include="Data\TransformerSchema\TransformerSchema.cs" />
+    <Compile Include="Extensions\ExtensionLoader.cs" />
+    <Compile Include="Extensions\ISpecial.cs" />
+    <Compile Include="Extensions\ExtensionConfigurationTable.cs" />
+    <Compile Include="Transformers\CreateViewerCache\CreateViewerCache.cs" />
+    <Compile Include="UI\CoordinateEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CoordinateEditor.Designer.cs">
+      <DependentUpon>CoordinateEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UserControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Service References\TranslatorService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SingletonTooltip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data\Convert.cs" />
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\DatabaseSchema.cs" />
+    <Compile Include="Data\Query.cs" />
+    <Compile Include="Transformers\ExecutionOrder.cs" />
+    <Compile Include="Extensions\IConditional.cs" />
+    <Compile Include="Extensions\IRelatedConditional.cs" />
+    <Compile Include="Transformers\LoadGpxTautai\CaptchaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Transformers\LoadGpxTautai\CaptchaForm.Designer.cs">
+      <DependentUpon>CaptchaForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\LoadGpxTautai\GpxTautaiOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\LoadGpxTautai\GpxTautaiOptions.Designer.cs">
+      <DependentUpon>GpxTautaiOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\LoadGpxTautai\LoadGpxTautai.cs" />
+    <Compile Include="Transformers\LoadGpxTautai\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\PrefixDisabled\PrefixDisabled.cs" />
+    <Compile Include="Transformers\PrefixDisabled\ConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\PrefixDisabled\ConfigurationControl.Designer.cs">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\RemoveDuplicates\RemoveDuplicates.cs" />
+    <Compile Include="Transformers\SimpleConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\SimpleConfigurationControl.Designer.cs">
+      <DependentUpon>SimpleConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\FileMerger\FileMerger.cs" />
+    <Compile Include="Transformers\HtmlEntityDecoder\HtmlEntityDecoder.cs" />
+    <Compile Include="Extensions\IConfigurable.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transformers\TransformerBase.cs" />
+    <Compile Include="Transformers\Translator\ConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\Translator\ConfigurationControl.Designer.cs">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\Translator\ConfigurationData.cs" />
+    <Compile Include="Transformers\Translator\Translator.cs" />
+    <Compile Include="Transformers\Translator\TranslatorCacheSchema.cs" />
+    <Compile Include="Transformers\Translator\TranslatorData.cs" />
+    <Compile Include="Viewers\BingMaps\BingMapsList.cs" />
+    <Compile Include="Viewers\BingMaps\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Viewers\CacheEditor\CacheEditor.cs" />
+    <Compile Include="Extensions\ICacheViewer.cs" />
+    <Compile Include="Viewers\CacheEditor\EditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Viewers\CacheEditor\EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\CacheEditor\EnterAnother.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\CacheEditor\EnterAnother.Designer.cs">
+      <DependentUpon>EnterAnother.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\CacheEditor\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\CacheWebPage\CacheWebPage.cs" />
+    <Compile Include="Viewers\CacheWebPage\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\EditedCacheTableView\EditedCacheTableView.cs" />
+    <Compile Include="Viewers\EditedCacheTableView\ParsedEditedCacheData.cs" />
+    <Compile Include="Viewers\EditedCacheTableView\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Viewers\SelectedCacheChangedEventArgs.cs" />
+    <Compile Include="Viewers\TableView\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Viewers\TableView\TableView.cs" />
+    <Compile Include="Extensions\ICacheListViewer.cs" />
+    <Compile Include="Viewers\TableView\ParsedCacheData.cs" />
+    <Compile Include="Gpx\Loader.cs" />
+    <Compile Include="Gpx\XmlExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Extensions\GeocachingService\AuthenticationForm.resx">
+      <DependentUpon>AuthenticationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\GeocachingService\ConfigurationControl.resx">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\GeocachingService\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\GeocachingService\WizardControl.resx">
+      <DependentUpon>WizardControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\AdditionalHints\EditorControl.resx">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadFromLiveApi\ConfigurationControl.resx">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadFromLiveApi\FilterEditor.resx">
+      <DependentUpon>FilterEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadGpxTautai\CaptchaForm.resx">
+      <DependentUpon>CaptchaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadGpxTautai\GpxTautaiOptions.resx">
+      <DependentUpon>GpxTautaiOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadGpxTautai\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadLocalFiles\Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\LoadLocalFiles\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\MarkSolved\EditorControl.resx">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\PocketQueryDownload\PocketQueryDownloadOptions.resx">
+      <DependentUpon>PocketQueryDownloadOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\PocketQueryDownload\PocketQueryWizardControl.resx">
+      <DependentUpon>PocketQueryWizardControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\PocketQueryDownload\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\PrefixDisabled\ConfigurationControl.resx">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\SimpleConfigurationControl.resx">
+      <DependentUpon>SimpleConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\Translator\ConfigurationControl.resx">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\UpdateCoordinates\EditorControl.resx">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CacheTypeIcons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CacheTypeIcons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CoordinateEditor.resx">
+      <DependentUpon>CoordinateEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\BingMaps\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\CacheEditor\EditorControl.resx">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\CacheEditor\EnterAnother.resx">
+      <DependentUpon>EnterAnother.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\CacheEditor\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\CacheWebPage\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\EditedCacheTableView\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\TableView\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\GeoTransformer.licenseheader">
+      <Link>GeoTransformer.licenseheader</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="Service References\GeocachingService\geocaching.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching12.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\geocaching9.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.CreateFieldNoteAndPublishResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.CreateTrackableLogResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.FavoritePointsSummaryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetAPILimitsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetAttributeTypesDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetBookmarkListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetBookmarkListsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetCacheIdsFavoritedByUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetCachesFavoritedByUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheDataTypesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheLogResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheTypesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetImagesForGeocacheResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetMembershipTypesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryUrlsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryZippedFileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetServerDetailsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetSiteStatsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetStatusMessageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetTrackableLogsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetTrackableResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetTrackableTravelResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUserCacheCountsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUserCredentialsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUserFavoritePointsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUserGalleryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUserProfileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUsersCacheNotesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUsersWhoFavoritedCacheResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetUserWaypointsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetWptLogTypesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.SaveUserWaypointResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.SouvenirResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.StatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.UploadImageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GeocachingService\Live.wsdl" />
+    <None Include="Service References\TranslatorService\GeoTransformer.TranslatorService.GetTranslationsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TranslatorService\GeoTransformer.TranslatorService.TranslateArrayResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\TranslatorService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\TranslatorService\configuration.svcinfo" />
+    <None Include="Service References\TranslatorService\configuration91.svcinfo" />
+    <None Include="Service References\TranslatorService\soap.wsdl" />
+    <None Include="Service References\TranslatorService\soap.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TranslatorService\soap1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TranslatorService\soap2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TranslatorService\soap3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\TranslatorService\SoapService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\GeocachingService\" />
+    <WCFMetadataStorage Include="Service References\TranslatorService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Transformers\LoadGpxTautai\apply.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Transformers\LoadGpxTautai\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Transformers\PocketQueryDownload\cancel.png" />
+    <None Include="Viewers\CacheEditor\Edit.png" />
+    <None Include="Viewers\CacheWebPage\Web.png" />
+    <None Include="Viewers\EditedCacheTableView\icon.png" />
+    <None Include="UI\CacheTypeIcons\Earthcache.gif" />
+    <None Include="UI\CacheTypeIcons\TraditionalCache.gif" />
+    <None Include="UI\CacheTypeIcons\UnknownCache.gif" />
+    <None Include="UI\CacheTypeIcons\Wherigo.gif" />
+    <None Include="UI\CacheTypeIcons\MultiCache.gif" />
+    <None Include="UI\CacheTypeIcons\CacheInTrashOutEvent.gif" />
+    <None Include="UI\CacheTypeIcons\EventCache.gif" />
+    <None Include="UI\CacheTypeIcons\LetterboxHybrid.gif" />
+    <None Include="Viewers\BingMaps\icon.png" />
+    <None Include="UI\CacheTypeIcons\SolvedCache.png" />
+    <None Include="Viewers\CacheEditor\Add.png" />
+    <None Include="Viewers\CacheEditor\Remove.png" />
+    <None Include="UI\CacheTypeIcons\FoundCache.png" />
+    <None Include="Service References\GeocachingService\geocaching.disco" />
+    <None Include="Service References\GeocachingService\configuration91.svcinfo" />
+    <None Include="Service References\GeocachingService\configuration.svcinfo" />
+    <None Include="Service References\GeocachingService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Extensions\GeocachingService\cancel.png" />
+    <None Include="Transformers\LoadFromLiveApi\apply.png" />
+    <None Include="Transformers\LoadFromLiveApi\cancel.png" />
+    <None Include="Transformers\LoadFromLiveApi\delete.png" />
+    <None Include="Transformers\LoadFromLiveApi\edit.png" />
+    <None Include="Transformers\LoadFromLiveApi\create.png" />
+    <Content Include="Transformers\LoadLocalFiles\gpx.png" />
+    <Content Include="Transformers\LoadLocalFiles\zip.png" />
+    <Content Include="Viewers\TableView\table.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
