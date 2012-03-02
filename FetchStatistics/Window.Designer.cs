@@ -49,6 +49,7 @@
             this.webBrowser1.ScrollBarsEnabled = true;
             this.webBrowser1.Size = new System.Drawing.Size(602, 391);
             this.webBrowser1.TabIndex = 1;
+            this.webBrowser1.ScriptErrorsSuppressed = true;
             // 
             // label1
             // 
