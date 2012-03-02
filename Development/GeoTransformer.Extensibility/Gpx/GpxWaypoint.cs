@@ -85,6 +85,107 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
+        /// Serializes the data to XML format.
+        /// </summary>
+        /// <param name="options">The serialization options.</param>
+        /// <param name="localName">The name (without namespace) of the element that will be created.</param>
+        /// <returns>A serialized XML object or <c>null</c> if this object does not contain any data.</returns>
+        public XElement Serialize(GpxSerializationOptions options, string localName = "wpt")
+        {
+            var el = new XElement(options.GpxNamespace + localName);
+
+            if (this.Elevation.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "ele", this.Elevation));
+            if (this.CreationTime.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "time", this.CreationTime.Value.ToUniversalTime()));
+            if (this.MagneticVariation.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "magvar", this.MagneticVariation));
+            if (this.GeoidHeight.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "geoidheight", this.GeoidHeight));
+            if (!string.IsNullOrEmpty(this.Name))
+                el.Add(new XElement(options.GpxNamespace + "name", this.Name));
+            if (!string.IsNullOrEmpty(this.Comment))
+                el.Add(new XElement(options.GpxNamespace + "cmt", this.Comment));
+            if (!string.IsNullOrEmpty(this.Description))
+                el.Add(new XElement(options.GpxNamespace + "desc", this.Description));
+            if (!string.IsNullOrEmpty(this.Source))
+                el.Add(new XElement(options.GpxNamespace + "src", this.Source));
+
+            if (options.GpxVersion == GpxVersion.Gpx_1_0)
+            {
+                if (this.Links.Count > 0)
+                {
+                    var link = this.Links[0];
+                    if (link.Href != null)
+                        el.Add(new XElement(options.GpxNamespace + "url", link.Href));
+                    if (!string.IsNullOrEmpty(link.Text))
+                        el.Add(new XElement(options.GpxNamespace + "urlname", link.Text));
+                }
+            }
+            else
+            {
+                foreach (var link in this.Links)
+                    el.Add(link.Serialize(options));
+            }
+
+            if (!string.IsNullOrEmpty(this.Symbol))
+                el.Add(new XElement(options.GpxNamespace + "sym", this.Symbol));
+            if (!string.IsNullOrEmpty(this.WaypointType))
+                el.Add(new XElement(options.GpxNamespace + "type", this.WaypointType));
+            if (!string.IsNullOrEmpty(this.FixType))
+                el.Add(new XElement(options.GpxNamespace + "fix", this.FixType));
+            if (this.Satellites.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "sat", this.Satellites));
+            if (this.HorizontalDilution.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "hdop", this.HorizontalDilution));
+            if (this.VerticalDilution.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "vdop", this.VerticalDilution));
+            if (this.PositionDilution.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "pdop", this.PositionDilution));
+            if (this.DgpsDataAge.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "ageofdgpsdata", this.DgpsDataAge));
+            if (this.DgpsStationId.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "dgpsid", this.DgpsStationId));
+
+            if (!options.DisableExtensions)
+            {
+                if (options.GpxVersion == GpxVersion.Gpx_1_0)
+                {
+                    if (options.EnableUnsupportedExtensions)
+                        foreach (var ext in this.ExtensionAttributes)
+                            el.Add(new XAttribute(ext));
+
+                    foreach (var ext in this.ExtensionElements)
+                        el.Add(new XElement(ext));
+                }
+                else
+                {
+                    if (options.EnableUnsupportedExtensions)
+                        foreach (var attr in this.ExtensionAttributes)
+                            el.Add(new XAttribute(attr));
+
+                    var extel = new XElement(options.GpxNamespace + "extensions");
+                    foreach (var elem in this.ExtensionElements)
+                        extel.Add(new XElement(elem));
+
+                    if (!extel.IsEmpty)
+                        el.Add(extel);
+                }
+            }
+
+            if (this.Coordinates.Latitude != 0 || this.Coordinates.Longitude != 0 || !el.IsEmpty)
+            {
+                el.Add(new XAttribute("lat", this.Coordinates.Latitude));
+                el.Add(new XAttribute("lon", this.Coordinates.Longitude));
+            }
+
+            if (el.IsEmpty)
+                return null;
+
+            return el;
+        }
+
+        /// <summary>
         /// Gets or sets the coordinates of the waypoint.
         /// </summary>
         public Coordinates.Wgs84Point Coordinates
