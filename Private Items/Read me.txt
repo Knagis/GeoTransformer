@@ -1,0 +1,24 @@
+The source code does not include API keys required to access some
+of the online services. You must obtain the keys yourself. You are
+not allowed to use the keys from GeoTransformer even if you acquire
+them.
+
+class GeoTransformer.Transformers.Translator.BingApiKeys
+    string TranslatorKey - the old style key that is used by 
+                     GeoTransformer to retrieve language list without 
+                     requiring the user to specify his own key and 
+                     secret.
+
+class GeoTransformer.Viewers.BingMaps.BingApiKeys
+    string MapsKey - the key required for Bing Maps AJAX API.
+
+class GeoTransformer.Coordinates.GeoNamesKeys
+    string Username - the username as registered with geonames.org
+
+class GeocachingService.OAuth.LiveApiKeys
+    string StagingKey
+    string StagingSecret
+    string ProductionKey
+    string ProductionSecret
+                     The keys as provided by Groundspeak to access
+                     geocaching.com Live API.

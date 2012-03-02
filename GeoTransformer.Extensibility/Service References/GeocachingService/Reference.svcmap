@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="85cb9a57-7d6a-476e-a464-b29b90f26892" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://staging.api.groundspeak.com/Live/v6beta/geocaching.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="geocaching.xsd" MetadataType="Schema" ID="3254911a-8a57-447c-a34a-18849d74e15e" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd10" />
+    <MetadataFile FileName="geocaching1.xsd" MetadataType="Schema" ID="14ee04d8-715f-4629-96fa-2cc09f67d85a" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd9" />
+    <MetadataFile FileName="geocaching2.xsd" MetadataType="Schema" ID="2d735a2f-f0a1-4fe0-b3ae-db07a962ed50" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd0" />
+    <MetadataFile FileName="geocaching.disco" MetadataType="Disco" ID="6c5a7414-9d06-4cb3-baaf-ddbf758c3fe9" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?disco" />
+    <MetadataFile FileName="geocaching9.xsd" MetadataType="Schema" ID="5f70982c-8fb0-4be7-9654-b6f6e02d3f58" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd5" />
+    <MetadataFile FileName="geocaching6.xsd" MetadataType="Schema" ID="7b3c25d1-d36c-44cd-a3b1-35e1685eab9a" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd6" />
+    <MetadataFile FileName="Live.wsdl" MetadataType="Wsdl" ID="7c677311-ade0-4c2d-84f2-f2653ec26963" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?wsdl" />
+    <MetadataFile FileName="geocaching7.xsd" MetadataType="Schema" ID="0f4bbd98-7c0a-4389-aeb1-a6a2a2612a2f" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd7" />
+    <MetadataFile FileName="geocaching8.xsd" MetadataType="Schema" ID="ade4d723-7fe1-4db8-a926-a56cb88a13ba" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd11" />
+    <MetadataFile FileName="geocaching5.xsd" MetadataType="Schema" ID="9b32912b-dfd9-4a59-b05c-de862874cf30" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd8" />
+    <MetadataFile FileName="geocaching10.xsd" MetadataType="Schema" ID="9b8c8760-0ef3-4bc4-85df-370258d0f163" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd3" />
+    <MetadataFile FileName="geocaching4.xsd" MetadataType="Schema" ID="e936fee1-20c2-4b6d-990d-b1b891f4be7c" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd2" />
+    <MetadataFile FileName="geocaching11.xsd" MetadataType="Schema" ID="be8e712b-cfed-4be1-88f6-6ee98d4ffe23" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd4" />
+    <MetadataFile FileName="geocaching12.xsd" MetadataType="Schema" ID="a6a5dd3e-4b12-4053-a547-d61c288f3972" SourceId="1" SourceUrl="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
