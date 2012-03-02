@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Live" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="CustomBinding_ILive_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="false" />
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd2" namespace="http://www.geocaching.com/Geocaching.Live/data" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Tucson.Geocaching.WCF.API.Geocaching.Types" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Groundspeak.API.AuthorizationLib" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Groundspeak.Web.PocketQueries" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Tucson.Geocaching.WCF.API.Utilities" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd8" namespace="http://www.geocaching.com/Challenges.Live/data" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd9" namespace="http://schemas.datacontract.org/2004/07/Tucson.Geocaching.WCF.API.Challenges.Types" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd10" namespace="http://schemas.datacontract.org/2004/07/Souvenirs.Common.Model" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/Souvenirs.Common" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ILive_GetMembershipTypes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMembershipTypes" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetMembershipTypes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMembershipTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetAPILimits_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAPILimits" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetAPILimits_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAPILimitsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetSiteStats_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSiteStats" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetSiteStats_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSiteStatsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetServerDetails_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetServerDetails" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetServerDetails_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetServerDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetStatusMessages_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatusMessages" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetStatusMessages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatusMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetImagesForGeocache_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetImagesForGeocache" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetImagesForGeocache_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetImagesForGeocacheResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetWptLogTypes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetWptLogTypes" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetWptLogTypes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetWptLogTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheTypes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheTypes" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheTypes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheDataTypes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheDataTypes" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheDataTypes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheDataTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryList_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryList" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryListResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryData" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryUrls_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryUrls" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryUrls_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryUrlsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryZippedFile_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryZippedFile" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetPocketQueryZippedFile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPocketQueryZippedFileResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackablesByTrackingNumber_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackablesByTrackingNumber" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackablesByTrackingNumber_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackablesByTrackingNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackablesByTBCode_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackablesByTBCode" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackablesByTBCode_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackablesByTBCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackablesInCache_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackablesInCache" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackablesInCache_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackablesInCacheResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackableTravelList_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackableTravelList" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackableTravelList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackableTravelListResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetAttributeTypesData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAttributeTypesData" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetAttributeTypesData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAttributeTypesDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUserCredentials_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserCredentials" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUserCredentials_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserCredentialsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_DeleteCacheNote_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCacheNote" />
+  </wsdl:message>
+  <wsdl:message name="ILive_DeleteCacheNote_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteCacheNoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheLogsByCacheCode_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheLogsByCacheCode" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheLogsByCacheCode_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheLogsByCacheCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackableLogsByTBCode_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackableLogsByTBCode" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetTrackableLogsByTBCode_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTrackableLogsByTBCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersCacheNotes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersCacheNotes" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersCacheNotes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersCacheNotesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUserWaypoints_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserWaypoints" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUserWaypoints_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserWaypointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_DeleteUserWaypoint_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteUserWaypoint" />
+  </wsdl:message>
+  <wsdl:message name="ILive_DeleteUserWaypoint_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteUserWaypointResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetCacheByTileGuid_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCacheByTileGuid" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetCacheByTileGuid_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCacheByTileGuidResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_AddFavoritePointToCache_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddFavoritePointToCache" />
+  </wsdl:message>
+  <wsdl:message name="ILive_AddFavoritePointToCache_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddFavoritePointToCacheResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_RemoveFavoritePointFromCache_InputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveFavoritePointFromCache" />
+  </wsdl:message>
+  <wsdl:message name="ILive_RemoveFavoritePointFromCache_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveFavoritePointFromCacheResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersFavoritePoints_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersFavoritePoints" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersFavoritePoints_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersFavoritePointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersWhoFavoritedCache_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersWhoFavoritedCache" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersWhoFavoritedCache_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersWhoFavoritedCacheResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetCacheIdsFavoritedByUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCacheIdsFavoritedByUser" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetCacheIdsFavoritedByUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCacheIdsFavoritedByUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetCachesFavoritedByUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCachesFavoritedByUser" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetCachesFavoritedByUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCachesFavoritedByUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetBookmarkListsForUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetBookmarkListsForUser" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetBookmarkListsForUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetBookmarkListsForUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetBookmarkListsByUserID_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetBookmarkListsByUserID" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetBookmarkListsByUserID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetBookmarkListsByUserIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_WindowsPhoneTileSearch_InputMessage">
+    <wsdl:part name="parameters" element="tns:WindowsPhoneTileSearch" />
+  </wsdl:message>
+  <wsdl:message name="ILive_WindowsPhoneTileSearch_OutputMessage">
+    <wsdl:part name="parameters" element="tns:WindowsPhoneTileSearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_RegisterWP7DeviceTile_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterWP7DeviceTile" />
+  </wsdl:message>
+  <wsdl:message name="ILive_RegisterWP7DeviceTile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterWP7DeviceTileResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersCacheCounts_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersCacheCounts" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersCacheCounts_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersCacheCountsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersTrackables_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersTrackables" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersTrackables_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersTrackablesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetOwnedTrackables_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOwnedTrackables" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetOwnedTrackables_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOwnedTrackablesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUserGallery_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserGallery" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUserGallery_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserGalleryResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_SaveUserWaypoint_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveUserWaypoint" />
+  </wsdl:message>
+  <wsdl:message name="ILive_SaveUserWaypoint_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveUserWaypointResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersGeocacheLogs_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersGeocacheLogs" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetUsersGeocacheLogs_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUsersGeocacheLogsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetMoreGeocaches_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMoreGeocaches" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetMoreGeocaches_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMoreGeocachesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_SearchForGeocaches_InputMessage">
+    <wsdl:part name="parameters" element="tns:SearchForGeocaches" />
+  </wsdl:message>
+  <wsdl:message name="ILive_SearchForGeocaches_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SearchForGeocachesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetAnotherUsersProfile_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAnotherUsersProfile" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetAnotherUsersProfile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAnotherUsersProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_CreateFieldNoteAndPublish_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateFieldNoteAndPublish" />
+  </wsdl:message>
+  <wsdl:message name="ILive_CreateFieldNoteAndPublish_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateFieldNoteAndPublishResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_SearchForSouvenirsByPublicGuid_InputMessage">
+    <wsdl:part name="parameters" element="tns:SearchForSouvenirsByPublicGuid" />
+  </wsdl:message>
+  <wsdl:message name="ILive_SearchForSouvenirsByPublicGuid_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SearchForSouvenirsByPublicGuidResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_UpdateCacheNote_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateCacheNote" />
+  </wsdl:message>
+  <wsdl:message name="ILive_UpdateCacheNote_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateCacheNoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetYourUserProfile_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetYourUserProfile" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetYourUserProfile_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetYourUserProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_UploadImageToGeocacheLog_InputMessage">
+    <wsdl:part name="parameters" element="tns:UploadImageToGeocacheLog" />
+  </wsdl:message>
+  <wsdl:message name="ILive_UploadImageToGeocacheLog_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UploadImageToGeocacheLogResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_CreateTrackableLog_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateTrackableLog" />
+  </wsdl:message>
+  <wsdl:message name="ILive_CreateTrackableLog_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateTrackableLogResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetBookmarkListByGuid_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetBookmarkListByGuid" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetBookmarkListByGuid_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetBookmarkListByGuidResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_AddGeocachesToBookmarkList_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddGeocachesToBookmarkList" />
+  </wsdl:message>
+  <wsdl:message name="ILive_AddGeocachesToBookmarkList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddGeocachesToBookmarkListResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheStatus" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheStatusResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ILive">
+    <wsdl:operation name="GetMembershipTypes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetMembershipTypes" message="tns:ILive_GetMembershipTypes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetMembershipTypesResponse" message="tns:ILive_GetMembershipTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAPILimits">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetAPILimits" message="tns:ILive_GetAPILimits_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetAPILimitsResponse" message="tns:ILive_GetAPILimits_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSiteStats">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetSiteStats" message="tns:ILive_GetSiteStats_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetSiteStatsResponse" message="tns:ILive_GetSiteStats_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetServerDetails">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetServerDetails" message="tns:ILive_GetServerDetails_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetServerDetailsResponse" message="tns:ILive_GetServerDetails_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusMessages">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetStatusMessages" message="tns:ILive_GetStatusMessages_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetStatusMessagesResponse" message="tns:ILive_GetStatusMessages_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetImagesForGeocache">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetImagesForGeocache" message="tns:ILive_GetImagesForGeocache_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetImagesForGeocacheResponse" message="tns:ILive_GetImagesForGeocache_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetWptLogTypes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetWptLogTypes" message="tns:ILive_GetWptLogTypes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetWptLogTypesResponse" message="tns:ILive_GetWptLogTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheTypes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetGeocacheTypes" message="tns:ILive_GetGeocacheTypes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetGeocacheTypesResponse" message="tns:ILive_GetGeocacheTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheDataTypes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetGeocacheDataTypes" message="tns:ILive_GetGeocacheDataTypes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetGeocacheDataTypesResponse" message="tns:ILive_GetGeocacheDataTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryList">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryList" message="tns:ILive_GetPocketQueryList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetPocketQueryListResponse" message="tns:ILive_GetPocketQueryList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryData" message="tns:ILive_GetPocketQueryData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetPocketQueryDataResponse" message="tns:ILive_GetPocketQueryData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryUrls">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryUrls" message="tns:ILive_GetPocketQueryUrls_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetPocketQueryUrlsResponse" message="tns:ILive_GetPocketQueryUrls_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryZippedFile">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryZippedFile" message="tns:ILive_GetPocketQueryZippedFile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetPocketQueryZippedFileResponse" message="tns:ILive_GetPocketQueryZippedFile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackablesByTrackingNumber">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetTrackablesByTrackingNumber" message="tns:ILive_GetTrackablesByTrackingNumber_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetTrackablesByTrackingNumberResponse" message="tns:ILive_GetTrackablesByTrackingNumber_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackablesByTBCode">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetTrackablesByTBCode" message="tns:ILive_GetTrackablesByTBCode_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetTrackablesByTBCodeResponse" message="tns:ILive_GetTrackablesByTBCode_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackablesInCache">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetTrackablesInCache" message="tns:ILive_GetTrackablesInCache_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetTrackablesInCacheResponse" message="tns:ILive_GetTrackablesInCache_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackableTravelList">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetTrackableTravelList" message="tns:ILive_GetTrackableTravelList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetTrackableTravelListResponse" message="tns:ILive_GetTrackableTravelList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAttributeTypesData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetAttributeTypesData" message="tns:ILive_GetAttributeTypesData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetAttributeTypesDataResponse" message="tns:ILive_GetAttributeTypesData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserCredentials">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUserCredentials" message="tns:ILive_GetUserCredentials_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUserCredentialsResponse" message="tns:ILive_GetUserCredentials_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCacheNote">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/DeleteCacheNote" message="tns:ILive_DeleteCacheNote_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/DeleteCacheNoteResponse" message="tns:ILive_DeleteCacheNote_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheLogsByCacheCode">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetGeocacheLogsByCacheCode" message="tns:ILive_GetGeocacheLogsByCacheCode_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetGeocacheLogsByCacheCodeResponse" message="tns:ILive_GetGeocacheLogsByCacheCode_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackableLogsByTBCode">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetTrackableLogsByTBCode" message="tns:ILive_GetTrackableLogsByTBCode_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetTrackableLogsByTBCodeResponse" message="tns:ILive_GetTrackableLogsByTBCode_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersCacheNotes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUsersCacheNotes" message="tns:ILive_GetUsersCacheNotes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUsersCacheNotesResponse" message="tns:ILive_GetUsersCacheNotes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserWaypoints">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUserWaypoints" message="tns:ILive_GetUserWaypoints_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUserWaypointsResponse" message="tns:ILive_GetUserWaypoints_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUserWaypoint">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/DeleteUserWaypoint" message="tns:ILive_DeleteUserWaypoint_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/DeleteUserWaypointResponse" message="tns:ILive_DeleteUserWaypoint_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheByTileGuid">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetCacheByTileGuid" message="tns:ILive_GetCacheByTileGuid_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetCacheByTileGuidResponse" message="tns:ILive_GetCacheByTileGuid_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddFavoritePointToCache">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/AddFavoritePointToCache" message="tns:ILive_AddFavoritePointToCache_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/AddFavoritePointToCacheResponse" message="tns:ILive_AddFavoritePointToCache_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFavoritePointFromCache">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/RemoveFavoritePointFromCache" message="tns:ILive_RemoveFavoritePointFromCache_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/RemoveFavoritePointFromCacheResponse" message="tns:ILive_RemoveFavoritePointFromCache_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersFavoritePoints">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUsersFavoritePoints" message="tns:ILive_GetUsersFavoritePoints_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUsersFavoritePointsResponse" message="tns:ILive_GetUsersFavoritePoints_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoFavoritedCache">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUsersWhoFavoritedCache" message="tns:ILive_GetUsersWhoFavoritedCache_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUsersWhoFavoritedCacheResponse" message="tns:ILive_GetUsersWhoFavoritedCache_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheIdsFavoritedByUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetCacheIdsFavoritedByUser" message="tns:ILive_GetCacheIdsFavoritedByUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetCacheIdsFavoritedByUserResponse" message="tns:ILive_GetCacheIdsFavoritedByUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCachesFavoritedByUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetCachesFavoritedByUser" message="tns:ILive_GetCachesFavoritedByUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetCachesFavoritedByUserResponse" message="tns:ILive_GetCachesFavoritedByUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBookmarkListsForUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetBookmarkListsForUser" message="tns:ILive_GetBookmarkListsForUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetBookmarkListsForUserResponse" message="tns:ILive_GetBookmarkListsForUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBookmarkListsByUserID">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetBookmarkListsByUserID" message="tns:ILive_GetBookmarkListsByUserID_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetBookmarkListsByUserIDResponse" message="tns:ILive_GetBookmarkListsByUserID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="WindowsPhoneTileSearch">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/WindowsPhoneTileSearch" message="tns:ILive_WindowsPhoneTileSearch_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/WindowsPhoneTileSearchResponse" message="tns:ILive_WindowsPhoneTileSearch_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterWP7DeviceTile">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/RegisterWP7DeviceTile" message="tns:ILive_RegisterWP7DeviceTile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/RegisterWP7DeviceTileResponse" message="tns:ILive_RegisterWP7DeviceTile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersCacheCounts">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUsersCacheCounts" message="tns:ILive_GetUsersCacheCounts_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUsersCacheCountsResponse" message="tns:ILive_GetUsersCacheCounts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersTrackables">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUsersTrackables" message="tns:ILive_GetUsersTrackables_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUsersTrackablesResponse" message="tns:ILive_GetUsersTrackables_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOwnedTrackables">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetOwnedTrackables" message="tns:ILive_GetOwnedTrackables_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetOwnedTrackablesResponse" message="tns:ILive_GetOwnedTrackables_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserGallery">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUserGallery" message="tns:ILive_GetUserGallery_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUserGalleryResponse" message="tns:ILive_GetUserGallery_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveUserWaypoint">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/SaveUserWaypoint" message="tns:ILive_SaveUserWaypoint_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/SaveUserWaypointResponse" message="tns:ILive_SaveUserWaypoint_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersGeocacheLogs">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetUsersGeocacheLogs" message="tns:ILive_GetUsersGeocacheLogs_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetUsersGeocacheLogsResponse" message="tns:ILive_GetUsersGeocacheLogs_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMoreGeocaches">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetMoreGeocaches" message="tns:ILive_GetMoreGeocaches_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetMoreGeocachesResponse" message="tns:ILive_GetMoreGeocaches_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchForGeocaches">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/SearchForGeocaches" message="tns:ILive_SearchForGeocaches_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/SearchForGeocachesResponse" message="tns:ILive_SearchForGeocaches_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAnotherUsersProfile">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetAnotherUsersProfile" message="tns:ILive_GetAnotherUsersProfile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetAnotherUsersProfileResponse" message="tns:ILive_GetAnotherUsersProfile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateFieldNoteAndPublish">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/CreateFieldNoteAndPublish" message="tns:ILive_CreateFieldNoteAndPublish_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/CreateFieldNoteAndPublishResponse" message="tns:ILive_CreateFieldNoteAndPublish_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchForSouvenirsByPublicGuid">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/SearchForSouvenirsByPublicGuid" message="tns:ILive_SearchForSouvenirsByPublicGuid_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/SearchForSouvenirsByPublicGuidResponse" message="tns:ILive_SearchForSouvenirsByPublicGuid_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCacheNote">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/UpdateCacheNote" message="tns:ILive_UpdateCacheNote_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/UpdateCacheNoteResponse" message="tns:ILive_UpdateCacheNote_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYourUserProfile">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetYourUserProfile" message="tns:ILive_GetYourUserProfile_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetYourUserProfileResponse" message="tns:ILive_GetYourUserProfile_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadImageToGeocacheLog">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/UploadImageToGeocacheLog" message="tns:ILive_UploadImageToGeocacheLog_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/UploadImageToGeocacheLogResponse" message="tns:ILive_UploadImageToGeocacheLog_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateTrackableLog">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/CreateTrackableLog" message="tns:ILive_CreateTrackableLog_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/CreateTrackableLogResponse" message="tns:ILive_CreateTrackableLog_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBookmarkListByGuid">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetBookmarkListByGuid" message="tns:ILive_GetBookmarkListByGuid_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetBookmarkListByGuidResponse" message="tns:ILive_GetBookmarkListByGuid_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddGeocachesToBookmarkList">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/AddGeocachesToBookmarkList" message="tns:ILive_AddGeocachesToBookmarkList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/AddGeocachesToBookmarkListResponse" message="tns:ILive_AddGeocachesToBookmarkList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetGeocacheStatus" message="tns:ILive_GetGeocacheStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetGeocacheStatusResponse" message="tns:ILive_GetGeocacheStatus_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomBinding_ILive" type="tns:ILive">
+    <wsp:PolicyReference URI="#CustomBinding_ILive_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetMembershipTypes">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetMembershipTypes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAPILimits">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetAPILimits" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSiteStats">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetSiteStats" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServerDetails">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetServerDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusMessages">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetStatusMessages" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetImagesForGeocache">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetImagesForGeocache" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetWptLogTypes">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetWptLogTypes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheTypes">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetGeocacheTypes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheDataTypes">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetGeocacheDataTypes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryList">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetPocketQueryList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryData">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetPocketQueryData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryUrls">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetPocketQueryUrls" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPocketQueryZippedFile">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetPocketQueryZippedFile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackablesByTrackingNumber">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetTrackablesByTrackingNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackablesByTBCode">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetTrackablesByTBCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackablesInCache">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetTrackablesInCache" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackableTravelList">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetTrackableTravelList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAttributeTypesData">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetAttributeTypesData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserCredentials">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUserCredentials" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteCacheNote">
+      <soap12:operation soapAction="http://tempuri.org/ILive/DeleteCacheNote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheLogsByCacheCode">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetGeocacheLogsByCacheCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTrackableLogsByTBCode">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetTrackableLogsByTBCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersCacheNotes">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUsersCacheNotes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserWaypoints">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUserWaypoints" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUserWaypoint">
+      <soap12:operation soapAction="http://tempuri.org/ILive/DeleteUserWaypoint" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheByTileGuid">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetCacheByTileGuid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddFavoritePointToCache">
+      <soap12:operation soapAction="http://tempuri.org/ILive/AddFavoritePointToCache" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFavoritePointFromCache">
+      <soap12:operation soapAction="http://tempuri.org/ILive/RemoveFavoritePointFromCache" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersFavoritePoints">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUsersFavoritePoints" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersWhoFavoritedCache">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUsersWhoFavoritedCache" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCacheIdsFavoritedByUser">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetCacheIdsFavoritedByUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCachesFavoritedByUser">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetCachesFavoritedByUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBookmarkListsForUser">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetBookmarkListsForUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBookmarkListsByUserID">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetBookmarkListsByUserID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WindowsPhoneTileSearch">
+      <soap12:operation soapAction="http://tempuri.org/ILive/WindowsPhoneTileSearch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterWP7DeviceTile">
+      <soap12:operation soapAction="http://tempuri.org/ILive/RegisterWP7DeviceTile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersCacheCounts">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUsersCacheCounts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersTrackables">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUsersTrackables" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOwnedTrackables">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetOwnedTrackables" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserGallery">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUserGallery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveUserWaypoint">
+      <soap12:operation soapAction="http://tempuri.org/ILive/SaveUserWaypoint" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersGeocacheLogs">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetUsersGeocacheLogs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMoreGeocaches">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetMoreGeocaches" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchForGeocaches">
+      <soap12:operation soapAction="http://tempuri.org/ILive/SearchForGeocaches" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAnotherUsersProfile">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetAnotherUsersProfile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateFieldNoteAndPublish">
+      <soap12:operation soapAction="http://tempuri.org/ILive/CreateFieldNoteAndPublish" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchForSouvenirsByPublicGuid">
+      <soap12:operation soapAction="http://tempuri.org/ILive/SearchForSouvenirsByPublicGuid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCacheNote">
+      <soap12:operation soapAction="http://tempuri.org/ILive/UpdateCacheNote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYourUserProfile">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetYourUserProfile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadImageToGeocacheLog">
+      <soap12:operation soapAction="http://tempuri.org/ILive/UploadImageToGeocacheLog" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateTrackableLog">
+      <soap12:operation soapAction="http://tempuri.org/ILive/CreateTrackableLog" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBookmarkListByGuid">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetBookmarkListByGuid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddGeocachesToBookmarkList">
+      <soap12:operation soapAction="http://tempuri.org/ILive/AddGeocachesToBookmarkList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheStatus">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetGeocacheStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Live">
+    <wsdl:port name="CustomBinding_ILive" binding="tns:CustomBinding_ILive">
+      <soap12:address location="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc/Silverlightsoap" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc/Silverlightsoap</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
