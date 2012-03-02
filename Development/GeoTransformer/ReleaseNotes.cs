@@ -41,17 +41,23 @@ namespace GeoTransformer
         {
             var q = Program.Database.Settings.Update();
             q.Value(o => o.LastVersionShown, typeof(ReleaseNotes).Assembly.GetName().Version.ToString());
-            q.Execute();
+            var rows = q.Execute();
+
+            if (rows == 0)
+            {
+                var qi = Program.Database.Settings.Insert();
+                qi.Value(o => o.LastVersionShown, typeof(ReleaseNotes).Assembly.GetName().Version.ToString());
+                qi.Execute();
+            }
         }
 
         public static void ShowReleaseNotes()
         {
             var q = Program.Database.Settings.Select();
-            q.Select(o => o.MainFormWindowWidth);
             q.Select(o => o.LastVersionShown);
             
             // this is checked so that the release notes are not shown if the application was not updated but it is a clean install.
-            if (q.ExecuteScalar(o => o.MainFormWindowWidth) == 0)
+            if (q.ExecuteScalar(o => o.RowId) == 0)
             {
                 UpdateLastVersionShown();
                 return;
