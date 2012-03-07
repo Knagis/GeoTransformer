@@ -15,7 +15,7 @@ namespace GeoTransformer.Gpx
     /// <summary>
     /// Represents a waypoint, point of interest, or named feature on a map.
     /// </summary>
-    public class GpxWaypoint : GpxElementBase
+    public class GpxWaypoint : GpxExtendableElement
     {
         private static Dictionary<XName, Action<GpxWaypoint, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GpxWaypoint, XAttribute>>
         {
@@ -62,7 +62,11 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GpxSchema_1_1 + "ageofdgpsdata", (o, e) => o.DgpsDataAge = XmlConvert.ToDecimal(e.Value) },
             { XmlExtensions.GpxSchema_1_0 + "dgpsid", (o, e) => o.DgpsDataAge = XmlConvert.ToUInt16(e.Value) },
             { XmlExtensions.GpxSchema_1_1 + "dgpsid", (o, e) => o.DgpsDataAge = XmlConvert.ToUInt16(e.Value) },
-            { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxWaypoint>(e, null, null) }
+            { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxWaypoint>(e, null, null) },
+
+            { XmlExtensions.GeocacheSchema_1_0_0 + "cache", (o, e) => o.Geocache = new Geocache(e) },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "cache", (o, e) => o.Geocache = new Geocache(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "cache", (o, e) => o.Geocache = new Geocache(e) },
         };
 
         /// <summary>
@@ -353,6 +357,15 @@ namespace GeoTransformer.Gpx
         {
             get { return this.GetValue<UInt16?>("DgpsStationId"); }
             set { this.SetValue("DgpsStationId", value); }
+        }
+
+        /// <summary>
+        /// Gets the Groundspeak geocache extensions for this waypoint.
+        /// </summary>
+        public Geocache Geocache
+        {
+            get { return this.GetValue<Geocache>("Geocache", true); }
+            private set { this.SetValue("Geocache", value); }
         }
     }
 }

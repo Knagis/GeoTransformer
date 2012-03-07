@@ -152,10 +152,16 @@
     <Compile Include="Extensions\ISaveData.cs" />
     <Compile Include="Extensions\ITransformer.cs" />
     <Compile Include="Extensions\ITransformerWithPopup.cs" />
+    <Compile Include="Gpx\GeocacheContainer.cs" />
+    <Compile Include="Gpx\GeocacheType.cs" />
+    <Compile Include="Gpx\GpxElementBase.cs" />
+    <Compile Include="Gpx\Geocache.cs" />
+    <Compile Include="Gpx\GeocacheOwner.cs" />
+    <Compile Include="Gpx\GeocacheVersion.cs" />
     <Compile Include="Gpx\GpxBounds.cs" />
     <Compile Include="Gpx\GpxCopyright.cs" />
     <Compile Include="Gpx\GpxDocument.cs" />
-    <Compile Include="Gpx\GpxElementBase.cs" />
+    <Compile Include="Gpx\GpxExtendableElement.cs" />
     <Compile Include="Gpx\GpxLink.cs" />
     <Compile Include="Gpx\GpxMetadata.cs" />
     <Compile Include="Gpx\GpxPerson.cs" />

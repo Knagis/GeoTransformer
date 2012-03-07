@@ -12,7 +12,7 @@ using XmlConvert = System.Xml.XmlConvert;
 
 namespace GeoTransformer.Gpx
 {
-    public class GpxMetadata : GpxElementBase
+    public class GpxMetadata : GpxExtendableElement
     {
         private static Dictionary<XName, Action<GpxMetadata, XElement>> _elementInitializers = new Dictionary<XName, Action<GpxMetadata, XElement>>
         {

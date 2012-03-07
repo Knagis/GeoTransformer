@@ -70,14 +70,6 @@ namespace GeoTransformer.Gpx
             }
             el.Add(this.Link.Serialize(options));
 
-            if (!options.DisableExtensions && options.EnableUnsupportedExtensions)
-            {
-                foreach (var ext in this.ExtensionAttributes)
-                    el.Add(new XAttribute(ext));
-                foreach (var ext in this.ExtensionElements)
-                    el.Add(new XElement(ext));
-            }
-
             if (el.IsEmpty)
                 return null;
 

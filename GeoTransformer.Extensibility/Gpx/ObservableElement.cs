@@ -10,7 +10,11 @@ using System.Text;
 
 namespace GeoTransformer.Gpx
 {
-    public class ObservableElement : System.ComponentModel.INotifyPropertyChanged
+    /// <summary>
+    /// Base class for data objects that need to provide events when property values are changed.
+    /// The class will automatically raise the events for nested objects as well.
+    /// </summary>
+    public abstract class ObservableElement : System.ComponentModel.INotifyPropertyChanged
     {
         private class ChangeHandler
         {
