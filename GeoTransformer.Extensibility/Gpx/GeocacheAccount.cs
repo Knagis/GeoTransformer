@@ -11,25 +11,25 @@ using System.Xml.Linq;
 
 namespace GeoTransformer.Gpx
 {
-    public class GeocacheOwner : GpxElementBase
+    public class GeocacheAccount : GpxElementBase
     {
-        private static Dictionary<XName, Action<GeocacheOwner, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheOwner, XAttribute>>
+        private static Dictionary<XName, Action<GeocacheAccount, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheAccount, XAttribute>>
         {
             { "id", (o, a) => o.ParseId(a.Value) },
         };
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeocacheOwner"/> class.
+        /// Initializes a new instance of the <see cref="GeocacheAccount"/> class.
         /// </summary>
-        public GeocacheOwner()
+        public GeocacheAccount()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeocacheOwner"/> class.
+        /// Initializes a new instance of the <see cref="GeocacheAccount"/> class.
         /// </summary>
         /// <param name="owner">The owner XML element.</param>
-        public GeocacheOwner(XElement owner)
+        public GeocacheAccount(XElement owner)
         {
             if (owner == null)
                 return;

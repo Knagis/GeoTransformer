@@ -40,9 +40,9 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GeocacheSchema_1_0_1 + "placed_by", (o, e) => o.PlacedBy = e.Value },
             { XmlExtensions.GeocacheSchema_1_0_2 + "placed_by", (o, e) => o.PlacedBy = e.Value },
 
-            { XmlExtensions.GeocacheSchema_1_0_0 + "owner", (o, e) => o.Owner = new GeocacheOwner(e) },
-            { XmlExtensions.GeocacheSchema_1_0_1 + "owner", (o, e) => o.Owner = new GeocacheOwner(e) },
-            { XmlExtensions.GeocacheSchema_1_0_2 + "owner", (o, e) => o.Owner = new GeocacheOwner(e) },
+            { XmlExtensions.GeocacheSchema_1_0_0 + "owner", (o, e) => o.Owner = new GeocacheAccount(e) },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "owner", (o, e) => o.Owner = new GeocacheAccount(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "owner", (o, e) => o.Owner = new GeocacheAccount(e) },
 
             { XmlExtensions.GeocacheSchema_1_0_0 + "type", (o, e) => o.CacheType = new GeocacheType(e) },
             { XmlExtensions.GeocacheSchema_1_0_1 + "type", (o, e) => o.CacheType = new GeocacheType(e) },
@@ -68,15 +68,32 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GeocacheSchema_1_0_1 + "state", (o, e) => o.CountryState = e.Value.Trim() },
             { XmlExtensions.GeocacheSchema_1_0_2 + "state", (o, e) => o.CountryState = e.Value.Trim() },
 
-            // attributes, attributes-attribute
-            // short_description
-            // long_description
-            // encoded_hints
-            // personal_note
-            // favorite_points
-            // logs, logs-log
+            { XmlExtensions.GeocacheSchema_1_0_0 + "encoded_hints", (o, e) => o.Hints = e.Value },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "encoded_hints", (o, e) => o.Hints = e.Value },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "encoded_hints", (o, e) => o.Hints = e.Value },
+
+            { XmlExtensions.GeocacheSchema_1_0_0 + "short_description", (o, e) => o.ShortDescription = new GeocacheDescription(e) },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "short_description", (o, e) => o.ShortDescription = new GeocacheDescription(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "short_description", (o, e) => o.ShortDescription = new GeocacheDescription(e) },
+
+            { XmlExtensions.GeocacheSchema_1_0_0 + "long_description", (o, e) => o.LongDescription = new GeocacheDescription(e) },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "long_description", (o, e) => o.LongDescription = new GeocacheDescription(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "long_description", (o, e) => o.LongDescription = new GeocacheDescription(e) },
+
+            { XmlExtensions.GeocacheSchema_1_0_2 + "personal_note", (o, e) => o.PersonalNote = e.Value },
+
+            { XmlExtensions.GeocacheSchema_1_0_2 + "favorite_points", (o, e) => o.FavoritePoints = XmlConvert.ToInt32(e.Value) },
+
+            { XmlExtensions.GeocacheSchema_1_0_1 + "attributes", (o, e) => o.Attributes = GeocacheAttribute.Parse(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "attributes", (o, e) => o.Attributes = GeocacheAttribute.Parse(e) },
+
+            { XmlExtensions.GeocacheSchema_1_0_0 + "logs", (o, e) => o.Logs = GeocacheLog.Parse(e) },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "logs", (o, e) => o.Logs = GeocacheLog.Parse(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "logs", (o, e) => o.Logs = GeocacheLog.Parse(e) },
+
+            { XmlExtensions.GeocacheSchema_1_0_2 + "images", (o, e) => o.Images = GeocacheImage.Parse(e) },
+
             // travelbugs, travelbugs-travelbug
-            // images, images-image
         };
 
         /// <summary>
@@ -192,9 +209,9 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Gets the account that owns the geocache.
         /// </summary>
-        public GeocacheOwner Owner
+        public GeocacheAccount Owner
         {
-            get { return this.GetValue<GeocacheOwner>("Owner", true); }
+            get { return this.GetValue<GeocacheAccount>("Owner", true); }
             private set { this.SetValue("Owner", value); }
         }
 
@@ -251,5 +268,81 @@ namespace GeoTransformer.Gpx
             get { return this.GetValue<string>("CountryState"); }
             set { this.SetValue("CountryState", value); }
         }
+
+        /// <summary>
+        /// Gets or sets the hints for the cache.
+        /// </summary>
+        public string Hints
+        {
+            get { return this.GetValue<string>("Hints"); }
+            set { this.SetValue("Hints", value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the personal note for the cache.
+        /// Note that this element is only supported in 1.0.2 version.
+        /// </summary>
+        public string PersonalNote
+        {
+            get { return this.GetValue<string>("PersonalNote"); }
+            set { this.SetValue("PersonalNote", value); }
+        }
+
+        /// <summary>
+        /// Gets the short description for the cache.
+        /// </summary>
+        public GeocacheDescription ShortDescription
+        {
+            get { return this.GetValue<GeocacheDescription>("ShortDescription", true); }
+            private set { this.SetValue("ShortDescription", value); }
+        }
+
+        /// <summary>
+        /// Gets the long description for the cache.
+        /// </summary>
+        public GeocacheDescription LongDescription
+        {
+            get { return this.GetValue<GeocacheDescription>("LongDescription", true); }
+            private set { this.SetValue("LongDescription", value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of favorite points for the cache.
+        /// Note that this element is only supported in 1.0.2 version.
+        /// </summary>
+        public int? FavoritePoints
+        {
+            get { return this.GetValue<int?>("FavoritePoints"); }
+            set { this.SetValue("FavoritePoints", value); }
+        }
+
+        /// <summary>
+        /// Gets the attributes assigned to the geocache.
+        /// Note that attributes are not supported on version 1.0 schema.
+        /// </summary>
+        public IList<GeocacheAttribute> Attributes
+        {
+            get { return this.GetValue<ObservableCollection<GeocacheAttribute>>("Attributes", true); }
+            private set { this.SetValue("Attributes", (ObservableCollection<GeocacheAttribute>)value); }
+        }
+
+        /// <summary>
+        /// Gets the images associated with this geocache.
+        /// </summary>
+        public IList<GeocacheImage> Images
+        {
+            get { return this.GetValue<ObservableCollection<GeocacheImage>>("Images", true); }
+            private set { this.SetValue("Images", (ObservableCollection<GeocacheImage>)value); }
+        }
+
+        /// <summary>
+        /// Gets the logs (visits) associated with this geocache.
+        /// </summary>
+        public IList<GeocacheLog> Logs
+        {
+            get { return this.GetValue<ObservableCollection<GeocacheLog>>("Logs", true); }
+            private set { this.SetValue("Logs", (ObservableCollection<GeocacheLog>)value); }
+        }
+
     }
 }

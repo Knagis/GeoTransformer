@@ -12,35 +12,35 @@ using XmlConvert = System.Xml.XmlConvert;
 
 namespace GeoTransformer.Gpx
 {
-    public class GeocacheType : GpxElementBase
+    public class GeocacheLogType : GpxElementBase
     {
-        private static Dictionary<XName, Action<GeocacheType, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheType, XAttribute>>
+        private static Dictionary<XName, Action<GeocacheLogType, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheLogType, XAttribute>>
         {
             { "id", (o, a) => o.Id = XmlConvert.ToInt32(a.Value) },
         };
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeocacheType"/> class.
+        /// Initializes a new instance of the <see cref="GeocacheLogType"/> class.
         /// </summary>
-        public GeocacheType()
+        public GeocacheLogType()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeocacheType"/> class.
+        /// Initializes a new instance of the <see cref="GeocacheLogType"/> class.
         /// </summary>
-        /// <param name="type">The cache type XML element.</param>
-        public GeocacheType(XElement type)
+        /// <param name="type">The geocache log type XML element.</param>
+        public GeocacheLogType(XElement logType)
         {
-            if (type == null)
+            if (logType == null)
                 return;
 
-            this.Initialize(type, _attributeInitializers, null);
-            this.Name = type.Value;
+            this.Initialize(logType, _attributeInitializers, null);
+            this.Name = logType.Value;
         }
 
         /// <summary>
-        /// Serializes the cache type to XML element.
+        /// Serializes the geocache log type to XML element.
         /// </summary>
         /// <param name="options">The serialization options.</param>
         /// <returns>The serialized object or <c>null</c> if this object is empty.</returns>
@@ -50,7 +50,7 @@ namespace GeoTransformer.Gpx
 
             // the schema specifies that the ID is mandatory but we will assume that the data provider will make sure of that and
             // also because most applications will probably not care about the ID, just the name.
-            if (this.Id.HasValue)
+            if (this.Id.HasValue && (options.EnableInvalidElements || options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2))
                 el.Add(new XAttribute("id", this.Id.Value));
 
             if (!string.IsNullOrEmpty(this.Name))
@@ -63,7 +63,7 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Gets or sets the ID of the cache type.
+        /// Gets or sets the ID of the geocache log type.
         /// </summary>
         public int? Id
         {
@@ -72,7 +72,7 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Gets or sets the name of the cache type.
+        /// Gets or sets the name of the geocache log type.
         /// </summary>
         public string Name
         {
