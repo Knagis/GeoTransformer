@@ -27,6 +27,21 @@ namespace GeoTransformer
         public static readonly XNamespace GpxSchema_1_1 = XNamespace.Get("http://www.topografix.com/GPX/1/1");
 
         /// <summary>
+        /// Returns the XML schema URI for the Groundspeak GPX extensions, version 1.0
+        /// </summary>
+        public static readonly XNamespace GeocacheSchema_1_0_0 = XNamespace.Get("http://www.groundspeak.com/cache/1/0");
+
+        /// <summary>
+        /// Returns the XML schema URI for the Groundspeak GPX extensions, version 1.0.1
+        /// </summary>
+        public static readonly XNamespace GeocacheSchema_1_0_1 = XNamespace.Get("http://www.groundspeak.com/cache/1/0/1");
+
+        /// <summary>
+        /// Returns the XML schema URI for the Groundspeak GPX extensions, version 1.0.2
+        /// </summary>
+        public static readonly XNamespace GeocacheSchema_1_0_2 = XNamespace.Get("http://www.groundspeak.com/cache/1/0/2");
+
+        /// <summary>
         /// Returns the XML schema URI for the Groundspeak GPX 1.0. Includes the { } brackets used by Xml.Linq.
         /// </summary>
         public const string GeocacheSchema10 = "{http://www.groundspeak.com/cache/1/0}";

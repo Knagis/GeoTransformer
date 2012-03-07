@@ -49,12 +49,18 @@ namespace GeoTransformer.Gpx
         public GpxSerializationOptions()
         {
             this.GpxVersion = Gpx.GpxVersion.Gpx_1_1;
+            this.GeocacheVersion = Gpx.GeocacheVersion.Geocache_1_0_1;
         }
 
         /// <summary>
         /// Gets or sets the GPX version for the resulting XML document. Default is <see cref="GpxVersion.Gpx_1_1"/>.
         /// </summary>
         public GpxVersion GpxVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version of Groundspeak extensions for the resulting XML document. Default is <see cref="GeocacheVersion.Geocache_1_0_1"/>.
+        /// </summary>
+        public GeocacheVersion GeocacheVersion { get; set; }
 
         /// <summary>
         /// Gets or sets whether the resulting XML document will include all extension attributes and elements even on XML elements where the schema does not
@@ -85,6 +91,28 @@ namespace GeoTransformer.Gpx
             get
             {
                 return this.GpxVersion == Gpx.GpxVersion.Gpx_1_0 ? XmlExtensions.GpxSchema_1_0 : XmlExtensions.GpxSchema_1_1;
+            }
+        }
+
+        /// <summary>
+        /// Gets the geocache extension namespace that corresponds to <see cref="GeocacheVersion"/>.
+        /// </summary>
+        public XNamespace GeocacheNamespace
+        {
+            get 
+            {
+                switch (this.GeocacheVersion)
+                {
+                    case GeocacheVersion.Geocache_1_0_0:
+                        return XmlExtensions.GeocacheSchema_1_0_0;
+
+                    case GeocacheVersion.Geocache_1_0_1:
+                    default:
+                        return XmlExtensions.GeocacheSchema_1_0_1;
+
+                    case GeocacheVersion.Geocache_1_0_2:
+                        return XmlExtensions.GeocacheSchema_1_0_2;
+                }
             }
         }
     }

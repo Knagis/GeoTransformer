@@ -54,27 +54,15 @@ namespace GeoTransformer.Gpx
             if (options == null)
                 throw new ArgumentNullException("options");
 
-            bool containsExtensions = !options.DisableExtensions && options.EnableUnsupportedExtensions && (this.ExtensionAttributes.Count > 0 || this.ExtensionElements.Count > 0);
-
-            if (!containsExtensions && this.MinLatitude == 0 && this.MaxLatitude == 0 && this.MinLongitude == 0 && this.MaxLongitude == 0)
+            if (this.MinLatitude == 0 && this.MaxLatitude == 0 && this.MinLongitude == 0 && this.MaxLongitude == 0)
                 return null;
 
-            var el = new XElement(options.GpxNamespace + "bounds",
+            return new XElement(options.GpxNamespace + "bounds",
                 new XAttribute("minlat", this.MinLatitude),
                 new XAttribute("minlon", this.MinLongitude),
                 new XAttribute("maxlat", this.MaxLatitude),
                 new XAttribute("maxlon", this.MaxLongitude)
             );
-
-            if (containsExtensions)
-            {
-                foreach (var ext in this.ExtensionAttributes)
-                    el.Add(new XAttribute(ext));
-                foreach (var ext in this.ExtensionElements)
-                    el.Add(new XElement(ext));
-            }
-
-            return el;
         }
 
         /// <summary>
