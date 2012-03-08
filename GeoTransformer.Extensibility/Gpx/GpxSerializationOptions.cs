@@ -28,6 +28,22 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
+        /// Specifies that the resulting XML must be as close to the format used by <c>geocaching.com</c> as possible.
+        /// </summary>
+        public static GpxSerializationOptions Compatibility
+        {
+            get
+            {
+                return new GpxSerializationOptions()
+                {
+                    GpxVersion = GpxVersion.Gpx_1_0,
+                    GeocacheVersion = GeocacheVersion.Geocache_1_0_1,
+                    GeocacheNamespaceWithPrefix = true
+                };
+            }
+        }
+
+        /// <summary>
         /// Gets the serialization options that enable the serialization of all available data so that the object can be returned to the previous state from the
         /// serialized XML.
         /// </summary>
@@ -38,7 +54,8 @@ namespace GeoTransformer.Gpx
                 return new GpxSerializationOptions()
                 {
                     EnableUnsupportedExtensions = true,
-                    EnableInvalidElements = true
+                    EnableInvalidElements = true,
+                    GeocacheVersion = Gpx.GeocacheVersion.Geocache_1_0_2,
                 };
             }
         }
@@ -115,5 +132,12 @@ namespace GeoTransformer.Gpx
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets if the elements from <see cref="GeocacheNamespace"/> schema should be prefixed with <c>groundspeak</c> prefix.
+        /// The GPX files from Groundspeak contain this prefix so it should be enabled to achieve maximum compatibility with third party
+        /// applications that might not process the XML fully according to specification.
+        /// </summary>
+        public bool GeocacheNamespaceWithPrefix { get; set; }
     }
 }

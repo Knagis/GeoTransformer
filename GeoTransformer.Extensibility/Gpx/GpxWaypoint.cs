@@ -155,6 +155,8 @@ namespace GeoTransformer.Gpx
             {
                 if (options.GpxVersion == GpxVersion.Gpx_1_0)
                 {
+                    el.Add(this.Geocache.Serialize(options));
+
                     if (options.EnableUnsupportedExtensions)
                         foreach (var ext in this.ExtensionAttributes)
                             el.Add(new XAttribute(ext));
@@ -169,9 +171,25 @@ namespace GeoTransformer.Gpx
                             el.Add(new XAttribute(attr));
 
                     var extel = new XElement(options.GpxNamespace + "extensions");
+                    el.Add(this.Geocache.Serialize(options));
+
                     foreach (var elem in this.ExtensionElements)
                         extel.Add(new XElement(elem));
 
+                    if (!extel.IsEmpty)
+                        el.Add(extel);
+                }
+            }
+            else
+            {
+                if (options.GpxVersion == GpxVersion.Gpx_1_0)
+                {
+                    el.Add(this.Geocache.Serialize(options));
+                }
+                else
+                {
+                    var extel = new XElement(options.GpxNamespace + "extensions");
+                    extel.Add(this.Geocache.Serialize(options));
                     if (!extel.IsEmpty)
                         el.Add(extel);
                 }

@@ -712,6 +712,15 @@ Thank you.</groundspeak:text>
 
             Assert.AreEqual(4, gpxDoc.Waypoints.SelectMany(o => o.Geocache.Logs).SelectMany(o => o.Images).Count());
             Assert.AreEqual(1, gpxDoc.Waypoints[0].Geocache.Trackables.Count);
+
+            var options = GeoTransformer.Gpx.GpxSerializationOptions.Compatibility;
+            options.GeocacheVersion = GeoTransformer.Gpx.GeocacheVersion.Geocache_1_0_2;
+            var serialized = gpxDoc.Serialize(options);
+
+            var caches = serialized.Root.Elements(XmlExtensions.GpxSchema_1_0 + "wpt").Elements(XmlExtensions.GeocacheSchema_1_0_2 + "cache");
+            Assert.AreEqual(1, caches.Count());
+            var cache = caches.First();
+            Assert.AreEqual(6, cache.Descendants(XmlExtensions.GeocacheSchema_1_0_2 + "image").Count());
         }
     }
 }

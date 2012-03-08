@@ -70,7 +70,8 @@ namespace GeoTransformer.Gpx
         /// <returns>The serialized object or <c>null</c> if this object is empty.</returns>
         public XElement Serialize(GpxSerializationOptions options)
         {
-            var el = new XElement(options.GeocacheNamespace + "attribute");
+            var ns = options.GeocacheVersion == GeocacheVersion.Geocache_1_0_0 ? XmlExtensions.GeocacheSchema_1_0_1 : options.GeocacheNamespace;
+            var el = new XElement(ns + "attribute");
 
             // the schema specifies that the ID is mandatory but we will assume that the data provider will make sure of that and
             // also because many applications will probably not care about the ID, just the name.

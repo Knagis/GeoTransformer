@@ -126,10 +126,111 @@ namespace GeoTransformer.Gpx
         {
             var el = new XElement(options.GeocacheNamespace + "cache");
 
-            // TODO: implement serialization.
+            // although ID is a required attribute we assume that the target application might not care about it
+            // as long as other information is present
+            if (this.Id.HasValue) el.Add(new XAttribute("id", this.Id.Value));
+
+            // serialize attributes that are new in 1.0.2 version
+            if (options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2)
+            {
+                if (this.MemberOnly.HasValue)
+                    el.Add(new XAttribute("memberonly", this.MemberOnly));
+
+                if (this.CustomCoordinates.HasValue)
+                    el.Add(new XAttribute("customcoords", this.CustomCoordinates));
+            }
+            else if (options.EnableUnsupportedExtensions)
+            {
+                if (this.MemberOnly.HasValue)
+                    el.Add(new XAttribute(XmlExtensions.GeocacheSchema_1_0_2 + "memberonly", this.MemberOnly));
+
+                if (this.CustomCoordinates.HasValue)
+                    el.Add(new XAttribute(XmlExtensions.GeocacheSchema_1_0_2 + "customcoords", this.CustomCoordinates));
+            }
+
+            // only add the non-default values - needed for the el.IsEmpty check.
+            if (!this.Available) el.Add(new XAttribute("available", this.Available));
+            if (this.Archived) el.Add(new XAttribute("archived", this.Archived));
+
+            // add the child elements
+            if (!string.IsNullOrEmpty(this.Name)) el.Add(new XElement(options.GeocacheNamespace + "name", this.Name));
+            if (!string.IsNullOrEmpty(this.PlacedBy)) el.Add(new XElement(options.GeocacheNamespace + "placed_by", this.PlacedBy));
+            el.Add(this.Owner.Serialize(options));
+            el.Add(this.CacheType.Serialize(options));
+            el.Add(this.Container.Serialize(options));
+            
+            if (this.Attributes.Count > 0 && (options.GeocacheVersion != GeocacheVersion.Geocache_1_0_0 || options.EnableUnsupportedExtensions))
+            {
+                var ns = options.GeocacheVersion == GeocacheVersion.Geocache_1_0_0 ? XmlExtensions.GeocacheSchema_1_0_1 : options.GeocacheNamespace;
+                var attributes = new XElement(ns + "attributes");
+                foreach (var attr in this.Attributes)
+                    attributes.Add(attr.Serialize(options));
+                if (!attributes.IsEmpty)
+                    el.Add(attributes);
+            }
+
+            if (this.Difficulty.HasValue) el.Add(new XElement(options.GeocacheNamespace + "difficulty", this.Difficulty.Value));
+            if (this.Terrain.HasValue) el.Add(new XElement(options.GeocacheNamespace + "terrain", this.Terrain.Value));
+            if (!string.IsNullOrEmpty(this.Country)) el.Add(new XElement(options.GeocacheNamespace + "country", this.Country));
+            if (!string.IsNullOrEmpty(this.CountryState)) el.Add(new XElement(options.GeocacheNamespace + "state", this.CountryState));
+            el.Add(this.ShortDescription.Serialize(options, "short_description"));
+            el.Add(this.LongDescription.Serialize(options, "long_description"));
+            if (!string.IsNullOrEmpty(this.Hints)) el.Add(new XElement(options.GeocacheNamespace + "encoded_hints", this.Hints));
+
+            if (!string.IsNullOrEmpty(this.PersonalNote) && (options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2 || options.EnableUnsupportedExtensions))
+                el.Add(new XElement(XmlExtensions.GeocacheSchema_1_0_2 + "personal_note", this.PersonalNote));
+
+            if (this.FavoritePoints.HasValue && (options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2 || options.EnableUnsupportedExtensions))
+                el.Add(new XElement(XmlExtensions.GeocacheSchema_1_0_2 + "favorite_points", this.FavoritePoints));
+
+            if (this.Logs.Count > 0)
+            {
+                var logs = new XElement(options.GeocacheNamespace + "logs");
+                foreach (var log in this.Logs)
+                    logs.Add(log.Serialize(options));
+                if (!logs.IsEmpty)
+                    el.Add(logs);
+            }
+
+            if (this.Trackables.Count > 0)
+            {
+                var travelbugs = new XElement(options.GeocacheNamespace + "travelbugs");
+                foreach (var travelbug in this.Trackables)
+                    travelbugs.Add(travelbug.Serialize(options));
+                if (!travelbugs.IsEmpty)
+                    el.Add(travelbugs);
+            }
+
+            if (this.Images.Count > 0 && (options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2 || options.EnableUnsupportedExtensions))
+            {
+                var images = new XElement(XmlExtensions.GeocacheSchema_1_0_2 + "images");
+                foreach (var img in this.Images)
+                    images.Add(img.Serialize(options));
+
+                if (!images.IsEmpty)
+                    el.Add(images);
+            }
+
+            if (!options.DisableExtensions)
+            {
+                if (options.EnableUnsupportedExtensions)
+                    foreach (var attr in this.ExtensionAttributes)
+                        el.Add(new XAttribute(attr));
+
+                foreach (var elem in this.ExtensionElements)
+                    el.Add(new XElement(elem));
+            }
 
             if (el.IsEmpty)
                 return null;
+
+            if (options.GeocacheNamespaceWithPrefix) el.Add(new XAttribute(XNamespace.Xmlns + "groundspeak", options.GeocacheNamespace));
+
+            // add the non-default values as well
+            if (this.Available) el.Add(new XAttribute("available", this.Available));
+            if (!this.Archived) el.Add(new XAttribute("archived", this.Archived));
+
+
             return el;
         }
 
