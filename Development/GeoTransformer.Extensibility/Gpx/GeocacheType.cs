@@ -50,7 +50,7 @@ namespace GeoTransformer.Gpx
 
             // the schema specifies that the ID is mandatory but we will assume that the data provider will make sure of that and
             // also because most applications will probably not care about the ID, just the name.
-            if (this.Id.HasValue)
+            if (this.Id.HasValue && (options.EnableInvalidElements || options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2))
                 el.Add(new XAttribute("id", this.Id.Value));
 
             if (!string.IsNullOrEmpty(this.Name))
