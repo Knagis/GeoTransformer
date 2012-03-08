@@ -152,6 +152,7 @@
     <Compile Include="Extensions\ISaveData.cs" />
     <Compile Include="Extensions\ITransformer.cs" />
     <Compile Include="Extensions\ITransformerWithPopup.cs" />
+    <Compile Include="Gpx\GeocacheTrackable.cs" />
     <Compile Include="Gpx\GeocacheImage.cs" />
     <Compile Include="Gpx\GeocacheLogText.cs" />
     <Compile Include="Gpx\GeocacheLogType.cs" />
