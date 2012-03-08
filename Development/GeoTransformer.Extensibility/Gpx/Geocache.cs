@@ -93,7 +93,9 @@ namespace GeoTransformer.Gpx
 
             { XmlExtensions.GeocacheSchema_1_0_2 + "images", (o, e) => o.Images = GeocacheImage.Parse(e) },
 
-            // travelbugs, travelbugs-travelbug
+            { XmlExtensions.GeocacheSchema_1_0_0 + "travelbugs", (o, e) => o.Trackables = GeocacheTrackable.Parse(e) },
+            { XmlExtensions.GeocacheSchema_1_0_1 + "travelbugs", (o, e) => o.Trackables = GeocacheTrackable.Parse(e) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "travelbugs", (o, e) => o.Trackables = GeocacheTrackable.Parse(e) },
         };
 
         /// <summary>
@@ -122,7 +124,13 @@ namespace GeoTransformer.Gpx
         /// <returns>The serialized XML object or <c>null</c> if there is no data in this object.</returns>
         public XElement Serialize(GpxSerializationOptions options)
         {
-            return null;
+            var el = new XElement(options.GeocacheNamespace + "cache");
+
+            // TODO: implement serialization.
+
+            if (el.IsEmpty)
+                return null;
+            return el;
         }
 
         /// <summary>
@@ -342,6 +350,15 @@ namespace GeoTransformer.Gpx
         {
             get { return this.GetValue<ObservableCollection<GeocacheLog>>("Logs", true); }
             private set { this.SetValue("Logs", (ObservableCollection<GeocacheLog>)value); }
+        }
+
+        /// <summary>
+        /// Gets the trackables currently logged in this geocache.
+        /// </summary>
+        public IList<GeocacheTrackable> Trackables
+        {
+            get { return this.GetValue<ObservableCollection<GeocacheTrackable>>("Trackables", true); }
+            private set { this.SetValue("Trackables", (ObservableCollection<GeocacheTrackable>)value); }
         }
 
     }

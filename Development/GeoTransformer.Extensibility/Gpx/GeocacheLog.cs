@@ -126,7 +126,7 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Gets or sets the ID of the cache type.
+        /// Gets or sets the ID of the geocache log (visit).
         /// </summary>
         public int? Id
         {

@@ -401,10 +401,14 @@ Pele_ ( Elina &amp; Elviss )</groundspeak:text>
         {
             #region [ XML init ]
             var xml = XDocument.Parse(@"<?xml version=""1.0"" encoding=""utf-8""?>
-<gpx xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
-xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" version=""1.0"" creator=""Groundspeak, Inc. All Rights 
-Reserved. http://www.groundspeak.com"" xsi:schemaLocation=""http://www.topografix.com/GPX/1/0 
-http://www.topografix.com/GPX/1/0/gpx.xsd http://www.groundspeak.com/cache/1/0/2 
+<gpx xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+
+xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" version=""1.0"" creator=""Groundspeak, Inc. All Rights 
+
+Reserved. http://www.groundspeak.com"" xsi:schemaLocation=""http://www.topografix.com/GPX/1/0 
+
+http://www.topografix.com/GPX/1/0/gpx.xsd http://www.groundspeak.com/cache/1/0/2 
+
 http://www.groundspeak.com/cache/1/0/2/cache.xsd"" xmlns=""http://www.topografix.com/GPX/1/0"">
   <name>Cache Listing Generated from Geocaching.com</name>
   <desc>This is an individual cache generated from Geocaching.com</desc>
@@ -423,7 +427,8 @@ http://www.groundspeak.com/cache/1/0/2/cache.xsd"" xmlns=""http://www.topografix
     <urlname>Jenkins Creek</urlname>
     <sym>Geocache</sym>
     <type>Geocache|Traditional Cache</type>
-    <groundspeak:cache id=""GCHYX1"" available=""true"" archived=""false"" memberonly=""true"" 
+    <groundspeak:cache id=""GCHYX1"" available=""true"" archived=""false"" memberonly=""true"" 
+
 customcoords=""true"" xmlns:groundspeak=""http://www.groundspeak.com/cache/1/0/2"">
       <groundspeak:name>Jenkins Creek</groundspeak:name>
       <groundspeak:placed_by>Prying Pandora</groundspeak:placed_by>
@@ -447,9 +452,11 @@ customcoords=""true"" xmlns:groundspeak=""http://www.groundspeak.com/cache/1/0/2
       <groundspeak:terrain>2.5</groundspeak:terrain>
       <groundspeak:country>United States</groundspeak:country>
       <groundspeak:state>Washington</groundspeak:state>
-      <groundspeak:short_description html=""true"">A beautiful, hidden 
+      <groundspeak:short_description html=""true"">A beautiful, hidden 
+
 park</groundspeak:short_description>
-      <groundspeak:long_description html=""true"">Jenkins Creek Park is a beautiful place with nice 
+      <groundspeak:long_description html=""true"">Jenkins Creek Park is a beautiful place with nice 
+
 trails. There is
 a pond, bridges, and the trail is lined with tulips and daffodils
 in the spring. The trail varies between hard-packed dirt and
@@ -470,10 +477,14 @@ be discreet and completely re-cover the cache!&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;Parking and trail head are at N47° 21.734 W122° 06.003&lt;br /&gt;
 NOTE: This entrance is currently closed.&lt;br /&gt;
 Alternative parking and trail head are at N 47° 21.750 W 122°
-05.710&lt;/p&gt;&lt;p&gt;Additional Hidden Waypoints&lt;/p&gt;APHYX1 - Alternative parking for 
-GCHYX1 Jenkins Creek&lt;br /&gt;N 47° 21.750 W 122° 05.710&lt;br /&gt;Alternative parking for 
-GCHYX1 Jenkins Creek&lt;br /&gt;JCHYX1 - Parking for GCHYX1 Jenkins Creek&lt;br /&gt;N 47° 21.734 
-W 122° 06.003&lt;br /&gt;Parking and trailhead for GCHYX1 Jenkins Creek  THIS ENTRANCE IS 
+05.710&lt;/p&gt;&lt;p&gt;Additional Hidden Waypoints&lt;/p&gt;APHYX1 - Alternative parking for 
+
+GCHYX1 Jenkins Creek&lt;br /&gt;N 47° 21.750 W 122° 05.710&lt;br /&gt;Alternative parking for 
+
+GCHYX1 Jenkins Creek&lt;br /&gt;JCHYX1 - Parking for GCHYX1 Jenkins Creek&lt;br /&gt;N 47° 21.734 
+
+W 122° 06.003&lt;br /&gt;Parking and trailhead for GCHYX1 Jenkins Creek  THIS ENTRANCE IS 
+
 CURRENTLY CLOSED&lt;br /&gt;
     </groundspeak:long_description>
       <groundspeak:encoded_hints>Under small log next to stump</groundspeak:encoded_hints>
@@ -484,7 +495,8 @@ CURRENTLY CLOSED&lt;br /&gt;
           <groundspeak:date>2011-09-19T18:35:52Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">sleepyplague2</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Spider webs get out of my way i need a cache! Tfth 
+          <groundspeak:text encoded=""false"">Spider webs get out of my way i need a cache! Tfth 
+
 and the new friends.</groundspeak:text>
           <groundspeak:log_wpt lat=""48.122046"" lon=""-122.483268""/>
         </groundspeak:log>
@@ -492,30 +504,36 @@ and the new friends.</groundspeak:text>
           <groundspeak:date>2011-09-08T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">PhilNi</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Our planned destination today was the Covington area 
-but we stopped for a few along the way. Seemed like we struggled all day taking much too long on 
-easy caches and DNF more than usual.  Nice park.  Nettles got me but it wasn't exactly the first 
+          <groundspeak:text encoded=""false"">Our planned destination today was the Covington area 
+
+but we stopped for a few along the way. Seemed like we struggled all day taking much too long on 
+
+easy caches and DNF more than usual.  Nice park.  Nettles got me but it wasn't exactly the first 
+
 time today...  TFTC.</groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYX3"">
           <groundspeak:date>2011-09-06T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">MikenChristina7</groundspeak:finder>
-          <groundspeak:text encoded=""false"">FOUND IT WHILE PICKIN UP HAILEY 
+          <groundspeak:text encoded=""false"">FOUND IT WHILE PICKIN UP HAILEY 
+
 TFTC</groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYX4"">
           <groundspeak:date>2011-08-22T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">Subman123</groundspeak:finder>
-          <groundspeak:text encoded=""false"">What a nice park. I enjoyed the walk around the park 
+          <groundspeak:text encoded=""false"">What a nice park. I enjoyed the walk around the park 
+
 and finding the two caches. Thanks Prying Pandora</groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYX5"">
           <groundspeak:date>2011-08-21T20:58:37Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">thewallys</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Had some trouble getting to this one, but we found 
+          <groundspeak:text encoded=""false"">Had some trouble getting to this one, but we found 
+
 it! We did not see a TB in the cache. TNLNSL. 
 Have a nice day!
 ~The Wallys</groundspeak:text>
@@ -530,14 +548,16 @@ Have a nice day!
           <groundspeak:date>2011-08-06T16:02:44Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">3GeoCats</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Nice camo.  Just a few avoidable nettles.  No TB.  
+          <groundspeak:text encoded=""false"">Nice camo.  Just a few avoidable nettles.  No TB.  
+
 TNLNSL.  TFTC.  </groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYX8"">
           <groundspeak:date>2011-07-31T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">elsworj</groundspeak:finder>
-          <groundspeak:text encoded=""false"">I had to maneuver around the nettles in order to make 
+          <groundspeak:text encoded=""false"">I had to maneuver around the nettles in order to make 
+
 the find, but nice hiding spot.</groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYX9"">
@@ -556,16 +576,20 @@ the find, but nice hiding spot.</groundspeak:text>
           <groundspeak:date>2011-06-13T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">wearesoclose</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Well, well off the trail but still a good cache!
+          <groundspeak:text encoded=""false"">Well, well off the trail but still a good cache!
+
 </groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYXC"">
           <groundspeak:date>2011-06-12T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">Brasstax</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Very nice park, loved the entrance sign.  My gpsr was 
-acting up all day, so it was lucky that Libertyfan76 had his to get us in the right direction.  
-Loved the camo.  Despite the nice day, we only passed one other couple as we were walking along.  
+          <groundspeak:text encoded=""false"">Very nice park, loved the entrance sign.  My gpsr was 
+
+acting up all day, so it was lucky that Libertyfan76 had his to get us in the right direction.  
+
+Loved the camo.  Despite the nice day, we only passed one other couple as we were walking along.  
+
 TFTC!</groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYXD"">
@@ -578,7 +602,8 @@ TFTC!</groundspeak:text>
           <groundspeak:date>2011-06-12T22:05:10Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">Libertyfan76</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Nice hide very creative! Neat park! TFTC!
+          <groundspeak:text encoded=""false"">Nice hide very creative! Neat park! TFTC!
+
 </groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYXF"">
@@ -592,7 +617,8 @@ TFTC!</groundspeak:text>
           <groundspeak:date>2011-05-25T01:50:11Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">k3rdgeer</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Thanks dgwphotos for the assist or we would still be 
+          <groundspeak:text encoded=""false"">Thanks dgwphotos for the assist or we would still be 
+
 in the woods. Kids took three toys and left three new toys. Great fun.</groundspeak:text>
           <groundspeak:images>
             <groundspeak:image>
@@ -609,18 +635,24 @@ in the woods. Kids took three toys and left three new toys. Great fun.</groundsp
           <groundspeak:date>2011-05-08T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">vanfam111</groundspeak:finder>
-          <groundspeak:text encoded=""false"">First time geocaching and this was a good find for 
+          <groundspeak:text encoded=""false"">First time geocaching and this was a good find for 
+
 the family. It was exactly what we needed to start off.</groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYXI"">
           <groundspeak:date>2011-05-05T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">JohnTubbsMB</groundspeak:finder>
-          <groundspeak:text encoded=""false"">Don't get down this way to geocache too often, but 
-needed to return a cache I found in Cougar Mtn. Park to Dgwphotos, the CO.  (Strange situation - 
-the cache migrated to a different part of the park and was hanging in plain sight from a tree, 
-yet had the original log book and was stuffed with a bunch of other stuff.)  Nice to meet 
-Dgwphotos, who accompanied me to this find and another cache of his nearby.  Thanks!
+          <groundspeak:text encoded=""false"">Don't get down this way to geocache too often, but 
+
+needed to return a cache I found in Cougar Mtn. Park to Dgwphotos, the CO.  (Strange situation - 
+
+the cache migrated to a different part of the park and was hanging in plain sight from a tree, 
+
+yet had the original log book and was stuffed with a bunch of other stuff.)  Nice to meet 
+
+Dgwphotos, who accompanied me to this find and another cache of his nearby.  Thanks!
+
 </groundspeak:text>
         </groundspeak:log>
         <groundspeak:log id=""GLHYXJ"">
@@ -633,9 +665,12 @@ Dgwphotos, who accompanied me to this find and another cache of his nearby.  Tha
           <groundspeak:date>2011-04-19T19:00:00Z</groundspeak:date>
           <groundspeak:type id=""2"">Found it</groundspeak:type>
           <groundspeak:finder id=""PRHYX1"">uxorious</groundspeak:finder>
-          <groundspeak:text encoded=""false"">What a pretty little park, and I picked a rather nice 
-day to check it out. I've lived in the Covington area for 30 years or so, and never have seen 
-this park. (Or at least this part of it. There used to be a cache at the other side of it, now 
+          <groundspeak:text encoded=""false"">What a pretty little park, and I picked a rather nice 
+
+day to check it out. I've lived in the Covington area for 30 years or so, and never have seen 
+
+this park. (Or at least this part of it. There used to be a cache at the other side of it, now 
+
 archived.)
 
 Really enjoyed my walk today, and the cache was very well done.
@@ -676,6 +711,7 @@ Thank you.</groundspeak:text>
             var gpxDoc = new GeoTransformer.Gpx.GpxDocument(xml);
 
             Assert.AreEqual(4, gpxDoc.Waypoints.SelectMany(o => o.Geocache.Logs).SelectMany(o => o.Images).Count());
+            Assert.AreEqual(1, gpxDoc.Waypoints[0].Geocache.Trackables.Count);
         }
     }
 }
