@@ -78,19 +78,16 @@ namespace GeoTransformer.Viewers.BingMaps
                 return uriB.Uri;
             }
 
-            var cache = waypoint.CacheElement("cache");
-            if (cache == null)
-                return new Uri("about:blank");
+            var gpx = new Gpx.GpxWaypoint(waypoint);
 
-            var cacheType = cache.CacheElement("type").GetValue();
+            var cacheType = gpx.Geocache.CacheType.Name;
             if (string.IsNullOrEmpty(cacheType))
                 return new Uri("about:blank");
 
-            if (string.Equals(waypoint.WaypointElement("sym").GetValue(), "Geocache Found", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(gpx.Symbol, "Geocache Found", StringComparison.OrdinalIgnoreCase))
                 cacheType = "Found Cache";
 
-            bool enabled = !string.Equals(cache.GetAttributeValue("available"), "false", StringComparison.OrdinalIgnoreCase)
-                            && string.Equals(cache.GetAttributeValue("archived"), "false", StringComparison.OrdinalIgnoreCase);
+            bool enabled = !gpx.Geocache.Archived && gpx.Geocache.Available;
 
             cacheType = cacheType.Replace(" ", "").Replace("-", "");
 
@@ -199,9 +196,9 @@ namespace GeoTransformer.Viewers.BingMaps
             decimal maxLat = decimal.MinValue;
             decimal maxLon = decimal.MinValue;
 
-            foreach (var wpt in data.SelectMany(o => o.Root.WaypointElements("wpt")))
+            foreach (var wpt in data.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt")))
             {
-                if (wpt.CacheElement("cache") != null)
+                if (wpt.Element(XmlExtensions.GeocacheSchema_1_0_1 + "cache") != null)
                 {
                     if (string.Equals(wpt.GetAttributeValue(XmlExtensions.GeoTransformerSchema + "EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -232,9 +229,9 @@ namespace GeoTransformer.Viewers.BingMaps
             decimal maxLat = decimal.MinValue;
             decimal maxLon = decimal.MinValue;
 
-            foreach (var wpt in data.SelectMany(o => o.Root.WaypointElements("wpt")))
+            foreach (var wpt in data.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt")))
             {
-                if (wpt.CacheElement("cache") != null)
+                if (wpt.Element(XmlExtensions.GeocacheSchema_1_0_1 + "cache") != null)
                 {
                     if (string.Equals(wpt.GetAttributeValue(XmlExtensions.GeoTransformerSchema + "EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -254,7 +251,7 @@ namespace GeoTransformer.Viewers.BingMaps
         {
             var lat = waypoint.Attribute("lat").GetValue();
             var lon = waypoint.Attribute("lon").GetValue();
-            var name = waypoint.WaypointElement("name").GetValue();
+            var name = waypoint.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
 
             if (string.IsNullOrWhiteSpace(lat) || string.IsNullOrWhiteSpace(lon) || string.IsNullOrWhiteSpace(name))
                 return;
@@ -275,7 +272,7 @@ namespace GeoTransformer.Viewers.BingMaps
 
             var icon = this.CreateCacheIconUri(waypoint);
 
-            var desc = waypoint.WaypointElement("desc").GetValue();
+            var desc = waypoint.Element(XmlExtensions.GpxSchema_1_1 + "desc").GetValue();
 
             sb.AppendLine("createPP("+lat+", "+lon+", '"+ name.Replace("'", @"\'") +"', '" + icon.Segments[icon.Segments.Length-1] +"', '" + desc.Replace("'", @"\'") + "')");
         }

@@ -39,11 +39,10 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="link">The link element (GPX 1.1).</param>
         public GpxLink(XElement link)
+            : base(true)
         {
-            if (link == null || link.Name.Namespace != XmlExtensions.GpxSchema_1_1)
-                return;
-
             this.Initialize(link, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>

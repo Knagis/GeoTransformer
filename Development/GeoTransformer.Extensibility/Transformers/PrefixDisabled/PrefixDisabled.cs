@@ -12,6 +12,10 @@ using GeoTransformer.Extensions;
 
 namespace GeoTransformer.Transformers.PrefixDisabled
 {
+    /// <summary>
+    /// Transformer that adds a configurable prefix to any disabled or archived caches. It modifies <see cref="Gpx.Geocache.Name"/>
+    /// property.
+    /// </summary>
     public class PrefixDisabled : TransformerBase, IConfigurable
     {
         private int _count;
@@ -33,29 +37,37 @@ namespace GeoTransformer.Transformers.PrefixDisabled
             get { return Transformers.ExecutionOrder.Process; }
         }
 
-        public override void Process(IList<System.Xml.Linq.XDocument> xmlFiles, TransformerOptions options)
+        /// <summary>
+        /// Processes the specified GPX document. If the method is not overriden in the derived class,
+        /// calls <see cref="Process(Gpx.GpxWaypoint, Transformers.TransformerOptions)"/> for each waypoint in the document.
+        /// </summary>
+        /// <param name="document">The document that has to be processed.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        protected override void Process(Gpx.GpxDocument document, TransformerOptions options)
         {
             this._count = 0;
-            base.Process(xmlFiles, options);
-
+            base.Process(document, options);
             this.ReportStatus(this._count + " disabled cache" + ((this._count % 10 == 1 && this._count != 11) ? string.Empty : "s") + " prefixed.");
         }
 
-        public override void Process(XDocument xml)
+        /// <summary>
+        /// Processes the specified GPX waypoint.
+        /// </summary>
+        /// <param name="waypoint">The waypoint that has to be processed.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        protected override void Process(Gpx.GpxWaypoint waypoint, TransformerOptions options)
         {
-            var prefix = this.Configuration.textBoxDisabledPrefix.Text + " ";
-            foreach (var c in xml.CacheDescendants("cache"))
-            {
-                var available = bool.Parse(c.Attribute("available").GetValue() ?? "true");
-                var archived = bool.Parse(c.Attribute("archived").GetValue() ?? "false");
+            var gc = waypoint.Geocache;
 
-                if (!available || archived)
-                {
-                    this._count++;
-                    var n = c.CacheElement("name");
-                    if (n != null && (n.Value == null || !n.Value.StartsWith(prefix, StringComparison.Ordinal)))
-                        n.Value = prefix + n.Value;
-                }
+            if (!gc.Available || gc.Archived)
+            {
+                this._count++;
+
+                var txt = this.Configuration.textBoxDisabledPrefix.Text;
+                if (string.IsNullOrWhiteSpace(gc.Name))
+                    gc.Name = txt;
+                else if (!gc.Name.Contains(txt))
+                    gc.Name = txt + " " + gc.Name;
             }
         }
 

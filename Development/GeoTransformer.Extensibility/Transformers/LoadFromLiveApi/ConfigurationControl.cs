@@ -96,7 +96,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                 var obj = this.listView.Objects;
 
                 if (obj == null)
-                    return new Query[0]; 
+                    return new Query[0];
 
                 return obj.OfType<Query>();
             }

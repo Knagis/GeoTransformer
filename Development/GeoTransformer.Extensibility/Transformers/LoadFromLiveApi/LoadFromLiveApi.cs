@@ -31,29 +31,39 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
         }
 
         /// <summary>
-        /// Processes the specified XML files. The default implementation calls <see cref="Process(XDocument)"/> for each file.
+        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
+        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
         /// </summary>
-        /// <param name="xmlFiles">The XML documents currently in the process. The list can be changed if needed</param>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
-        public override void Process(IList<System.Xml.Linq.XDocument> xmlFiles, TransformerOptions options)
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             var queries = this._configurationControl.Queries.ToList();
 
+            IEnumerable<Gpx.GpxDocument> data;
             if ((options & TransformerOptions.UseLocalStorage) == TransformerOptions.UseLocalStorage)
-                this.LoadFromCache(xmlFiles, queries);
+                data = this.LoadFromCache(queries);
             else
-                this.LoadRegular(xmlFiles, queries);
+                data = this.LoadRegular(queries);
+
+            foreach (var gpx in data)
+                documents.Add(gpx);
         }
 
-        private void LoadFromCache(IList<System.Xml.Linq.XDocument> xmlFiles, IList<Query> queries)
+        /// <summary>
+        /// Loads all queries from cache ignoring those that cannot be found.
+        /// </summary>
+        /// <param name="queries">The queries that should be processed. All given queries will be processed.</param>
+        /// <returns>A list of GPX documents.</returns>
+        private IEnumerable<Gpx.GpxDocument> LoadFromCache(IList<Query> queries)
         {
-            this.ReportStatus("{0} queries pending", queries.Count);
             int cached = 0;
             int notAvailable = 0;
             int wptCount = 0;
 
             foreach (var q in queries)
             {
+                this.ReportStatus("Loading '{0}'.", q.Title);
                 var cacheFile = System.IO.Path.Combine(this.LocalStoragePath, q.Id.ToString() + ".gpx");
                 if (!System.IO.File.Exists(cacheFile))
                 {
@@ -61,64 +71,91 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                 }
                 else
                 {
-                    var doc = Gpx.Loader.Gpx(cacheFile);
-                    wptCount += doc.CacheDescendants("cache").Count() / 2; // divide because of the CachedCopy elements.
-                    xmlFiles.Add(doc);
+                    var gpx = Gpx.Loader.Gpx(cacheFile);
+                    gpx.Metadata.OriginalFileName = q.Title + ".gpx";
+                    wptCount += gpx.Waypoints.Count(o => o.Geocache.IsDefined());
                     cached++;
+                    yield return gpx;
                 }
 
-                this.ReportStatus("{0} queries pending, {1} cached, {2} not available", queries.Count - cached - notAvailable, cached, notAvailable);
+                this.ReportProgress(cached + notAvailable, queries.Count);
             }
 
-            this.ReportStatus("{0}/{1} queries loaded, {2} caches", cached, queries.Count, wptCount);
+            if (notAvailable > 0)
+                this.ReportStatus(StatusSeverity.Warning, "{0}/{1} queries loaded, {2} caches", cached, queries.Count, wptCount);
+            else
+                this.ReportStatus(StatusSeverity.Information, "{0} queries loaded, {1} caches", queries.Count, wptCount);
         }
 
-        private void LoadRegular(IList<System.Xml.Linq.XDocument> xmlFiles, IList<Query> queries)
+        /// <summary>
+        /// Loads all queries from cache. Queries that cannot be found (or cannot be downloaded) are loaded from cache or ignored.
+        /// </summary>
+        /// <param name="queries">The queries that should be processed. All given queries will be processed.</param>
+        /// <returns>A list of GPX documents.</returns>
+        private IEnumerable<Gpx.GpxDocument> LoadRegular(IList<Query> queries)
         {
             if (!GeocachingService.LiveClient.IsEnabled)
-                this.ReportStatus(true, "Live API is not enabled");
+                this.ReportStatus(StatusSeverity.Error, "Live API is not enabled.");
 
-            this.ReportStatus("{0} queries pending", queries.Count);
             int cached = 0;
             int downloaded = 0;
             int wptCount = 0;
+            int notAvailable = 0;
 
             foreach (var q in queries)
             {
+                this.ReportStatus("Loading {0}/{1}: '{2}'.", queries.Count - notAvailable - cached - downloaded, queries.Count, q.Title);
+
                 var cacheFile = System.IO.Path.Combine(this.LocalStoragePath, q.Id.ToString() + ".gpx");
                 var age = DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(cacheFile)).TotalHours;
-                if (age < 18)
+                
+                Gpx.GpxDocument gpx = null;
+                if (age > 18)
                 {
-                    var doc = Gpx.Loader.Gpx(cacheFile);
-                    wptCount += doc.CacheDescendants("cache").Count() / 2; // divide because of the CachedCopy elements.
-                    xmlFiles.Add(doc);
-                    cached++;
-                }
-                else
-                {
-                    var doc = DownloadQuery(q);
-                    wptCount += doc.CacheDescendants("cache").Count() / 2; // divide because of the CachedCopy elements.
-                    xmlFiles.Add(doc);
-                    downloaded++;
-                    doc.Save(cacheFile);
+                    gpx = DownloadQuery(q);
+                    if (gpx != null)
+                    {
+                        gpx.Metadata.OriginalFileName = q.Title + ".gpx";
+                        wptCount += gpx.Waypoints.Count(o => o.Geocache.IsDefined());
+                        downloaded++;
+                        gpx.Serialize(Gpx.GpxSerializationOptions.Roundtrip).Save(cacheFile);
+                        yield return gpx;
+                    }
                 }
 
-                this.ReportStatus("{0} queries pending, {1} cached, {2} downloaded", queries.Count - cached - downloaded, cached, downloaded);
+                // if there was an error while downloading the query, it should also be loaded from cache.
+                if (gpx == null && System.IO.File.Exists(cacheFile))
+                {
+                    gpx = Gpx.Loader.Gpx(cacheFile);
+                    gpx.Metadata.OriginalFileName = q.Title + ".gpx";
+                    wptCount += gpx.Waypoints.Count(o => o.Geocache.IsDefined());
+                    cached++;
+                    yield return gpx;
+                }
+
+                if (gpx == null)
+                    notAvailable++;
             }
 
-            this.ReportStatus("{0} cached, {1} downloaded, {2} caches", cached, downloaded, wptCount);
+            if (notAvailable > 0)
+                this.ReportStatus(StatusSeverity.Warning, "{0} cached, {1} downloaded, {2} not available, {3} caches", cached, downloaded, notAvailable, wptCount);
+            else
+                this.ReportStatus(StatusSeverity.Information, "{0} cached, {1} downloaded, {2} caches", cached, downloaded, wptCount);
         }
 
-        private System.Xml.Linq.XDocument DownloadQuery(Query q)
+        private Gpx.GpxDocument DownloadQuery(Query q)
         {
-            var doc = Gpx.Loader.CreateEmptyDocument(q.Id.ToString() + ".gpx");
+            var gpx = new Gpx.GpxDocument();
             int perPage = 15;
 
             using (var service = GeocachingService.LiveClient.CreateClientProxy())
             {
                 var basic = service.IsBasicMember();
                 if (!basic.HasValue)
-                    this.ReportStatus(true, "Live API is not available.");
+                {
+                    this.ReportStatus(StatusSeverity.Warning, "Cannot download '{0}' because Live API is not available.", q.Title);
+                    return null;
+                }
 
                 int loaded = 0;
 
@@ -140,10 +177,10 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                 while (result.Status.StatusCode == 0)
                 {
                     foreach (var gc in result.Geocaches)
-                        doc.Root.Add(Gpx.Loader.Convert(gc));
+                        gpx.Waypoints.Add(new Gpx.GpxWaypoint(gc));
 
                     loaded += result.Geocaches.Length;
-                    this.ReportStatus("Downloading: {0}% of {1}", loaded * 100 / q.MaximumCaches, q.Title);
+                    this.ReportProgress(loaded, q.MaximumCaches);
 
                     // if the maximum has been loaded or there are no more caches to be loaded, break.
                     if (result.Geocaches.Length == 0 || loaded >= q.MaximumCaches)
@@ -155,12 +192,15 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                 }
 
                 if (result.Status.StatusCode != 0)
-                    this.ReportStatus(true, result.Status.StatusMessage);
+                {
+                    this.ReportStatus(StatusSeverity.Warning, "Unable to download '{0}': " + result.Status.StatusMessage);
+                    return null;
+                }
 
                 q.LastDownloadCacheCount = loaded;
             }
 
-            return doc;
+            return gpx;
         }
 
         private ConfigurationControl _configurationControl;

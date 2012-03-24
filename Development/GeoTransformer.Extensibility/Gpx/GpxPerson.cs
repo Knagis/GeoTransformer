@@ -34,11 +34,12 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="person">The XML element containing the person description (GPX 1.1).</param>
         public GpxPerson(XElement person)
+            :base(true)
         {
-            if (person == null || person.Name.Namespace != XmlExtensions.GpxSchema_1_1)
-                return;
+            if (person != null)
+                this.Initialize(person, null, _elementInitializers);
 
-            this.Initialize(person, null, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>

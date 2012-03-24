@@ -17,41 +17,63 @@ namespace GeoTransformer.Gpx
     /// </summary>
     public static class Loader
     {
-        #region [ Standard GPX file load ]
+        #region [ GPX files ]
 
-        public static XDocument Gpx(string fileName)
+        /// <summary>
+        /// Loads a <see cref="Gpx.GpxDocument"/> from the given file name.
+        /// This method sets <see cref="GpxMetadata.OriginalFileName"/> property.
+        /// </summary>
+        /// <param name="fileName">Path to the GPX file.</param>
+        /// <returns>A GPX document with data from the file.</returns>
+        public static Gpx.GpxDocument Gpx(string fileName)
         {
-            var xml = XDocument.Load(fileName, LoadOptions.PreserveWhitespace);
-            xml.Root.SetAttributeValue("originalFileName", Path.GetFileName(fileName));
-            PostProcess(xml);
-            return xml;
-        }
-
-        public static XDocument Gpx(Stream stream, string originalFileName)
-        {
-            var xml = XDocument.Load(stream, LoadOptions.PreserveWhitespace);
-            xml.Root.SetAttributeValue("originalFileName", originalFileName);
-            PostProcess(xml);
-            return xml;
+            var gpx = new GpxDocument(XDocument.Load(fileName));
+            gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(fileName);
+            return gpx;
         }
 
         #endregion
 
         #region [ ZIP archives ]
 
-        public static IEnumerable<XDocument> Zip(string fileName)
+        /// <summary>
+        /// Unzips all GPX files from the specified ZIP archive and loads them into <see cref="Gpx.GpxDocument"/> instances.
+        /// All files with extension other than <c>.gpx</c> are ignored.
+        /// </summary>
+        /// <param name="fileName">Path to the ZIP file.</param>
+        /// <returns>GPX documents with data from the archive.</returns>
+        public static IEnumerable<Gpx.GpxDocument> Zip(string fileName)
         {
             using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fileName))
                 foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry zipEntry in zip)
+                {
+                    if (!zipEntry.IsFile || !string.Equals(System.IO.Path.GetExtension(zipEntry.Name), ".gpx", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
                     using (var zips = zip.GetInputStream(zipEntry))
-                        yield return Gpx(zips, zipEntry.Name);
+                    {
+                        var gpx = new GpxDocument(XDocument.Load(zips));
+                        gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(zipEntry.Name);
+                        yield return gpx;
+                    }
+                }
         }
 
-        public static XDocument Zip(string fileName, string entry)
+        /// <summary>
+        /// Unzips the specified <paramref name="entry"/> from the ZIP archive and loads it into a <see cref="Gpx.GpxDocument"/>.
+        /// </summary>
+        /// <param name="fileName">Path to the ZIP file.</param>
+        /// <param name="entry">The name of the ZIP archive entry.</param>
+        /// <returns>GPX document with data from the archive entry.</returns>
+        public static Gpx.GpxDocument Zip(string fileName, string entry)
         {
             using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fileName))
             using (var zips = zip.GetInputStream(zip.GetEntry(entry)))
-                return Gpx(zips, entry);
+            {
+                var gpx = new GpxDocument(XDocument.Load(zips));
+                gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(entry);
+                return gpx;
+            }
         }
 
         #endregion
@@ -80,10 +102,10 @@ namespace GeoTransformer.Gpx
             wpt.SetElementValue(gpx + "sym", "Geocache");
             wpt.SetElementValue(gpx + "type", "Geocache|" + cacheType);
 
-            var groundspeak = XmlExtensions.GeocacheSchema101;
+            var groundspeak = XmlExtensions.GeocacheSchema_1_0_1;
             var cache = new XElement(groundspeak + "cache");
             // this line forces the output XML to include prefixes.
-            cache.SetAttributeValue(XNamespace.Xmlns + "groundspeak", XmlExtensions.GeocacheSchema101Clean);
+            cache.SetAttributeValue(XNamespace.Xmlns + "groundspeak", XmlExtensions.GeocacheSchema_1_0_1);
             wpt.Add(cache);
             cache.Add(new XAttribute("id", geocache.ID));
             cache.Add(new XAttribute("available", geocache.Available));
@@ -137,69 +159,7 @@ namespace GeoTransformer.Gpx
                     ));
             }
 
-
-
-            PostProcess(wpt);
             return wpt;
-        }
-
-        #endregion
-
-        #region [ Common functionality ]
-
-        /// <summary>
-        /// Creates a GPX document without any waypoints with just the basic information.
-        /// </summary>
-        public static XDocument CreateEmptyDocument(string fileName)
-        {
-            fileName = System.IO.Path.GetFileName(fileName);
-
-            var ns = XmlExtensions.GpxSchema_1_0;
-            var xml = new XDocument(new XElement(ns + "gpx"));
-
-            // set the namespace attributes so that the document is as close as possible to the default
-            // gpx files by geocaching.com
-            xml.Root.SetAttributeValue(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            xml.Root.SetAttributeValue(XNamespace.Xmlns + "xsd", "http://www.w3.org/2001/XMLSchema");
-            xml.Root.SetAttributeValue("{http://www.w3.org/2001/XMLSchema-instance}schemaLocation", "http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd http://www.groundspeak.com/cache/1/0/1 http://www.groundspeak.com/cache/1/0/1/cache.xsd");
-
-            xml.Root.SetAttributeValue("version", "1.0");
-            xml.Root.SetAttributeValue("creator", "GeoTransformer. http://knagis.miga.lv/GeoTransformer/");
-            xml.Root.SetAttributeValue("originalFileName", Path.GetFileName(fileName));
-            xml.Root.Add(new XElement(ns + "name", "Geocache listings generated by GeoTransformer"));
-            xml.Root.Add(new XElement(ns + "time", DateTime.Now.ToUniversalTime()));
-            xml.Root.Add(new XElement(ns + "keywords", "cache, geocache"));
-
-            PostProcess(xml);
-
-            return xml;
-        }
-
-        /// <summary>
-        /// Performs post-processing of the loaded waypoints (such as creating the cached copy).
-        /// </summary>
-        /// <param name="waypoints">The waypoints to process.</param>
-        private static void PostProcess(IEnumerable<XElement> waypoints)
-        {
-            if (waypoints == null)
-                return;
-
-            // .GetCachedCopy() creates the copy if it does not exist yet.
-            foreach (var wpt in waypoints)
-                wpt.GetCachedCopy();
-        }
-
-        private static void PostProcess(params XElement[] waypoints)
-        {
-            PostProcess((IEnumerable<XElement>)waypoints);
-        }
-
-        private static void PostProcess(XDocument document)
-        {
-            if (document == null)
-                return;
-
-            PostProcess(document.Root.WaypointElements("wpt"));
         }
 
         #endregion

@@ -131,6 +131,7 @@ namespace GeoTransformer
         private static void StartUpdateDownload(bool force)
         {
             var thread = new System.Threading.Thread(DownloadUpdateInner);
+            thread.Name = "AutoUpdater";
             thread.Start(force);
         }
 

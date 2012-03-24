@@ -37,11 +37,10 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="bounds">The bounds element from GPX 1.0 or GPX 1.1 specification.</param>
         public GpxBounds(XElement bounds)
+            : base(true)
         {
-            if (bounds == null)
-                return;
-
             this.Initialize(bounds, _attributeInitializers, null);
+            this.ResumeObservation();
         }
 
         /// <summary>

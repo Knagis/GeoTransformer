@@ -27,9 +27,9 @@ namespace GeoTransformer.Transformers.EditorExtensions
             {
                 table.Delete().Execute();
 
-                var extensionElements = xmlFiles.SelectMany(o => o.Root.WaypointElements("wpt"))
+                var extensionElements = xmlFiles.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt"))
                                                .SelectMany(o => o.Elements())
-                                               .Where(o => string.Equals(o.Name.NamespaceName, XmlExtensions.GeoTransformerSchemaClean))
+                                               .Where(o => o.Name.Namespace == XmlExtensions.GeoTransformerSchema)
                                                .Where(o => !string.Equals(o.Name.LocalName, "CachedCopy")); // the copy exists for all elements but is saved only for those that contain other extensions
 
                 var savedCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -38,7 +38,7 @@ namespace GeoTransformer.Transformers.EditorExtensions
                     if (!e.ContainsSignificantInformation())
                         continue;
 
-                    var name = e.Parent.WaypointElement("name").GetValue();
+                    var name = e.Parent.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
                     if (string.IsNullOrWhiteSpace(name))
                         continue;
 
@@ -52,10 +52,11 @@ namespace GeoTransformer.Transformers.EditorExtensions
                     {
                         savedCodes.Add(name);
 
-                        iq = table.Insert();
-                        iq.Value(o => o.CacheCode, name);
-                        iq.Value(o => o.Data, e.Parent.GetCachedCopy().Parent.ToString()); // .Parent makes sure that the extension element is saved, not the copy.
-                        iq.Execute();
+#warning Implement saving of cached copies again
+                        //iq = table.Insert();
+                        //iq.Value(o => o.CacheCode, name);
+                        //iq.Value(o => o.Data, e.Parent.GetCachedCopy().Parent.ToString()); // .Parent makes sure that the extension element is saved, not the copy.
+                        //iq.Execute();
                     }
                 }
 

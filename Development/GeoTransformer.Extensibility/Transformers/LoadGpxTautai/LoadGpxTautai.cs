@@ -40,7 +40,7 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
             var form = new CaptchaForm(script);
             var result = form.ShowDialog(this.ParentWindow);
             if (result != System.Windows.Forms.DialogResult.OK)
-                this.ReportStatus(true, "User cancelled");
+                this.ReportStatus(StatusSeverity.Error, "User cancelled from CAPTCHA window");
 
             return form.FieldValues;
         }
@@ -127,9 +127,12 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
         }
 
         /// <summary>
-        /// Loads the GPX files from GPX Tautai and adds them to the list of files for processing.
+        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
+        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
         /// </summary>
-        public override void Process(IList<XDocument> xmlFiles, TransformerOptions options)
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             string file = null;
             string cache = System.IO.Path.Combine(this.LocalStoragePath, "GpxTautai.zip.cache");
@@ -159,32 +162,45 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
 
             if (userOnlyLocalStorage && !useCache)
             {
-                this.ReportStatus("Cached copy is not available.");
+                this.ReportStatus(StatusSeverity.Warning, "Cached copy is not available.");
                 return;
             }
 
             if (!useCache)
             {
-                var captcha = this.SendInitialRequest();
-                this.TerminateExecutionIfNeeded();
-                var fields = this.RequestCaptcha(captcha);
-                this.TerminateExecutionIfNeeded();
-                this.AddFilterFields(fields);
-                file = this.DownloadGpx(fields);
-                this.TerminateExecutionIfNeeded();
+                try
+                {
+                    var captcha = this.SendInitialRequest();
+                    this.TerminateExecutionIfNeeded();
+                    var fields = this.RequestCaptcha(captcha);
+                    this.TerminateExecutionIfNeeded();
+                    this.AddFilterFields(fields);
+                    file = this.DownloadGpx(fields);
+                    this.TerminateExecutionIfNeeded();
+                }
+                catch (Exception ex)
+                {
+                    if (!System.IO.File.Exists(cache))
+                        this.ReportStatus(StatusSeverity.Error, "Unable to download the GPX data: " + ex.Message);
+                    else
+                        this.ReportStatus(StatusSeverity.Warning, "Using the cached copy because unable to download a new copy: " + ex.Message);
+
+                    file = cache;
+                    useCache = true;
+                }
             }
 
             int wptCount = 0;
             try
             {
-                foreach (var xml in Gpx.Loader.Zip(file))
+                foreach (var gpx in Gpx.Loader.Zip(file))
                 {
-                    wptCount += xml.Root.WaypointElements("wpt").Where(o => o.CacheElement("cache") != null).Count();
-                    xmlFiles.Add(xml);
+                    wptCount += gpx.Waypoints.Count(o => o.Geocache.IsDefined());
+                    documents.Add(gpx);
                 }
 
                 if (useCache)
-                    this.ReportStatus(string.Format("Using file downloaded {0:0.0} minutes ago - {1} caches loaded.", DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(cache)).TotalMinutes, wptCount));
+                    this.ReportStatus("Using file downloaded {0:0.0} minutes ago - {1} caches loaded.", DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(cache)).TotalMinutes, wptCount);
                 else
                     this.ReportStatus("Download complete - " + wptCount + " caches loaded.");
             }
@@ -192,11 +208,13 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
             {
                 if (useCache)
                 {
+                    // this is an attempt to recover from a broken file in the cache.
                     System.IO.File.Delete(cache);
-                    this.Process(xmlFiles, options);
+                    this.Process(documents, options);
                     return;
                 }
-                this.ReportStatus(true, "Could not download valid GPX file. Please try again.");
+
+                this.ReportStatus(StatusSeverity.Error, "Could not download valid GPX file. Please try again.");
             }
 
             if (!useCache)

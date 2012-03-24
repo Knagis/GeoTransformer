@@ -41,7 +41,7 @@ namespace GeoTransformer.Viewers.CacheEditor
             else
             {
                 this.toolStripButtonRemove.Enabled = true;
-                this.SetTitle(element.WaypointElement("desc").GetValue() ?? element.WaypointElement("name").GetValue());
+                this.SetTitle(element.Element(XmlExtensions.GpxSchema_1_1 + "desc").GetValue() ?? element.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue());
             }
         }
 
@@ -60,7 +60,7 @@ namespace GeoTransformer.Viewers.CacheEditor
                 return;
 
             foreach (var elem in this._element.Elements().ToList())
-                if (string.Equals(elem.Name.NamespaceName, XmlExtensions.GeoTransformerSchemaClean, StringComparison.Ordinal))
+                if (elem.Name.Namespace  == XmlExtensions.GeoTransformerSchema)
                     elem.Remove();
 
             if (!this._element.ContainsSignificantInformation() 
@@ -68,7 +68,7 @@ namespace GeoTransformer.Viewers.CacheEditor
                 this._element.Remove();
 
             Extensions.ExtensionLoader.ApplicationService.RefreshCacheList();
-            Extensions.ExtensionLoader.ApplicationService.SelectCache(this._element.WaypointElement("name").GetValue());
+            Extensions.ExtensionLoader.ApplicationService.SelectCache(this._element.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue());
         }
 
         private void toolStripButtonEditAnother_Click(object sender, EventArgs e)

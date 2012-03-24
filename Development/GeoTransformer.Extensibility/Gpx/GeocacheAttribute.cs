@@ -35,12 +35,15 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="type">The attribute XML element.</param>
         public GeocacheAttribute(XElement attribute)
+            : base(true)
         {
-            if (attribute == null)
-                return;
+            if (attribute != null)
+            {
+                this.Initialize(attribute, _attributeInitializers, null);
+                this.Name = attribute.Value;
+            }
 
-            this.Initialize(attribute, _attributeInitializers, null);
-            this.Name = attribute.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

@@ -35,11 +35,12 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="type">The geocache image XML element.</param>
         public GeocacheImage(XElement image)
+            : base(true)
         {
-            if (image == null)
-                return;
+            if (image != null)
+                this.Initialize(image, null, _elementInitializers);
 
-            this.Initialize(image, null, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>

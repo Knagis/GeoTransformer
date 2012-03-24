@@ -31,12 +31,15 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="type">The cache type XML element.</param>
         public GeocacheType(XElement type)
+            : base(true)
         {
-            if (type == null)
-                return;
+            if (type != null)
+            {
+                this.Initialize(type, _attributeInitializers, null);
+                this.Name = type.Value;
+            }
 
-            this.Initialize(type, _attributeInitializers, null);
-            this.Name = type.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

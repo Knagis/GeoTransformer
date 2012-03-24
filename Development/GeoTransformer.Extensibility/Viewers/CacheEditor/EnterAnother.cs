@@ -29,8 +29,8 @@ namespace GeoTransformer.Viewers.CacheEditor
             var caches = Extensions.ExtensionLoader.ApplicationService.RetrieveDisplayedCaches();
             if (caches != null)
             {
-                foreach (var c in caches.SelectMany(o => o.Root.WaypointElements("wpt"))
-                                        .Select(o => new { Code = o.WaypointElement("name").GetValue(), Name = o.WaypointElement("desc").GetValue() }))
+                foreach (var c in caches.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt"))
+                                        .Select(o => new { Code = o.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue(), Name = o.Element(XmlExtensions.GpxSchema_1_1 + "desc").GetValue() }))
                 {
                     if (!this._cacheNameCache.ContainsKey(c.Code))
                         this._cacheNameCache.Add(c.Code, c.Name);

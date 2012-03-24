@@ -66,8 +66,8 @@ namespace GeoTransformer
                 return;
             }
 
-            var waypoint = data.SelectMany(o => o.Root.WaypointElements("wpt"))
-                               .FirstOrDefault(o => string.Equals(o.WaypointElement("name").GetValue(), code, StringComparison.OrdinalIgnoreCase));
+            var waypoint = data.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt"))
+                               .FirstOrDefault(o => string.Equals(o.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue(), code, StringComparison.OrdinalIgnoreCase));
 
             if (waypoint == null && selectForEditing)
             {
@@ -89,12 +89,12 @@ namespace GeoTransformer
                 {
                     waypoint = new System.Xml.Linq.XElement(XmlExtensions.GpxSchema_1_0 + "wpt",
                                             new System.Xml.Linq.XElement(XmlExtensions.GpxSchema_1_0 + "name", code),
-                                            new System.Xml.Linq.XElement(XmlExtensions.GeocacheSchema101 + "cache"));
+                                            new System.Xml.Linq.XElement(XmlExtensions.GeocacheSchema_1_0_1 + "cache"));
                 }
 
                 waypoint.SetAttributeValue(XmlExtensions.GeoTransformerSchema + "EditorOnly", true);
                 if (this._PlaceholderCacheTarget == null || !data.Contains(this._PlaceholderCacheTarget))
-                    data.Add(this._PlaceholderCacheTarget = new System.Xml.Linq.XDocument(new System.Xml.Linq.XElement("Root")));
+                    data.Add(this._PlaceholderCacheTarget = new System.Xml.Linq.XDocument(new System.Xml.Linq.XElement(XmlExtensions.GpxSchema_1_1 + "gpx")));
 
                 this._PlaceholderCacheTarget.Root.Add(waypoint);
             }

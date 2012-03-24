@@ -43,7 +43,7 @@ namespace GeoTransformer.Viewers.EditedCacheTableView
 
         public void DisplayCaches(IList<System.Xml.Linq.XDocument> data, string cacheCode)
         {
-            var editedCaches = data.SelectMany(o => o.Root.WaypointElements("wpt"))
+            var editedCaches = data.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt"))
                 .Select(o => new ParsedEditedCacheData(o))
                 .Where(o => o.IsGeocache && (o.ContainsExtensionElements || o.IsEditorOnly))
                 .ToList();

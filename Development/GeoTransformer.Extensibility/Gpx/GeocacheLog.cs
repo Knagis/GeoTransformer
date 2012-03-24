@@ -55,13 +55,14 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheLog"/> class.
         /// </summary>
-        /// <param name="type">The geocache log XML element.</param>
-        public GeocacheLog(XElement attribute)
+        /// <param name="log">The geocache log XML element.</param>
+        public GeocacheLog(XElement log)
+            : base(true)
         {
-            if (attribute == null)
-                return;
+            if (log != null)
+                this.Initialize(log, _attributeInitializers, _elementInitializers);
 
-            this.Initialize(attribute, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>

@@ -11,7 +11,8 @@ using System.Text;
 namespace GeoTransformer.Transformers.AdditionalHints
 {
     /// <summary>
-    /// A transformer that allows the user to put additional hints in the GPX file.
+    /// A transformer that allows the user to put additional hints in the GPX file (either as geocache hints or if the waypoint does not
+    /// have geocache extensions, the comment of the waypoint.
     /// </summary>
     public class AdditionalHints : TransformerBase, Extensions.IEditor
     {
@@ -35,25 +36,32 @@ namespace GeoTransformer.Transformers.AdditionalHints
         }
 
         /// <summary>
-        /// Processes the specified input document.
+        /// Processes the specified GPX waypoint.
         /// </summary>
-        /// <param name="xml"></param>
-        public override void Process(System.Xml.Linq.XDocument xml)
+        /// <param name="waypoint">The waypoint that has to be processed.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        protected override void Process(Gpx.GpxWaypoint waypoint, TransformerOptions options)
         {
-            foreach (var element in xml.ExtensionElements(typeof(AdditionalHints)))
+            var ext = waypoint.ExtensionElements.FirstOrDefault(o => o.Name == XmlExtensions.CreateExtensionName(typeof(AdditionalHints)));
+            if (ext == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(ext.Value))
+                return;
+
+            if (waypoint.Geocache.IsDefined())
             {
-                if (string.IsNullOrWhiteSpace(element.Value))
-                    continue;
-
-                var cache = element.Parent.CacheElement("cache");
-                if (cache == null)
-                    continue;
-
-                var hints = cache.CacheElement("encoded_hints");
-                if (hints == null)
-                    cache.Add(hints = new System.Xml.Linq.XElement(System.Xml.Linq.XName.Get("encoded_hints", cache.Name.NamespaceName)));
-
-                hints.Value = string.Concat(element.Value, Environment.NewLine, "-----", Environment.NewLine, hints.Value);
+                if (string.IsNullOrWhiteSpace(waypoint.Geocache.Hints))
+                    waypoint.Geocache.Hints = ext.Value;
+                else
+                    waypoint.Geocache.Hints = string.Concat(ext.Value, Environment.NewLine, "-----", Environment.NewLine, waypoint.Geocache.Hints);
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(waypoint.Comment))
+                    waypoint.Comment = ext.Value;
+                else
+                    waypoint.Comment = string.Concat(ext.Value, Environment.NewLine, "-----", Environment.NewLine, waypoint.Comment);
             }
         }
 

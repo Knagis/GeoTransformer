@@ -84,6 +84,7 @@ namespace GeoTransformer
             this.Height += wantedHeight - actualHeight;
 
             this._worker = new System.Threading.Thread(WorkerEntry);
+            this._worker.Name = "Transformer runner";
             this._worker.SetApartmentState(System.Threading.ApartmentState.STA);
         }
 
@@ -151,7 +152,7 @@ namespace GeoTransformer
         private void WorkerEntry()
         {
             var i = 0;
-            IList<System.Xml.Linq.XDocument> data = new List<System.Xml.Linq.XDocument>();
+            IList<Gpx.GpxDocument> data = new List<Gpx.GpxDocument>();
             foreach (var task in this._transformers)
             {
                 if (this._workerShouldCancel)
@@ -170,10 +171,23 @@ namespace GeoTransformer
 
                 EventHandler<Transformers.StatusMessageEventArgs> handler = (sender, args) => 
                 { 
-                    clearMessage = false; 
-                    if (args.IsError) 
-                        throw new Exception(args.Message); 
-                    this.ReportProgress(new StatusMessage() { TaskIndex = i, Message = args.Message });
+                    clearMessage = false;
+                    if (args.Severity == Transformers.StatusSeverity.FatalError)
+                    {
+                        throw new Exception(args.Message);
+                    }
+                    else if (args.Severity == Transformers.StatusSeverity.Error)
+                    {
+                        var result = this.Invoke(t => MessageBox.Show(t, "The current step finished with an error: " + Environment.NewLine + Environment.NewLine + args.Message + Environment.NewLine + Environment.NewLine + "Do you want to ignore it and continue with the next step?", "Transformer error", MessageBoxButtons.YesNo, MessageBoxIcon.Question));
+                        if (result != System.Windows.Forms.DialogResult.Yes)
+                            throw new Exception(args.Message);
+                        else
+                            this.ReportProgress(new StatusMessage() { TaskIndex = i, Error = true, Message = args.Message });
+                    }
+                    else
+                    {
+                        this.ReportProgress(new StatusMessage() { TaskIndex = i, Message = args.Message });
+                    }
                 };
 
                 try

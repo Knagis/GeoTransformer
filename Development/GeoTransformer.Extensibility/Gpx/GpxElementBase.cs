@@ -17,6 +17,15 @@ namespace GeoTransformer.Gpx
     public abstract class GpxElementBase : ObservableElement
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="GpxElementBase"/> class.
+        /// </summary>
+        /// <param name="suspendObservation">if set to <c>true</c> suspends the observation until <see cref="ResumeObservation"/> method is called. Should be set to <c>true</c> when the constructor loads the data.</param>
+        protected GpxElementBase(bool suspendObservation = false)
+            : base(suspendObservation)
+        {
+        }
+
+        /// <summary>
         /// Initializes the current instance from the given XML <paramref name="container"/>.
         /// </summary>
         /// <typeparam name="T">The type of the class that is derived from <see cref="GpxElementBase"/></typeparam>

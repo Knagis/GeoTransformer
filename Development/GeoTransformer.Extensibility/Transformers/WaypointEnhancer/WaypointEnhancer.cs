@@ -34,97 +34,64 @@ namespace GeoTransformer.Transformers.WaypointEnhancer
         }
 
         /// <summary>
-        /// Processes the specified XML files. The default implementation calls <see cref="Process(XDocument)"/> for each file.
+        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
+        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
         /// </summary>
-        /// <param name="xmlFiles">The XML documents currently in the process. The list can be changed if needed</param>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
-        public override void Process(IList<XDocument> xmlFiles, TransformerOptions options)
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
-            var _caches = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            var _waypoints = new List<XElement>();
+            // the mapping of cache code -> cache title
+            var caches = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var waypoints = new List<Gpx.GpxWaypoint>();
 
-            foreach (var wpt in xmlFiles.SelectMany(o => o.Root.WaypointElements("wpt")))
+            foreach (var wpt in documents.SelectMany(o => o.Waypoints))
             {
-                var c = wpt.CacheElement("cache");
-                if (c != null)
+                var c = wpt.Geocache;
+                if (!c.IsDefined())
                 {
-                    var code = wpt.WaypointElement("name").GetValue();
-                    if (string.IsNullOrWhiteSpace(code) || !code.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    _caches[code.Substring(2)] = c.CacheElement("name").GetValue();
-
+                    waypoints.Add(wpt);
                     continue;
                 }
 
-                _waypoints.Add(wpt);
+                var code = wpt.Name;
+                if (string.IsNullOrWhiteSpace(code) || !code.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                caches[code.Substring(2)] = c.Name;
             }
 
+            // these are the navaid colors as supported by Garmin GPS units
             var colors = new List<string> { "Blue", "Green", "Red", "White", "Amber", "Black", "Orange", "Violet" };
-            foreach (var wpt in _waypoints)
+            foreach (var wpt in waypoints)
             {
-                XName nname = wpt.Name.Namespace + "name";
-                XName ncmt = wpt.Name.Namespace + "cmt";
-                XName ndesc = wpt.Name.Namespace + "desc";
-                XName nsym = wpt.Name.Namespace + "sym";
-
-                XElement name = null; // the code of the waypoint
-                XElement cmt = null;  // the description that is shown on the GPS
-                XElement desc = null; // the title of the waypoint
-                XElement sym = null;  // the symbol
-
-                foreach (var el in wpt.Elements())
-                {
-                    if (el.Name == nname)
-                        name = el;
-                    else if (el.Name == ncmt)
-                        cmt = el;
-                    else if (el.Name == ndesc)
-                        desc = el;
-                    else if (el.Name == nsym)
-                        sym = el;
-                }
-
-                // add the comment field as it will be required further on.
-                if (cmt == null)
-                    wpt.Add(cmt = new XElement(ncmt));
-
                 // copy the name of the waypoint in the description
-                if (desc != null && !string.IsNullOrWhiteSpace(desc.GetValue()))
-                    cmt.SetValue(desc.GetValue() + Environment.NewLine + Environment.NewLine + cmt.GetValue());
+                if (!string.IsNullOrWhiteSpace(wpt.Description))
+                    wpt.Comment = wpt.Description + Environment.NewLine + Environment.NewLine + wpt.Comment; 
+
+                string code = wpt.Name;
+                if (code == null || code.Length < 2)
+                    continue;
+
+                // strip the first two characters as the remainder of the code is identical for all waypoints of a single cache.
+                code = code.Substring(2);
 
                 // copy the parent geocache reference in the description
-                string code = null;
-                if (name != null && !string.IsNullOrWhiteSpace(name.GetValue()))
-                {
-                    code = name.GetValue();
-                    if (code.Length > 2)
-                    {
-                        code = code.Substring(2);
-                        if (_caches.ContainsKey(code))
-                            cmt.SetValue("Geocache: " + _caches[code] + Environment.NewLine + Environment.NewLine + cmt.GetValue());
-                    }
-                    else
-                    {
-                        code = null; // used for the symbol change
-                    }
-                }
+                if (caches.ContainsKey(code))
+                    wpt.Comment = "Geocache: " + caches[code] + Environment.NewLine + Environment.NewLine + wpt.Comment;
 
                 // change the symbol for trail head
-                if (code != null && sym != null)
+                var curSym = wpt.Symbol;
+                if (string.Equals(curSym, "Trailhead", StringComparison.OrdinalIgnoreCase))
+                    wpt.Symbol = "Trail Head";
+                else if (string.Equals(curSym, "Final Location", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(curSym, "Stages of a Multicache", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(curSym, "Question to Answer", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(curSym, "Reference Point", StringComparison.OrdinalIgnoreCase))
                 {
-                    var curSym = sym.GetValue();
-                    if (string.Equals(curSym, "Trailhead", StringComparison.OrdinalIgnoreCase))
-                        sym.SetValue("Trail Head");
-                    else if (string.Equals(curSym, "Final Location", StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(curSym, "Stages of a Multicache", StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(curSym, "Question to Answer", StringComparison.OrdinalIgnoreCase)
-                        || string.Equals(curSym, "Reference Point", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // randomize the color - use the GetHashCode so that the color persists during multiple
-                        // updates.
-                        sym.SetValue("Navaid, " + colors[Math.Abs(code.GetHashCode()) % colors.Count]);
-                    }
+                    // randomize the color - use the GetHashCode so that the color persists during multiple
+                    // updates.
+                    wpt.Symbol = "Navaid, " + colors[Math.Abs(code.GetHashCode()) % colors.Count];
                 }
             }
         }
