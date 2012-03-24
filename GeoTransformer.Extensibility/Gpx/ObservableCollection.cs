@@ -18,6 +18,22 @@ namespace GeoTransformer.Gpx
     public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableCollection&lt;T&gt;"/> class.
+        /// </summary>
+        public ObservableCollection()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObservableCollection&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="data">The data that is the initial contents of this collection.</param>
+        public ObservableCollection(IEnumerable<T> data)
+            : base(data)
+        {
+        }
+
+        /// <summary>
         /// Clears the items.
         /// </summary>
         protected override void ClearItems()

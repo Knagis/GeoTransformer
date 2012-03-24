@@ -10,7 +10,7 @@ using System.Text;
 
 namespace GeoTransformer.Viewers.CacheEditor
 {
-    public class CacheEditor : Extensions.ICacheViewer
+    public class CacheEditor : Extensions.IWaypointViewer
     {
         public System.Drawing.Image ButtonImage
         {
@@ -44,11 +44,22 @@ namespace GeoTransformer.Viewers.CacheEditor
         }
 
         /// <summary>
-        /// Called to display the cache details in the UI control.
+        /// Called to display the cache details in the UI control. The method is only called for waypoints after <see cref="IsEnabled"/> returns <c>true</c>.
         /// </summary>
-        /// <param name="data">The GPX element containing the cache information.</param>
-        public void DisplayCache(System.Xml.Linq.XElement data)
+        /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
+        public void DisplayWaypoints(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
+#warning Implement without XElement
+            System.Xml.Linq.XElement data = null;
+            if (waypoints.Count > 0)
+                data = waypoints[0].Serialize(new Gpx.GpxSerializationOptions() 
+                {
+                    GpxVersion = Gpx.GpxVersion.Gpx_1_0,
+                    EnableUnsupportedExtensions = true,
+                    EnableInvalidElements = true,
+                    GeocacheVersion = Gpx.GeocacheVersion.Geocache_1_0_1,
+                });
+
             this._container.BindElement(data);
 
             this._container.flowLayoutPanel.Enabled = data != null;
@@ -70,13 +81,16 @@ namespace GeoTransformer.Viewers.CacheEditor
         /// <summary>
         /// Called by the main application to determine if the viewer is enabled for the particular waypoint.
         /// </summary>
-        /// <param name="data">The GPX element containing the cache information (can be <c>null</c>).</param>
+        /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
         /// <returns>
         ///   <c>true</c> if the viewer is enabled for the specified waypoint; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsEnabled(System.Xml.Linq.XElement data)
+        public bool IsEnabled(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            return true;
+            if (waypoints == null)
+                return true;
+
+            return waypoints.Count <= 1;
         }
     }
 }
