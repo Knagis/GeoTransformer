@@ -25,10 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeocachingService.OAuth", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Private Items", "Private Items", "{B13D5C5D-4077-4552-8081-CBA7912679B1}"
 	ProjectSection(SolutionItems) = preProject
-		Private Items\BingMapsApiKeys.cs = Private Items\BingMapsApiKeys.cs
-		Private Items\BingTranslatorApiKeys.cs = Private Items\BingTranslatorApiKeys.cs
-		Private Items\GeoNamesKeys.cs = Private Items\GeoNamesKeys.cs
-		Private Items\LiveApiKeys.cs = Private Items\LiveApiKeys.cs
 		Private Items\Read me.txt = Private Items\Read me.txt
 	EndProjectSection
 EndProject
