@@ -52,6 +52,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gpx\GeocacheTest.cs" />
     <Compile Include="Gpx\GpxDocumentTest.cs" />
     <Compile Include="Gpx\ObservableElementTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
