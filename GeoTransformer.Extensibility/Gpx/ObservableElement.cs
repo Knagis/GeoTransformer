@@ -72,8 +72,10 @@ namespace GeoTransformer.Gpx
                 if (!create)
                     return default(T);
 
-                var newVal = new T();
-                this.SetValue(key, newVal);
+                var newVal = new T(); 
+
+                // setting the default value - from the consumer perspective there is no change happening
+                this.SetValue(key, newVal, true);
                 return newVal;
             }
             else
@@ -89,7 +91,14 @@ namespace GeoTransformer.Gpx
                 return (T)val;
         }
 
-        protected void SetValue<T>(string key, T value)
+        /// <summary>
+        /// Sets a value in this element.
+        /// </summary>
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="key">The key by which the value will be retrieved.</param>
+        /// <param name="value">The value that will be stored.</param>
+        /// <param name="suppressChangeEvent">if set to <c>true</c> suppresses the <see cref="PropertyChanged"/> event. Should only be used in very special scenarios.</param>
+        protected void SetValue<T>(string key, T value, bool suppressChangeEvent = false)
         {
             if (this._suspendObservation)
             {
@@ -111,7 +120,7 @@ namespace GeoTransformer.Gpx
             this._values[key] = value;
             this.AttachListener(key, value);
 
-            if (!object.Equals(value, oldVal))
+            if (!suppressChangeEvent && !object.Equals(value, oldVal))
                 this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(key));
         }
 
@@ -210,7 +219,7 @@ namespace GeoTransformer.Gpx
 
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs args)
+        protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs args)
         {
             var handler = this.PropertyChanged;
             if (handler != null)
