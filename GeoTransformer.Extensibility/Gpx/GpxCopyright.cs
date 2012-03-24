@@ -38,11 +38,10 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="copyright">The copyright element from GPX 1.1 schema.</param>
         public GpxCopyright(XElement copyright)
+            : base(true)
         {
-            if (copyright == null || copyright.Name.Namespace != XmlExtensions.GpxSchema_1_1)
-                return;
-
             this.Initialize(copyright, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>

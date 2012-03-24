@@ -24,7 +24,7 @@ namespace GeoTransformer.Viewers
             this.CacheXmlData = cache;
 
             if (cache != null)
-                this.CacheCode = cache.WaypointElement("name").GetValue();
+                this.CacheCode = cache.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
         }
 
         /// <summary>

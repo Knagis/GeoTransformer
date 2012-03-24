@@ -58,7 +58,12 @@ namespace GeoTransformer.Viewers.CacheEditor
                 if (data == null)
                     editor.Item1.BindControl(null);
                 else
-                    editor.Item1.BindControl(data.ExtensionElement(editor.Item1.GetType(), true));
+                {
+                    var elem = data.Element(XmlExtensions.CreateExtensionName(editor.Item1.GetType()));
+                    if (elem == null)
+                        data.Add(elem = new System.Xml.Linq.XElement(XmlExtensions.CreateExtensionName(editor.Item1.GetType())));
+                    editor.Item1.BindControl(elem);
+                }
             }
         }
 

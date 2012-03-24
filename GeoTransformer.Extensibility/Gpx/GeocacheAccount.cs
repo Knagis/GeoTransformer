@@ -30,12 +30,15 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="owner">The owner XML element.</param>
         public GeocacheAccount(XElement owner)
+            : base(true)
         {
-            if (owner == null)
-                return;
+            if (owner != null)
+            {
+                this.Initialize(owner, _attributeInitializers, null);
+                this.Name = owner.Value;
+            }
 
-            this.Initialize(owner, _attributeInitializers, null);
-            this.Name = owner.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

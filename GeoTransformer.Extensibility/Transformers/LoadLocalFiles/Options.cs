@@ -291,12 +291,12 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
             }
         }
 
-        public IEnumerable<XDocument> Process()
+        public IEnumerable<Gpx.GpxDocument> Process()
         {
             return this.Process(this.treeLoadedGpx.Nodes);
         }
 
-        private IEnumerable<XDocument> Process(TreeNodeCollection nodes)
+        private IEnumerable<Gpx.GpxDocument> Process(TreeNodeCollection nodes)
         {
             foreach (TreeNode n in nodes)
             {
@@ -310,7 +310,7 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
             }
         }
 
-        private XDocument Process(TreeNode node)
+        private Gpx.GpxDocument Process(TreeNode node)
         {
             var t = (NodeTag)node.Tag;
             if (t.ZipContainer || !node.Checked) return null;

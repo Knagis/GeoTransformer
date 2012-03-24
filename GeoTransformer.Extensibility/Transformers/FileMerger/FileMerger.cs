@@ -12,6 +12,9 @@ using GeoTransformer.Extensions;
 
 namespace GeoTransformer.Transformers.FileMerger
 {
+    /// <summary>
+    /// Transformer that merges all loaded <see cref="Gpx.GpxDocument"/> in two files - one for geocaches and one for additional waypoints.
+    /// </summary>
     public class FileMerger : TransformerBase, IConfigurable
     {
         private SimpleConfigurationControl Configuration;
@@ -33,30 +36,38 @@ namespace GeoTransformer.Transformers.FileMerger
             get { return Transformers.ExecutionOrder.BeforePublish; }
         }
 
-        public override void Process(IList<System.Xml.Linq.XDocument> xmlFiles, TransformerOptions options)
+        /// <summary>
+        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
+        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// </summary>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
-            var xmlCaches = Gpx.Loader.CreateEmptyDocument("GeoTransformer.gpx");
-            var xmlWaypoints = Gpx.Loader.CreateEmptyDocument("GeoTransformer-wpts.gpx");
+            var xmlCaches = new Gpx.GpxDocument();
+            xmlCaches.Metadata.OriginalFileName = "GeoTransformer.gpx";
+            var xmlWaypoints = new Gpx.GpxDocument();
+            xmlWaypoints.Metadata.OriginalFileName = "GeoTransformer-wpts.gpx";
 
             bool something = false;
 
-            foreach (var wpt in xmlFiles.SelectMany(o => o.Root.WaypointElements("wpt")))
+            foreach (var wpt in documents.SelectMany(o => o.Waypoints))
             {
                 something = true;
-                if (wpt.CacheElement("cache") != null)
-                    xmlCaches.Root.Add(wpt);
+                if (wpt.Geocache.IsDefined())
+                    xmlCaches.Waypoints.Add(wpt);
                 else
-                    xmlWaypoints.Root.Add(wpt);
+                    xmlWaypoints.Waypoints.Add(wpt);
             }
 
-            this.ReportStatus(xmlFiles.Count + " file" + (xmlFiles.Count % 10 == 1 && xmlFiles.Count != 11 ? "" : "s") + " merged.");
-            xmlFiles.Clear();
+            this.ReportStatus(documents.Count + " file" + (documents.Count % 10 == 1 && documents.Count != 11 ? "" : "s") + " merged.");
+            documents.Clear();
 
             // just in case the loading of the files failed, let's not delete the old data still on the device.
             if (something)
             {
-                xmlFiles.Add(xmlCaches);
-                xmlFiles.Add(xmlWaypoints);
+                documents.Add(xmlCaches);
+                documents.Add(xmlWaypoints);
             }
         }
 

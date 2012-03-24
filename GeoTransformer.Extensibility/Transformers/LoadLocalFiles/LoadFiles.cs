@@ -32,16 +32,22 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
             get { return Transformers.ExecutionOrder.LoadSources; }
         }
 
-        public override void Process(IList<XDocument> xmlFiles, TransformerOptions options)
+        /// <summary>
+        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
+        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// </summary>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             int files = 0;
             int wptCount = 0;
 
-            foreach (var xml in this._configurationControl.Process())
-                if (xml != null)
+            foreach (var gpx in this._configurationControl.Process())
+                if (gpx != null)
                 {
-                    xmlFiles.Add(xml);
-                    wptCount += xml.Root.WaypointElements("wpt").Where(o => o.CacheElement("cache") != null).Count();
+                    documents.Add(gpx);
+                    wptCount += gpx.Waypoints.Count(o => o.Geocache.IsDefined());
                     files++;
                 }
 

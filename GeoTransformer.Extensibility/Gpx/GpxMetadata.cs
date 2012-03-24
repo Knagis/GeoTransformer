@@ -39,8 +39,10 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="metadata">The GPX version 1.1 metadata element.</param>
         public GpxMetadata(XElement metadata)
+            : base(true)
         {
             this.Initialize(metadata);
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -106,6 +108,16 @@ namespace GeoTransformer.Gpx
                 return null;
 
             return el;
+        }
+
+        /// <summary>
+        /// Gets or sets the filename of the file from which the <see cref="GpxDocument"/> as initialized.
+        /// This value is used to save the document to a file when no specific file name is given.
+        /// </summary>
+        public string OriginalFileName
+        {
+            get { return this.GetValue<string>("OriginalFileName"); }
+            set { this.SetValue("OriginalFileName", value); }
         }
 
         /// <summary>

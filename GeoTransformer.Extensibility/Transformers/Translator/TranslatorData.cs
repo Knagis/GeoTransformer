@@ -10,21 +10,37 @@ using System.Text;
 
 namespace GeoTransformer.Transformers.Translator
 {
+    /// <summary>
+    /// Represents a value to be translated.
+    /// </summary>
     internal class TranslateData
     {
-        public TranslateData(string text)
-            : this(text, false)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TranslateData"/> class.
+        /// </summary>
+        /// <param name="text">The text to be translated.</param>
+        /// <param name="updateValue">The delegate that is used to set the translated value back to the source.</param>
+        public TranslateData(string text, Action<string> updateValue)
+            : this(text, false, updateValue)
         {
         }
-        public TranslateData(string text, bool isHtml)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TranslateData"/> class.
+        /// </summary>
+        /// <param name="text">The text to be translated.</param>
+        /// <param name="isHtml">Set to <c>true</c> if the content in <paramref name="text"/> is HTML.</param>
+        /// <param name="updateValue">The delegate that is used to set the translated value back to the source.</param>
+        public TranslateData(string text, bool isHtml, Action<string> updateValue)
         {
             if (text == null)
                 text = string.Empty;
             this.Text = text;
             this.IsHtml = isHtml;
+            this.UpdateValue = updateValue;
         }
 
-        public System.Xml.Linq.XElement SourceElement;
+        public Action<string> UpdateValue;
         public bool IsHtml;
         public string Text;
         private string _hash;

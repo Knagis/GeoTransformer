@@ -33,12 +33,12 @@ namespace GeoTransformer.Viewers.CacheWebPage
 
         public void DisplayCache(System.Xml.Linq.XElement data)
         {
-            var url = data.WaypointElement("url").GetValue();
+            var url = data.Element(XmlExtensions.GpxSchema_1_1 + "url").GetValue();
             if (string.IsNullOrWhiteSpace(url))
             {
-                var name = data.WaypointElement("name").GetValue();
+                var name = data.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
                 if (name != null && name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
-                    url = "http://coord.info/" + data.WaypointElement("name").GetValue();
+                    url = "http://coord.info/" + data.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
             }
 
             this._browser.Navigate(url);
@@ -49,11 +49,11 @@ namespace GeoTransformer.Viewers.CacheWebPage
             if (data == null)
                 return false;
 
-            var url = data.WaypointElement("url").GetValue();
+            var url = data.Element(XmlExtensions.GpxSchema_1_1 + "url").GetValue();
             if (!string.IsNullOrWhiteSpace(url))
                 return true;
 
-            var name = data.WaypointElement("name").GetValue();
+            var name = data.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
             if (name != null && name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
                 return true;
 

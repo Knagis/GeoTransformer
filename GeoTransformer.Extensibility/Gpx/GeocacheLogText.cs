@@ -16,7 +16,7 @@ namespace GeoTransformer.Gpx
     {
         private static Dictionary<XName, Action<GeocacheLogText, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheLogText, XAttribute>>
         {
-            { "encoded", (o, a) => o.IsEncoded = XmlConvert.ToBoolean(a.Value) },
+            { "encoded", (o, a) => o.IsEncoded = Boolean.Parse(a.Value) },
         };
 
         /// <summary>
@@ -31,12 +31,15 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="description">The log text XML element.</param>
         public GeocacheLogText(XElement description)
+            : base(true)
         {
-            if (description == null)
-                return;
+            if (description != null)
+            {
+                this.Initialize(description, _attributeInitializers, null);
+                this.Text = description.Value;
+            }
 
-            this.Initialize(description, _attributeInitializers, null);
-            this.Text = description.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

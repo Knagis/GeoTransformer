@@ -43,6 +43,8 @@ namespace GeoTransformer.Gpx
 
             { XmlExtensions.GpxSchema_1_1 + "metadata", (o, e) => o.Metadata.Initialize(e) },
             { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxDocument>(e, null, null) },
+
+            { XmlExtensions.GeoTransformerSchema + "originalFileName", (o, e) => o.Metadata.OriginalFileName = e.Value },
         };
 
         /// <summary>
@@ -50,6 +52,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         public GpxDocument()
         {
+            this.Metadata.CreationTime = DateTime.Now;
         }
 
         /// <summary>
@@ -57,11 +60,12 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="document">The document containing GPX 1.0 or 1.1 data.</param>
         public GpxDocument(XDocument document)
+            : base(true)
         {
-            if (document == null || document.Root == null)
-                return;
+            if (document != null && document.Root != null)
+                this.Initialize(document.Root, _attributeInitializers, _elementInitializers);
 
-            this.Initialize(document.Root, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -142,6 +146,9 @@ namespace GeoTransformer.Gpx
 
                     foreach (var ext in this.ExtensionElements)
                         root.Add(new XElement(ext));
+
+                    if (!string.IsNullOrEmpty(this.Metadata.OriginalFileName))
+                        root.Add(new XElement(XmlExtensions.GeoTransformerSchema + "originalFileName", this.Metadata.OriginalFileName));
                 }
                 else
                 {
@@ -151,6 +158,10 @@ namespace GeoTransformer.Gpx
                     var extel = new XElement(options.GpxNamespace + "extensions");
                     foreach (var ext in this.ExtensionElements)
                         extel.Add(new XElement(ext));
+
+                    if (!string.IsNullOrEmpty(this.Metadata.OriginalFileName))
+                        extel.Add(new XElement(XmlExtensions.GeoTransformerSchema + "originalFileName", this.Metadata.OriginalFileName));
+
                     if (!extel.IsEmpty)
                         root.Add(extel);
                 }

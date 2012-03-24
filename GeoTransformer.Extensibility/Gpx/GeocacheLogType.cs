@@ -29,14 +29,17 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheLogType"/> class.
         /// </summary>
-        /// <param name="type">The geocache log type XML element.</param>
+        /// <param name="logType">The geocache log type XML element.</param>
         public GeocacheLogType(XElement logType)
+            : base(true)
         {
-            if (logType == null)
-                return;
+            if (logType != null)
+            {
+                this.Initialize(logType, _attributeInitializers, null);
+                this.Name = logType.Value;
+            }
 
-            this.Initialize(logType, _attributeInitializers, null);
-            this.Name = logType.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

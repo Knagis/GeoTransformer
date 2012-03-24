@@ -189,7 +189,6 @@
     <Compile Include="Transformers\AdditionalHints\EditorControl.Designer.cs">
       <DependentUpon>EditorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Transformers\EditorExtensions\ClearEditorExtensions.cs" />
     <Compile Include="Transformers\EditorExtensions\SaveEditorExtensions.cs" />
     <Compile Include="Transformers\EditorExtensions\LoadEditorExtensions.cs" />
     <Compile Include="Transformers\LoadFromLiveApi\ConfigurationControl.cs">
@@ -243,7 +242,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Transformers\ProgressUpdateEventArgs.cs" />
     <Compile Include="Transformers\StatusMessageEventArgs.cs" />
+    <Compile Include="Transformers\StatusSeverity.cs" />
     <Compile Include="Transformers\TransformerOptions.cs" />
     <Compile Include="Transformers\UpdateCoordinates\EditorControl.cs">
       <SubType>UserControl</SubType>

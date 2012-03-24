@@ -40,7 +40,7 @@ namespace GeoTransformer.Transformers
             this._driveRoot = driveRoot;
         }
 
-        public override void Process(IList<System.Xml.Linq.XDocument> xmlFiles, TransformerOptions options)
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             using (var vd = new VolumeDeviceClass())
             {

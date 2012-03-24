@@ -17,6 +17,16 @@ namespace GeoTransformer.UnitTests.Gpx
     {
         private class SimpleImplementation : GeoTransformer.Gpx.ObservableElement
         {
+            public SimpleImplementation(bool suspendObservation = false)
+                : base(suspendObservation)
+            {
+            }
+
+            public void ResumeObservation()
+            {
+                base.ResumeObservation();
+            }
+
             public void Set<T>(string key, T value)
             {
                 this.SetValue<T>(key, value);
@@ -191,6 +201,37 @@ namespace GeoTransformer.UnitTests.Gpx
             n1.Notify();
             n2.Notify();
             Assert.AreEqual(0, eventsRaised);
+        }
+
+        /// <summary>
+        /// Tests if the observation suspension and resume functions properly.
+        /// </summary>
+        [TestMethod]
+        public void TestSuspendObservation()
+        {
+            var dict = new SimpleImplementation(true);
+            int eventsRaised = 0;
+            dict.PropertyChanged += (a, b) => { eventsRaised++; };
+
+            string key1 = "id";
+
+            // initialize a new value
+            eventsRaised = 0;
+            dict.Set(key1, 123);
+            Assert.AreEqual(0, eventsRaised);
+
+            // resume the observation
+            dict.ResumeObservation();
+
+            // set existing key to the same value
+            eventsRaised = 0;
+            dict.Set(key1, 123);
+            Assert.AreEqual(0, eventsRaised);
+
+            // set existing key to a new value
+            eventsRaised = 0;
+            dict.Set(key1, 234);
+            Assert.AreEqual(1, eventsRaised);
         }
     }
 }

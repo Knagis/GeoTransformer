@@ -20,14 +20,14 @@ namespace GeoTransformer.Gpx
         private static Dictionary<XName, Action<Geocache, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<Geocache, XAttribute>>
         {
             { "id", (o, a) => o.ParseId(a.Value) },
-            { "available", (o, a) => o.Available = XmlConvert.ToBoolean(a.Value) },
-            { "archived", (o, a) => o.Archived = XmlConvert.ToBoolean(a.Value) },
-            { "memberonly", (o, a) => o.MemberOnly = XmlConvert.ToBoolean(a.Value) },
-            { "customcoords", (o, a) => o.CustomCoordinates = XmlConvert.ToBoolean(a.Value) },
+            { "available", (o, a) => o.Available = Boolean.Parse(a.Value) },
+            { "archived", (o, a) => o.Archived = Boolean.Parse(a.Value) },
+            { "memberonly", (o, a) => o.MemberOnly = Boolean.Parse(a.Value) },
+            { "customcoords", (o, a) => o.CustomCoordinates = Boolean.Parse(a.Value) },
             
             // the attributes introduced in 1.0.2 can be serialized in earlier versions with qualified names
-            { XmlExtensions.GeocacheSchema_1_0_2 + "memberonly", (o, a) => o.MemberOnly = XmlConvert.ToBoolean(a.Value) },
-            { XmlExtensions.GeocacheSchema_1_0_2 + "customcoords", (o, a) => o.CustomCoordinates = XmlConvert.ToBoolean(a.Value) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "memberonly", (o, a) => o.MemberOnly = Boolean.Parse(a.Value) },
+            { XmlExtensions.GeocacheSchema_1_0_2 + "customcoords", (o, a) => o.CustomCoordinates = Boolean.Parse(a.Value) },
         };
 
         private static Dictionary<XName, Action<Geocache, XElement>> _elementInitializers = new Dictionary<XName, Action<Geocache, XElement>>
@@ -110,11 +110,12 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="cache">The XML element (groundspeak:cache) that contains the cache extensions.</param>
         public Geocache(XElement cache)
+            : base(true)
         {
-            if (cache == null)
-                return;
-
-            this.Initialize(cache, _attributeInitializers, _elementInitializers);
+            if (cache != null)
+                this.Initialize(cache, _attributeInitializers, _elementInitializers);
+    
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -232,6 +233,39 @@ namespace GeoTransformer.Gpx
 
 
             return el;
+        }
+
+        /// <summary>
+        /// Checks if the geocache extensions have been defined for the waypoint.
+        /// </summary>
+        /// <returns><c>True</c> if the waypoint already have geocache extensions; otherwise <c>false</c>.</returns>
+        /// <remarks>This method performs rather expensive test. To achive best performance make sure that <see cref="Id"/> property is always set
+        /// for new geocaches.</remarks>
+        public bool IsDefined()
+        {
+            return this.Id.HasValue
+                || !string.IsNullOrEmpty(this.ShortDescription.Text)
+                || !string.IsNullOrEmpty(this.LongDescription.Text)
+                || this.Difficulty.HasValue
+                || this.Terrain.HasValue
+                || !this.Available
+                || this.Archived
+                || this.MemberOnly.HasValue
+                || this.CustomCoordinates.HasValue
+                || !string.IsNullOrEmpty(this.Name)
+                || !string.IsNullOrEmpty(this.PlacedBy)
+                || !string.IsNullOrEmpty(this.Owner.Name)
+                || !string.IsNullOrEmpty(this.CacheType.Name)
+                || !string.IsNullOrEmpty(this.Container.Name)
+                || !string.IsNullOrEmpty(this.Country)
+                || !string.IsNullOrEmpty(this.CountryState)
+                || !string.IsNullOrEmpty(this.Hints)
+                || !string.IsNullOrEmpty(this.PersonalNote)
+                || this.FavoritePoints.HasValue
+                || this.Attributes.Count > 0
+                || this.Images.Count > 0
+                || this.Logs.Count > 0
+                || this.Trackables.Count > 0;
         }
 
         /// <summary>

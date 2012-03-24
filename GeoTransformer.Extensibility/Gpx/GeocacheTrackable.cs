@@ -39,13 +39,13 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheTrackable"/> class.
         /// </summary>
-        /// <param name="type">The geocache travelbug XML element.</param>
+        /// <param name="travelBug">The geocache travelbug XML element.</param>
         public GeocacheTrackable(XElement travelbug)
+            : base(true)
         {
-            if (travelbug == null)
-                return;
-
-            this.Initialize(travelbug, _attributeInitializers, _elementInitializers);
+            if (travelbug != null)
+                this.Initialize(travelbug, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>

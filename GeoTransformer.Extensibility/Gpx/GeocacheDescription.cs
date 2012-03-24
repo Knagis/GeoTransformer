@@ -16,7 +16,7 @@ namespace GeoTransformer.Gpx
     {
         private static Dictionary<XName, Action<GeocacheDescription, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheDescription, XAttribute>>
         {
-            { "html", (o, a) => o.IsHtml = XmlConvert.ToBoolean(a.Value) },
+            { "html", (o, a) => o.IsHtml = Boolean.Parse(a.Value) },
         };
 
         /// <summary>
@@ -31,12 +31,15 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="description">The description XML element.</param>
         public GeocacheDescription(XElement description)
+            : base(true)
         {
-            if (description == null)
-                return;
+            if (description != null)
+            {
+                this.Initialize(description, _attributeInitializers, null);
+                this.Text = description.Value;
+            }
 
-            this.Initialize(description, _attributeInitializers, null);
-            this.Text = description.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

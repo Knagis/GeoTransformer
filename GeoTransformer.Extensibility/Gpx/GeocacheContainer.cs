@@ -31,12 +31,15 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="type">The cache container XML element.</param>
         public GeocacheContainer(XElement container)
+            : base(true)
         {
-            if (container == null)
-                return;
+            if (container != null)
+            {
+                this.Initialize(container, _attributeInitializers, null);
+                this.Name = container.Value;
+            }
 
-            this.Initialize(container, _attributeInitializers, null);
-            this.Name = container.Value;
+            this.ResumeObservation();
         }
 
         /// <summary>

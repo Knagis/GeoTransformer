@@ -70,9 +70,23 @@ namespace GeoTransformer.Gpx
         };
 
         /// <summary>
+        /// Prevents a default instance of the <see cref="GpxWaypoint"/> class from being created.
+        /// </summary>
+        /// <param name="isCopy">if set to <c>true</c> indicates that the instance represents a copy of a waypoint.</param>
+        private GpxWaypoint(bool isCopy)
+        {
+            if (!isCopy)
+            {
+                this._originalValues = new GpxWaypoint(true);
+                this._originalValues.PropertyChanged += (a, b) => { throw new InvalidOperationException("Cannot modify the OriginalValues property."); };
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GpxWaypoint"/> class.
         /// </summary>
         public GpxWaypoint()
+            : this(false)
         {
         }
 
@@ -81,11 +95,54 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="waypoint">The waypoint XML element.</param>
         public GpxWaypoint(XElement waypoint)
+            : this(waypoint, false)
         {
-            if (waypoint == null)
-                return;
+        }
 
-            this.Initialize(waypoint, _attributeInitializers, _elementInitializers);
+        /// <summary>
+        /// Prevents a default instance of the <see cref="GpxWaypoint"/> class from being created.
+        /// </summary>
+        /// <param name="waypoint">The waypoint XML element.</param>
+        /// <param name="isCopy">if set to <c>true</c> indicates that the instance represents a copy of a waypoint.</param>
+        private GpxWaypoint(XElement waypoint, bool isCopy)
+            : base(true)
+        {
+            if (!isCopy)
+            {
+                this._originalValues = new GpxWaypoint(waypoint, true);
+                this._originalValues.PropertyChanged += (a, b) => { throw new InvalidOperationException("Cannot modify the OriginalValues property."); };
+            }
+
+            if (waypoint != null)
+                this.Initialize(waypoint, _attributeInitializers, _elementInitializers);
+    
+            this.ResumeObservation();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GpxWaypoint"/> class.
+        /// </summary>
+        /// <param name="cache">The geocache object from the Live API service.</param>
+        /// <exception cref="ArgumentNullException">when <paramref name="cache"/> is <c>null</c></exception>
+        public GpxWaypoint(GeoTransformer.GeocachingService.Geocache cache)
+            : this(cache, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GpxWaypoint"/> class.
+        /// </summary>
+        /// <param name="cache">The geocache object from the Live API service.</param>
+        /// <param name="isCopy">if set to <c>true</c> indicates that the instance represents a copy of a waypoint.</param>
+        /// <exception cref="ArgumentNullException">when <paramref name="cache"/> is <c>null</c></exception>
+        public GpxWaypoint(GeoTransformer.GeocachingService.Geocache cache, bool isCopy)
+#warning Remove the dependency on Gpx.Loader
+            : this(Gpx.Loader.Convert(cache))
+        {
+            if (cache == null)
+                throw new ArgumentNullException("cache");
+
+            //TODO: implement without the loader
         }
 
         /// <summary>
@@ -195,7 +252,7 @@ namespace GeoTransformer.Gpx
                 }
             }
 
-            if (this.Coordinates.Latitude != 0 || this.Coordinates.Longitude != 0 || !el.IsEmpty)
+            if (!el.IsEmpty || this.Coordinates.Latitude != 0 || this.Coordinates.Longitude != 0)
             {
                 el.Add(new XAttribute("lat", this.Coordinates.Latitude));
                 el.Add(new XAttribute("lon", this.Coordinates.Longitude));
@@ -208,12 +265,32 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
+        /// Holds the value for <see cref="OriginalValues"/> property.
+        /// </summary>
+        private GpxWaypoint _originalValues;
+
+        /// <summary>
+        /// Gets the original values for this GPX waypoint. The object is read-only (any modification will result in an exception).
+        /// </summary>
+        public GpxWaypoint OriginalValues
+        {
+            get
+            {
+                // this check will trigger when the property is requested for the instance that itself is a copy for another waypoint.
+                if (this._originalValues == null)
+                    return this;
+
+                return this._originalValues;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the coordinates of the waypoint.
         /// </summary>
         public Coordinates.Wgs84Point Coordinates
         {
             get { return this.GetValue<Coordinates.Wgs84Point>("Coordinates"); }
-            set { this.SetValue<Coordinates.Wgs84Point>("Coordinates", value); }
+            set { this.SetValue("Coordinates", value); }
         }
 
         /// <summary>

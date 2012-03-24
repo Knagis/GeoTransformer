@@ -46,7 +46,7 @@ namespace GeoTransformer.Viewers.TableView
             foreach (var e in this.SourceElement.Elements())
             {
                 var ns = e.Name.Namespace;
-                if (ns == XmlExtensions.GpxSchema_1_0)
+                if (ns == XmlExtensions.GpxSchema_1_0 || ns == XmlExtensions.GpxSchema_1_1)
                 {
                     switch (e.Name.LocalName)
                     {
@@ -58,7 +58,7 @@ namespace GeoTransformer.Viewers.TableView
                             break;
                     }
                 }
-                else if (ns == XNamespace.Get(XmlExtensions.GeocacheSchema101Clean) || ns == XNamespace.Get(XmlExtensions.GeocacheSchema10Clean))
+                else if (ns == XmlExtensions.GeocacheSchema_1_0_0 || ns == XmlExtensions.GeocacheSchema_1_0_1 || ns == XmlExtensions.GeocacheSchema_1_0_2)
                 {
                     if (string.Equals(e.Name.LocalName, "cache"))
                     {
@@ -116,7 +116,7 @@ namespace GeoTransformer.Viewers.TableView
                         }
                     }
                 }
-                else if (ns == XNamespace.Get(XmlExtensions.GeoTransformerSchemaClean)
+                else if (ns == XmlExtensions.GeoTransformerSchema
                             && !string.Equals(e.Name.LocalName, "CachedCopy", StringComparison.Ordinal) 
                             && e.ContainsSignificantInformation())
                 {
