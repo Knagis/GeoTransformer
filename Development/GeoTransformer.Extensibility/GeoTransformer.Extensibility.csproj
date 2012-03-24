@@ -350,7 +350,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Viewers\CacheEditor\CacheEditor.cs" />
-    <Compile Include="Extensions\ICacheViewer.cs" />
+    <Compile Include="Extensions\IWaypointViewer.cs" />
     <Compile Include="Viewers\CacheEditor\EditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -374,22 +374,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Viewers\EditedCacheTableView\EditedCacheTableView.cs" />
-    <Compile Include="Viewers\EditedCacheTableView\ParsedEditedCacheData.cs" />
-    <Compile Include="Viewers\EditedCacheTableView\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Viewers\SelectedCacheChangedEventArgs.cs" />
+    <Compile Include="Viewers\TableView\EditedCacheTableView.cs" />
+    <Compile Include="Viewers\SelectedWaypointsChangedEventArgs.cs" />
     <Compile Include="Viewers\TableView\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Viewers\TableView\TableView.cs" />
-    <Compile Include="Extensions\ICacheListViewer.cs" />
-    <Compile Include="Viewers\TableView\ParsedCacheData.cs" />
+    <Compile Include="Extensions\IWaypointListViewer.cs" />
+    <Compile Include="Viewers\TableView\Columns.cs" />
     <Compile Include="Gpx\Loader.cs" />
     <Compile Include="Gpx\XmlExtensions.cs" />
   </ItemGroup>
@@ -487,11 +481,6 @@
     <EmbeddedResource Include="Viewers\CacheWebPage\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Viewers\EditedCacheTableView\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Viewers\TableView\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -699,7 +688,7 @@
     <None Include="Transformers\PocketQueryDownload\cancel.png" />
     <None Include="Viewers\CacheEditor\Edit.png" />
     <None Include="Viewers\CacheWebPage\Web.png" />
-    <None Include="Viewers\EditedCacheTableView\icon.png" />
+    <None Include="Viewers\TableView\edited.png" />
     <None Include="UI\CacheTypeIcons\Earthcache.gif" />
     <None Include="UI\CacheTypeIcons\TraditionalCache.gif" />
     <None Include="UI\CacheTypeIcons\UnknownCache.gif" />
@@ -730,7 +719,9 @@
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
     <Content Include="Viewers\TableView\table.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Viewers\EditedCacheTableView\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

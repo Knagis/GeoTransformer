@@ -10,7 +10,7 @@ using System.Text;
 
 namespace GeoTransformer.Viewers.CacheWebPage
 {
-    public class CacheWebPage : Extensions.ICacheViewer
+    public class CacheWebPage : Extensions.IWaypointViewer
     {
         private System.Windows.Forms.WebBrowser _browser;
 
@@ -31,29 +31,54 @@ namespace GeoTransformer.Viewers.CacheWebPage
             return this._browser;
         }
 
-        public void DisplayCache(System.Xml.Linq.XElement data)
+        /// <summary>
+        /// Called to display the cache details in the UI control. The method is only called for waypoints after <see cref="IsEnabled"/> returns <c>true</c>.
+        /// </summary>
+        /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
+        public void DisplayWaypoints(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            var url = data.Element(XmlExtensions.GpxSchema_1_1 + "url").GetValue();
-            if (string.IsNullOrWhiteSpace(url))
+            if (waypoints.Count == 0)
             {
-                var name = data.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
-                if (name != null && name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
-                    url = "http://coord.info/" + data.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
+                this._browser.Navigate("about:blank");
+                return;
             }
 
-            this._browser.Navigate(url);
+            var wpt = waypoints[0];
+            foreach (var l in wpt.Links)
+                if (l != null && l.Href != null)
+                {
+                    this._browser.Navigate(l.Href);
+                    return;
+                }
+
+            var name = wpt.Name;
+            if (name != null && name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
+            {
+                this._browser.Navigate("http://coord.info/" + wpt.Name);
+                return;
+            }
+
+            this._browser.Navigate("about:blank");
         }
 
-        public bool IsEnabled(System.Xml.Linq.XElement data)
+        /// <summary>
+        /// Called by the main application to determine if the viewer is enabled for the selected waypoint(-s).
+        /// </summary>
+        /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
+        /// <returns>
+        ///   <c>true</c> if the viewer is enabled for the specified waypoints; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsEnabled(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            if (data == null)
+            if (waypoints == null || waypoints.Count != 1)
                 return false;
 
-            var url = data.Element(XmlExtensions.GpxSchema_1_1 + "url").GetValue();
-            if (!string.IsNullOrWhiteSpace(url))
-                return true;
+            var wpt = waypoints[0];
+            foreach (var l in wpt.Links)
+                if (l != null && l.Href != null)
+                    return true;
 
-            var name = data.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
+            var name = wpt.Name;
             if (name != null && name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
                 return true;
 

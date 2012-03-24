@@ -41,17 +41,12 @@ namespace GeoTransformer.Transformers.CreateViewerCache
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
         public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
-            var list = new List<System.Xml.Linq.XDocument>();
-
-            foreach (var gpx in documents)
-                list.Add(gpx.Serialize(Gpx.GpxSerializationOptions.Default));
-
-            this.Data = list;
+            this.Data = documents;
         }
 
         /// <summary>
         /// Gets the list of GPX documents that were captured by this transformer.
         /// </summary>
-        public IList<System.Xml.Linq.XDocument> Data { get; private set; }
+        public IList<Gpx.GpxDocument> Data { get; private set; }
     }
 }

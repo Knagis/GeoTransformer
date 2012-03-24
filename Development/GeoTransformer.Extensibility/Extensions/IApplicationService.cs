@@ -19,7 +19,7 @@ namespace GeoTransformer.Extensions
         /// Retrieves the caches that are currently being displayed in the main form.
         /// </summary>
         /// <returns>The GPX documents that are currently displayed or <c>null</c> if the loading of caches is not yet completed.</returns>
-        IEnumerable<System.Xml.Linq.XDocument> RetrieveDisplayedCaches();
+        IEnumerable<Gpx.GpxDocument> RetrieveDisplayedCaches();
 
         /// <summary>
         /// Refreshes the whole displayed cache list. Should be called when the list contents are changed (a cache is removed or added to it).
@@ -28,11 +28,11 @@ namespace GeoTransformer.Extensions
         void RefreshCacheList();
 
         /// <summary>
-        /// Instructs the cache list and individual view to select a cache with a particular code (the value of the GPX <c>name</c> element).
+        /// Instructs the waypoint list and individual view to select a waypoint with a particular <paramref name="name"/> (the value of <see cref="Gpx.GpxWaypoint.Name"/> property).
         /// If the code cannot be found, the selection will be cleared or a new blank placeholder will be created depending on the <paramref name="selectForEditing"/> parameter.
         /// </summary>
-        /// <param name="code">The code of the cache that will be selected.</param>
-        /// <param name="selectForEditing">If set to <c>true</c> then an empty placeholder cache will be created for the editor.</param>
-        void SelectCache(string code, bool selectForEditing = false);
+        /// <param name="name">The name of the waypoint that will be selected.</param>
+        /// <param name="selectForEditing">If set to <c>true</c> then an empty placeholder waypoint will be created for the editor.</param>
+        void SelectWaypoint(string name, bool selectForEditing = false);
     }
 }

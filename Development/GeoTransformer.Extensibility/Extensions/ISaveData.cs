@@ -16,9 +16,9 @@ namespace GeoTransformer.Extensions
     public interface ISaveData : IExtension
     {
         /// <summary>
-        /// Saves the data that the extension needs in the specified XML files.
+        /// Saves the data that the extension needs in the specified GPX documents.
         /// </summary>
-        /// <param name="xmlFiles">The XML files.</param>
-        void Save(IEnumerable<System.Xml.Linq.XDocument> xmlFiles);
+        /// <param name="documents">The GPX documents that are currently loaded.</param>
+        void Save(IEnumerable<Gpx.GpxDocument> documents);
     }
 }

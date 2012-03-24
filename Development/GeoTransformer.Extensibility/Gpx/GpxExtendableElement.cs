@@ -96,5 +96,29 @@ namespace GeoTransformer.Gpx
         {
             get { return this.GetValue<ObservableCollection<XElement>>("ExtensionElements", true); }
         }
+
+        /// <summary>
+        /// Finds the extension attribute with the given <paramref name="name"/> and returns the value.
+        /// </summary>
+        /// <param name="name">The name of the extension attribute.</param>
+        /// <returns>The value of the attribute or <c>null</c> if the attribute with the given <paramref name="name"/> does not exist.</returns>
+        public string FindExtensionAttributeValue(XName name)
+        {
+            var attr = this.ExtensionAttributes.FirstOrDefault(o => o.Name == name);
+            if (attr == null)
+                return null;
+
+            return attr.Value;
+        }
+
+        /// <summary>
+        /// Finds the extension attribute with the given <paramref name="name"/> (assuming <see cref="XmlExtensions.GeoTransformerSchema"/>) and returns the value.
+        /// </summary>
+        /// <param name="localName">Name of the local.</param>
+        /// <returns>The value of the attribute or <c>null</c> if the attribute with the given <paramref name="name"/> does not exist.</returns>
+        public string FindExtensionAttributeValue(string localName)
+        {
+            return this.FindExtensionAttributeValue(XmlExtensions.GeoTransformerSchema + localName);
+        }
     }
 }

@@ -11,8 +11,11 @@ using System.Globalization;
 
 namespace GeoTransformer.Viewers.BingMaps
 {
+    /// <summary>
+    /// Displays geocaches on Bing Maps.
+    /// </summary>
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]
-    public class BingMapsList : Extensions.ICacheListViewer, Extensions.ILocalStorage
+    public class BingMapsList : Extensions.IWaypointListViewer, Extensions.ILocalStorage
     {
         public System.Drawing.Image ButtonImage
         {
@@ -28,13 +31,18 @@ namespace GeoTransformer.Viewers.BingMaps
         private bool _firstRequest = true;
         private bool _iconsCreated;
         private bool _setBoundsCalled;
-        private Dictionary<string, System.Xml.Linq.XElement> _pushpinCache = new Dictionary<string, System.Xml.Linq.XElement>();
+        private Dictionary<string, Gpx.GpxWaypoint> _pushpinCache = new Dictionary<string, Gpx.GpxWaypoint>();
+
         public System.Windows.Forms.Control Initialize()
         {
             this._browser = new System.Windows.Forms.WebBrowser();
             return this._browser;
         }
 
+        /// <summary>
+        /// Converts the given image to a grayscale copy.
+        /// </summary>
+        /// <param name="original">The image to convert.</param>
         private static System.Drawing.Image GrayscaleIcon(System.Drawing.Image original)
         {
             //create a blank bitmap the same size as original 
@@ -68,7 +76,12 @@ namespace GeoTransformer.Viewers.BingMaps
 
             return newBitmap; 
         }
-        public Uri CreateCacheIconUri(System.Xml.Linq.XElement waypoint)
+
+        /// <summary>
+        /// Creates the relative URI that points to the icon for the given waypoint.
+        /// If <paramref name="waypoint"/> is <c>null</c>, returns the base URI for the icons.
+        /// </summary>
+        public Uri CreateCacheIconUri(Gpx.GpxWaypoint waypoint)
         {
             var uriB = new UriBuilder();
             if (waypoint == null)
@@ -78,16 +91,14 @@ namespace GeoTransformer.Viewers.BingMaps
                 return uriB.Uri;
             }
 
-            var gpx = new Gpx.GpxWaypoint(waypoint);
-
-            var cacheType = gpx.Geocache.CacheType.Name;
+            var cacheType = waypoint.Geocache.CacheType.Name;
             if (string.IsNullOrEmpty(cacheType))
                 return new Uri("about:blank");
 
-            if (string.Equals(gpx.Symbol, "Geocache Found", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(waypoint.Symbol, "Geocache Found", StringComparison.OrdinalIgnoreCase))
                 cacheType = "Found Cache";
 
-            bool enabled = !gpx.Geocache.Archived && gpx.Geocache.Available;
+            bool enabled = !waypoint.Geocache.Archived && waypoint.Geocache.Available;
 
             cacheType = cacheType.Replace(" ", "").Replace("-", "");
 
@@ -114,7 +125,13 @@ namespace GeoTransformer.Viewers.BingMaps
             return uriB.Uri;
         }
 
-        public void DisplayCaches(IList<System.Xml.Linq.XDocument> data, string cacheCode)
+        /// <summary>
+        /// Called by the main form to display the caches in the viewer control returned by <see cref="Initialize"/>. The method can be called multiple
+        /// times and each time the previous data is overwritten. This method is called from a background thread.
+        /// </summary>
+        /// <param name="data">A list of GPX documents containing the cache information. The viewer may modify the list.</param>
+        /// <param name="selected">The waypoints that are currently selected. If the viewer does not support multiple selection the first waypoint should be used.</param>
+        public void DisplayCaches(IList<Gpx.GpxDocument> data, System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> selected)
         {
             this._pushpinCache.Clear();
 
@@ -139,10 +156,10 @@ namespace GeoTransformer.Viewers.BingMaps
 
             var x = this._pushpinCache[cacheCode];
             if (this.SelectedCacheChanged != null)
-                this.SelectedCacheChanged(this, new SelectedCacheChangedEventArgs(x));
+                this.SelectedCacheChanged(this, new SelectedWaypointsChangedEventArgs(x));
         }
 
-        private string CreateMapPage(IEnumerable<System.Xml.Linq.XDocument> data)
+        private string CreateMapPage(IEnumerable<Gpx.GpxDocument> data)
         {
             var iconRoot = this.CreateCacheIconUri(null);
 
@@ -186,32 +203,12 @@ namespace GeoTransformer.Viewers.BingMaps
             return sb.ToString();
         }
 
-        private void CreateMapUpdateScript(IEnumerable<System.Xml.Linq.XDocument> data)
+        private void CreateMapUpdateScript(IEnumerable<Gpx.GpxDocument> data)
         {
             var sb = new StringBuilder();
             sb.AppendLine("map.entities.clear();");
 
-            decimal minLat = decimal.MaxValue;
-            decimal minLon = decimal.MaxValue;
-            decimal maxLat = decimal.MinValue;
-            decimal maxLon = decimal.MinValue;
-
-            foreach (var wpt in data.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt")))
-            {
-                if (wpt.Element(XmlExtensions.GeocacheSchema_1_0_1 + "cache") != null)
-                {
-                    if (string.Equals(wpt.GetAttributeValue(XmlExtensions.GeoTransformerSchema + "EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    this.CreatePushpin(sb, wpt, ref minLat, ref minLon, ref maxLat, ref maxLon);
-                }
-            }
-
-            if (!this._setBoundsCalled && minLat != decimal.MaxValue)
-            {
-                this._setBoundsCalled = true;
-                sb.AppendLine("map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(" + minLat.ToString(CultureInfo.InvariantCulture) + ", " + minLon.ToString(CultureInfo.InvariantCulture) + "), new Microsoft.Maps.Location(" + maxLat.ToString(CultureInfo.InvariantCulture) + ", " + maxLon.ToString(CultureInfo.InvariantCulture) + "))});");
-            }
+            this.CreatePushpins(sb, data.SelectMany(o => o.Waypoints));
 
             var script = this._browser.Document.CreateElement("script");
             script.SetAttribute("type", "text/javascript");
@@ -219,65 +216,67 @@ namespace GeoTransformer.Viewers.BingMaps
             this._browser.Document.Body.InsertAdjacentElement(System.Windows.Forms.HtmlElementInsertionOrientation.BeforeEnd, script);
         }
 
-        private void CreateMapScript(StringBuilder sb, IEnumerable<System.Xml.Linq.XDocument> data)
+        private void CreateMapScript(StringBuilder sb, IEnumerable<Gpx.GpxDocument> data)
         {
             sb.AppendLine(@"document.body.style.height=""" + this._browser.ClientSize.Height + @"px"";");
             sb.AppendLine(@"map = new Microsoft.Maps.Map(document.body, {credentials:""" + BingApiKeys.MapsKey + @""", enableSearchLogo: false, enableClickableLogo: false});");
 
+            this.CreatePushpins(sb, data.SelectMany(o => o.Waypoints));
+        }
+
+        private void CreatePushpins(StringBuilder sb, IEnumerable<Gpx.GpxWaypoint> waypoints)
+        {
             decimal minLat = decimal.MaxValue;
             decimal minLon = decimal.MaxValue;
             decimal maxLat = decimal.MinValue;
             decimal maxLon = decimal.MinValue;
 
-            foreach (var wpt in data.SelectMany(o => o.Root.Elements(XmlExtensions.GpxSchema_1_1 + "wpt")))
+            foreach (var wpt in waypoints)
             {
-                if (wpt.Element(XmlExtensions.GeocacheSchema_1_0_1 + "cache") != null)
-                {
-                    if (string.Equals(wpt.GetAttributeValue(XmlExtensions.GeoTransformerSchema + "EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
-                        continue;
+                if (!wpt.Geocache.IsDefined())
+                    continue;
 
-                    this.CreatePushpin(sb, wpt, ref minLat, ref minLon, ref maxLat, ref maxLon);
-                }
+                if (string.Equals(wpt.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                this.CreatePushpin(sb, wpt, ref minLat, ref minLon, ref maxLat, ref maxLon);
             }
 
-            if (minLat != decimal.MaxValue)
+            if (!this._setBoundsCalled && minLat != decimal.MaxValue)
             {
                 this._setBoundsCalled = true;
                 sb.AppendLine("map.setView({ bounds: Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(" + minLat.ToString(CultureInfo.InvariantCulture) + ", " + minLon.ToString(CultureInfo.InvariantCulture) + "), new Microsoft.Maps.Location(" + maxLat.ToString(CultureInfo.InvariantCulture) + ", " + maxLon.ToString(CultureInfo.InvariantCulture) + "))});");
             }
         }
 
-        private void CreatePushpin(StringBuilder sb, System.Xml.Linq.XElement waypoint, ref decimal minLat, ref decimal minLon, ref decimal maxLat, ref decimal maxLon)
+        private void CreatePushpin(StringBuilder sb, Gpx.GpxWaypoint waypoint, ref decimal minLat, ref decimal minLon, ref decimal maxLat, ref decimal maxLon)
         {
-            var lat = waypoint.Attribute("lat").GetValue();
-            var lon = waypoint.Attribute("lon").GetValue();
-            var name = waypoint.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue();
+            var lat = waypoint.Coordinates.Latitude;
+            var lon = waypoint.Coordinates.Longitude;
+            var name = waypoint.Name;
 
-            if (string.IsNullOrWhiteSpace(lat) || string.IsNullOrWhiteSpace(lon) || string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
                 return;
 
-            decimal d;
-            if (decimal.TryParse(lat, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d))
-            {
-                if (d < minLat) minLat = d;
-                if (d > maxLat) maxLat = d;
-            }
-            if (decimal.TryParse(lon, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d))
-            {
-                if (d < minLon) minLon = d;
-                if (d > maxLon) maxLon = d;
-            }
+            if (lat < minLat) minLat = lat;
+            if (lat > maxLat) maxLat = lat;
+            if (lon < minLon) minLon = lon;
+            if (lon > maxLon) maxLon = lon;
 
             this._pushpinCache[name] = waypoint;
 
             var icon = this.CreateCacheIconUri(waypoint);
 
-            var desc = waypoint.Element(XmlExtensions.GpxSchema_1_1 + "desc").GetValue();
+            var desc = waypoint.Description;
 
-            sb.AppendLine("createPP("+lat+", "+lon+", '"+ name.Replace("'", @"\'") +"', '" + icon.Segments[icon.Segments.Length-1] +"', '" + desc.Replace("'", @"\'") + "')");
+            sb.AppendLine("createPP(" + lat.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", "
+                                      + lon.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", '" 
+                                      + name.Replace("'", @"\'") + "', '" 
+                                      + icon.Segments[icon.Segments.Length - 1] + "', '" 
+                                      + desc.Replace("'", @"\'") + "')");
         }
 
-        public event EventHandler<SelectedCacheChangedEventArgs> SelectedCacheChanged;
+        public event EventHandler<SelectedWaypointsChangedEventArgs> SelectedCacheChanged;
 
         /// <summary>
         /// Contains the local storage path where the extension can store its cache if needed. The value is set by the main engine once the extension instance is created.

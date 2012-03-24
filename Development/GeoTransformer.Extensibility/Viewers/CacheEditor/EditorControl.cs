@@ -68,7 +68,7 @@ namespace GeoTransformer.Viewers.CacheEditor
                 this._element.Remove();
 
             Extensions.ExtensionLoader.ApplicationService.RefreshCacheList();
-            Extensions.ExtensionLoader.ApplicationService.SelectCache(this._element.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue());
+            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue());
         }
 
         private void toolStripButtonEditAnother_Click(object sender, EventArgs e)
@@ -79,7 +79,7 @@ namespace GeoTransformer.Viewers.CacheEditor
                 if (frm.DialogResult != DialogResult.OK)
                     return;
 
-                Extensions.ExtensionLoader.ApplicationService.SelectCache(frm.EnteredCacheCode, true);
+                Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(frm.EnteredCacheCode, true);
             }
 
         }

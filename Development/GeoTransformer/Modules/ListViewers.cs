@@ -36,21 +36,21 @@ namespace GeoTransformer.Modules
             this.InitializeViewers();
         }
 
-        private List<Tuple<ICacheListViewer, Control>> _listViewers = new List<Tuple<ICacheListViewer, Control>>();
-        private System.Collections.ObjectModel.ObservableCollection<System.Xml.Linq.XDocument> _viewerCache;
+        private List<Tuple<IWaypointListViewer, Control>> _listViewers = new List<Tuple<IWaypointListViewer, Control>>();
+        private Gpx.ObservableCollection<Gpx.GpxDocument> _viewerCache;
 
         /// <summary>
-        /// Gets the list of loaded XML files.
+        /// Gets the list of loaded GPX files.
         /// </summary>
-        internal IList<System.Xml.Linq.XDocument> LoadedXmlFiles
+        internal IList<Gpx.GpxDocument> LoadedGpxFiles
         {
             get { return this._viewerCache; }
         }
 
         private void InitializeViewers()
         {
-            foreach (var instance in Extensions.ExtensionLoader.RetrieveExtensions<ICacheListViewer>()
-                                            .OrderBy(o => o is Viewers.EditedCacheTableView.EditedCacheTableView ? 0 : 1)
+            foreach (var instance in Extensions.ExtensionLoader.RetrieveExtensions<IWaypointListViewer>()
+                                            .OrderBy(o => o is Viewers.TableView.EditedCacheTableView ? 0 : 1)
                                             .ThenBy(o => o.ButtonText))
             {
                 instance.SelectedCacheChanged += ViewerSelectedCacheChanged;
@@ -63,24 +63,26 @@ namespace GeoTransformer.Modules
                 if (cond != null && !cond.IsEnabled)
                     btn.Enabled = false;
                 
-                this._listViewers.Add(Tuple.Create<ICacheListViewer, Control>(instance, null));
+                this._listViewers.Add(Tuple.Create<IWaypointListViewer, Control>(instance, null));
                 this.toolStripViewers.Items.Add(btn);
             }
         }
 
-        void ViewerSelectedCacheChanged(object sender, Viewers.SelectedCacheChangedEventArgs e)
+        void ViewerSelectedCacheChanged(object sender, Viewers.SelectedWaypointsChangedEventArgs e)
         {
-            var viewer = this._listViewers.FirstOrDefault(o => o.Item1 == sender as ICacheListViewer);
+            var viewer = this._listViewers.FirstOrDefault(o => o.Item1 == sender as IWaypointListViewer);
             if (viewer == null || !viewer.Item2.Visible)
                 return;
 
-            var newCode = e.CacheCode;
-            if (string.Equals(this.SelectedCacheCode, newCode, StringComparison.OrdinalIgnoreCase))
+            if (this.SelectedWaypoints == null && e.Selection == null)
                 return;
 
-            this.SelectedCacheCode = newCode;
+            if (this.SelectedWaypoints != null && this.SelectedWaypoints.SequenceEqual(e.Selection))
+                return;
 
-            var handler = this.Events[SelectedCacheChangedEvent] as EventHandler<Viewers.SelectedCacheChangedEventArgs>;
+            this.SelectedWaypoints = e.Selection;
+
+            var handler = this.Events[SelectedWaypointsChangedEvent] as EventHandler<Viewers.SelectedWaypointsChangedEventArgs>;
             if (handler != null)
                 handler(this, e);
         }
@@ -167,9 +169,19 @@ namespace GeoTransformer.Modules
             thread.Start(true);
         }
 
-        internal void ChangeSelectedCache(string code)
+        internal void ChangeSelectedWaypoint(string name)
         {
-            new System.Threading.Thread((a) => { this.SelectedCacheCode = (string)a; this.LoadListViewerData(false); }).Start(code);
+            // TODO: could save the name in a temp variable and select it once the load completes
+            if (this._viewerCache == null)
+                return;
+
+            this.SelectedWaypoints = new System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint>(
+                    this._viewerCache.SelectMany(o => o.Waypoints)
+                                     .Where(o => string.Equals(o.Name, name, StringComparison.OrdinalIgnoreCase))
+                                     .ToList()
+                );
+
+            new System.Threading.Thread(() => { this.LoadListViewerData(false); }).Start();
         }
 
         /// <summary>
@@ -216,13 +228,13 @@ namespace GeoTransformer.Modules
                     if (this._viewerCache != null)
                     {
                         foreach (var doc in this._viewerCache)
-                            doc.Changed -= _viewerCache_XmlDocumentChanged;
+                            doc.PropertyChanged -= _viewerCache_GpxDocumentChanged;
                         this._viewerCache.CollectionChanged -= this._viewerCache_CollectionChanged;
                     }
 
-                    this._viewerCache = new System.Collections.ObjectModel.ObservableCollection<System.Xml.Linq.XDocument>(specialTransformer.Data);
+                    this._viewerCache = new Gpx.ObservableCollection<Gpx.GpxDocument>(specialTransformer.Data);
                     foreach (var doc in this._viewerCache)
-                        doc.Changed += _viewerCache_XmlDocumentChanged;
+                        doc.PropertyChanged += _viewerCache_GpxDocumentChanged;
 
                     this._viewerCache.CollectionChanged += this._viewerCache_CollectionChanged;
                 }
@@ -233,7 +245,7 @@ namespace GeoTransformer.Modules
                 var currentViewerBtn = this.toolStripViewers.Items.OfType<ToolStripButton>().First(o => o.Checked);
                 var tag = (int)currentViewerBtn.Tag;
                 var viewer = this._listViewers[tag];
-                viewer.Item1.DisplayCaches(this._viewerCache, this.SelectedCacheCode);
+                viewer.Item1.DisplayCaches(this._viewerCache, this.SelectedWaypoints);
             }
 
             this.Invoke(() => { this.toolStripViewersRefresh.Enabled = true; this.toolStripViewersRefresh.Text = "Refresh"; });
@@ -242,40 +254,38 @@ namespace GeoTransformer.Modules
         void _viewerCache_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)
-                foreach (System.Xml.Linq.XDocument doc in e.OldItems)
-                    doc.Changed -= this._viewerCache_XmlDocumentChanged;
+                foreach (Gpx.GpxDocument doc in e.OldItems)
+                    doc.PropertyChanged -= this._viewerCache_GpxDocumentChanged;
 
             if (e.NewItems != null)
-                foreach (System.Xml.Linq.XDocument doc in e.NewItems)
-                    doc.Changed += this._viewerCache_XmlDocumentChanged;
+                foreach (Gpx.GpxDocument doc in e.NewItems)
+                    doc.PropertyChanged += this._viewerCache_GpxDocumentChanged;
         }
 
-        void _viewerCache_XmlDocumentChanged(object sender, System.Xml.Linq.XObjectChangeEventArgs e)
+        void _viewerCache_GpxDocumentChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.ObjectChange == System.Xml.Linq.XObjectChange.Value || sender is System.Xml.Linq.XText)
-                this.ParentForm.UnsavedData = true;
-
-            if (e.ObjectChange == System.Xml.Linq.XObjectChange.Remove)
-                this.ParentForm.UnsavedData = true;
+#warning Has to be enhanced to detect only changes to editor extension elements.
+            //if (e.ObjectChange == System.Xml.Linq.XObjectChange.Value || sender is System.Xml.Linq.XText)
+            this.ParentForm.UnsavedData = true;
         }
 
         /// <summary>
         /// Gets the the GC code of the currently selected cache.
         /// </summary>
-        public string SelectedCacheCode
+        public System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> SelectedWaypoints
         {
             get;
             private set;
         }
 
-        private static object SelectedCacheChangedEvent = new object();
+        private static object SelectedWaypointsChangedEvent = new object();
         /// <summary>
         /// Occurs when <see cref="SelectedCacheCode"/> has changed.
         /// </summary>
-        public event EventHandler<Viewers.SelectedCacheChangedEventArgs> SelectedCacheChanged
+        public event EventHandler<Viewers.SelectedWaypointsChangedEventArgs> SelectedWaypointsChanged
         {
-            add { this.Events.AddHandler(SelectedCacheChangedEvent, value); }
-            remove { this.Events.AddHandler(SelectedCacheChangedEvent, value); }
+            add { this.Events.AddHandler(SelectedWaypointsChangedEvent, value); }
+            remove { this.Events.AddHandler(SelectedWaypointsChangedEvent, value); }
         }
     }
 }

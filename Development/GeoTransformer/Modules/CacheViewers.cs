@@ -36,12 +36,12 @@ namespace GeoTransformer.Modules
             this.InitializeViewers();
         }
 
-        private List<Tuple<ICacheViewer, Control, ToolStripButton>> _cacheViewers = new List<Tuple<ICacheViewer, Control, ToolStripButton>>();
-        private System.Xml.Linq.XElement _currentSelection;
+        private List<Tuple<IWaypointViewer, Control, ToolStripButton>> _cacheViewers = new List<Tuple<IWaypointViewer, Control, ToolStripButton>>();
+        private System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> _currentSelection;
 
         private void InitializeViewers()
         {
-            foreach (var instance in Extensions.ExtensionLoader.RetrieveExtensions<ICacheViewer>()
+            foreach (var instance in Extensions.ExtensionLoader.RetrieveExtensions<IWaypointViewer>()
                                                                .OrderBy(o => o is Viewers.CacheEditor.CacheEditor ? 0 : 1)
                                                                .ThenBy(o => o.ButtonText))
             {
@@ -55,7 +55,7 @@ namespace GeoTransformer.Modules
                 else if (!instance.IsEnabled(null))
                     btn.Enabled = false;
 
-                this._cacheViewers.Add(Tuple.Create<ICacheViewer, Control, ToolStripButton>(instance, null, btn));
+                this._cacheViewers.Add(Tuple.Create<IWaypointViewer, Control, ToolStripButton>(instance, null, btn));
                 this.toolStripViewers.Items.Add(btn);
             }
         }
@@ -101,12 +101,15 @@ namespace GeoTransformer.Modules
             }
 
             //viewer.Item2.Visible = true;
-            this.DisplayCache(this._currentSelection);
+            this.DisplayWaypoints(this._currentSelection);
         }
 
-        public void DisplayCache(System.Xml.Linq.XElement cache)
+        public void DisplayWaypoints(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            this._currentSelection = cache;
+            if (waypoints == null)
+                waypoints = new System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint>(new Gpx.GpxWaypoint[0]);
+
+            this._currentSelection = waypoints;
 
             foreach (var v in this._cacheViewers)
             {
@@ -115,7 +118,7 @@ namespace GeoTransformer.Modules
                 if (cond != null)
                     enabled &= cond.IsEnabled;
 
-                enabled &= v.Item1.IsEnabled(cache);
+                enabled &= v.Item1.IsEnabled(waypoints);
 
                 v.Item3.Enabled = enabled;
 
@@ -128,7 +131,7 @@ namespace GeoTransformer.Modules
                     }
 
                     v.Item2.Visible = true;
-                    v.Item1.DisplayCache(cache);
+                    v.Item1.DisplayWaypoints(waypoints);
                 }
             }
         }

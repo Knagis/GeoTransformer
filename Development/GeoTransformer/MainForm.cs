@@ -76,7 +76,7 @@ namespace GeoTransformer
         {
             this.SaveSettings();
 
-            var xmlFiles = this.listViewers.LoadedXmlFiles;
+            var xmlFiles = this.listViewers.LoadedGpxFiles;
             if (xmlFiles != null)
             {
                 foreach (var ext in ExtensionLoader.RetrieveExtensions<Extensions.ISaveData>())
@@ -182,7 +182,7 @@ namespace GeoTransformer
 
             this.labelVersion2.Text = "Application version: " + Application.ProductVersion;
 
-            this.listViewers.SelectedCacheChanged += (sender, args) => { this.cacheViewers.DisplayCache(args.CacheXmlData); };
+            this.listViewers.SelectedWaypointsChanged += (sender, args) => { this.cacheViewers.DisplayWaypoints(args.Selection); };
 
             foreach (var tabPage in ExtensionLoader.RetrieveExtensions<Extensions.ITopLevelTabPage>())
             {
