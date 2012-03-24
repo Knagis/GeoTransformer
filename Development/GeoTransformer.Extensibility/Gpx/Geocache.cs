@@ -236,6 +236,22 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
+        /// Raises the <see cref="E:PropertyChanged"/> event.
+        /// </summary>
+        /// <param name="args">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
+        protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs args)
+        {
+            this._isDefinedCachedValue = null;
+
+            base.OnPropertyChanged(args);
+        }
+
+        /// <summary>
+        /// Holds a cached value for <see cref="IsDefined"/> method. The value is cleared when any property is changed within this instance.
+        /// </summary>
+        private bool? _isDefinedCachedValue;
+
+        /// <summary>
         /// Checks if the geocache extensions have been defined for the waypoint.
         /// </summary>
         /// <returns><c>True</c> if the waypoint already have geocache extensions; otherwise <c>false</c>.</returns>
@@ -243,7 +259,10 @@ namespace GeoTransformer.Gpx
         /// for new geocaches.</remarks>
         public bool IsDefined()
         {
-            return this.Id.HasValue
+            if (this._isDefinedCachedValue.HasValue)
+                return this._isDefinedCachedValue.Value;
+
+            var x = this.Id.HasValue
                 || !string.IsNullOrEmpty(this.ShortDescription.Text)
                 || !string.IsNullOrEmpty(this.LongDescription.Text)
                 || this.Difficulty.HasValue
@@ -266,6 +285,9 @@ namespace GeoTransformer.Gpx
                 || this.Images.Count > 0
                 || this.Logs.Count > 0
                 || this.Trackables.Count > 0;
+
+            this._isDefinedCachedValue = x;
+            return x;
         }
 
         /// <summary>
@@ -495,6 +517,5 @@ namespace GeoTransformer.Gpx
             get { return this.GetValue<ObservableCollection<GeocacheTrackable>>("Trackables", true); }
             private set { this.SetValue("Trackables", (ObservableCollection<GeocacheTrackable>)value); }
         }
-
     }
 }
