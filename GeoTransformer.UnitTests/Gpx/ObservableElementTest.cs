@@ -22,7 +22,7 @@ namespace GeoTransformer.UnitTests.Gpx
             {
             }
 
-            public void ResumeObservation()
+            public new void ResumeObservation()
             {
                 base.ResumeObservation();
             }
