@@ -244,6 +244,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Transformers\ProgressUpdateEventArgs.cs" />
+    <Compile Include="Transformers\ReadableAttributes\ReadableAttributes.cs" />
     <Compile Include="Transformers\StatusMessageEventArgs.cs" />
     <Compile Include="Transformers\StatusSeverity.cs" />
     <Compile Include="Transformers\TransformerOptions.cs" />
