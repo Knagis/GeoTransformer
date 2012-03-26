@@ -16,7 +16,8 @@ namespace GeoTransformer
         {
             { Version.Parse("4.1.0.0"), "Added an option to put geocache attributes in a log entry so it can be read on GPS." + Environment.NewLine +
                                         "Added support for loading GPX 1.1 files." + Environment.NewLine + 
-                                        "Partial support for geocaching.com GPX 1.0.2 extensions (still under development by Groundspeak)." },
+                                        "Partial support for geocaching.com GPX 1.0.2 extensions (still under development by Groundspeak)." + Environment.NewLine +
+                                        "Virtual caches are now displayed on the map with the correct symbol." },
             { Version.Parse("4.0.0.3"), "Fixed the 'Not available' problem in Pocket Query download." + Environment.NewLine +
                                         "Cached PQ downloads are now removed if unused (freeing up space)." },
             { Version.Parse("4.0.0.0"), "Created a welcome screen that is shown to the users." + Environment.NewLine +
