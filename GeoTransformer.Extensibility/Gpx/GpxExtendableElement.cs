@@ -120,5 +120,53 @@ namespace GeoTransformer.Gpx
         {
             return this.FindExtensionAttributeValue(XmlExtensions.GeoTransformerSchema + localName);
         }
+
+        /// <summary>
+        /// Finds the extension element with the given <paramref name="name"/>. If <paramref name="create"/> is set to <c>true</c>
+        /// will create a new element if one does not exist.
+        /// </summary>
+        /// <param name="name">The fully qualified name of the extension element.</param>
+        /// <param name="create"><c>True</c> to create a new element if one cannot be found.</param>
+        /// <returns>The extension element or <c>null</c> if one cannot be found and <paramref name="create"/> is <c>false</c>.</returns>
+        public XElement FindExtensionElement(XName name, bool create = false)
+        {
+            var elem = this.ExtensionElements.FirstOrDefault(o => o.Name == name);
+            if (elem == null && create)
+                this.ExtensionElements.Add(elem = new XElement(name));
+
+            return elem;
+        }
+
+        /// <summary>
+        /// Finds the extension element with the given <paramref name="name"/> assuming <see cref="XmlExtensions.GeoTransformerSchema"/>.
+        /// If <paramref name="create"/> is set to <c>true</c> will create a new element if one does not exist.
+        /// </summary>
+        /// <param name="localName">The local name of the extension element.</param>
+        /// <param name="create"><c>True</c> to create a new element if one cannot be found.</param>
+        /// <returns>
+        /// The extension element or <c>null</c> if one cannot be found and <paramref name="create"/> is <c>false</c>.
+        /// </returns>
+        public XElement FindExtensionElement(string localName, bool create = false)
+        {
+            return FindExtensionElement(XmlExtensions.GeoTransformerSchema + localName, create);
+        }
+
+        /// <summary>
+        /// Finds the extension element for the given <paramref name="type"/> class (uses <see cref="Type.FullName"/> as the element name).
+        /// If <paramref name="create"/> is set to <c>true</c> will create a new element if one does not exist.
+        /// </summary>
+        /// <param name="type">The extension for which to find the element.</param>
+        /// <param name="create"><c>True</c> to create a new element if one cannot be found.</param>
+        /// <returns>
+        /// The extension element or <c>null</c> if one cannot be found and <paramref name="create"/> is <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">when <paramref name="type"/> is <c>null</c></exception>
+        public XElement FindExtensionElement(Type type, bool create = false)
+        {
+            if (type == null)
+                throw new ArgumentNullException("type");
+
+            return FindExtensionElement(XmlExtensions.GeoTransformerSchema + type.FullName, create);
+        }
     }
 }

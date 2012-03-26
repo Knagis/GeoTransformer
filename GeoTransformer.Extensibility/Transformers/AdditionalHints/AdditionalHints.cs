@@ -42,7 +42,7 @@ namespace GeoTransformer.Transformers.AdditionalHints
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
         protected override void Process(Gpx.GpxWaypoint waypoint, TransformerOptions options)
         {
-            var ext = waypoint.ExtensionElements.FirstOrDefault(o => o.Name == XmlExtensions.CreateExtensionName(typeof(AdditionalHints)));
+            var ext = waypoint.FindExtensionElement(typeof(AdditionalHints));
             if (ext == null)
                 return;
 
@@ -77,12 +77,12 @@ namespace GeoTransformer.Transformers.AdditionalHints
         }
 
         /// <summary>
-        /// Binds the control to the given XML <paramref name="data"/> object. For consequent calls the method removes previous bindings and sets up new ones.
+        /// Binds the control to the given GPX <paramref name="waypoint"/> object. For consequent calls the method removes previous bindings and sets up new ones.
         /// </summary>
-        /// <param name="data">The data object.</param>
-        public void BindControl(System.Xml.Linq.XElement data)
+        /// <param name="waypoint">The GPX waypoint object that will be edited by the control.</param>
+        public void BindControl(Gpx.GpxWaypoint waypoint)
         {
-            this._editorControl.BoundElement = data;
+            this._editorControl.BoundElement = waypoint == null ? null : waypoint.FindExtensionElement(typeof(AdditionalHints), true);
         }
     }
 }

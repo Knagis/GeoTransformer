@@ -40,7 +40,7 @@ namespace GeoTransformer.Transformers.MarkSolved
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
         protected override void Process(Gpx.GpxWaypoint waypoint, TransformerOptions options)
         {
-            var configElement = waypoint.ExtensionElements.FirstOrDefault(o => o.Name == XmlExtensions.CreateExtensionName(typeof(MarkSolved)));
+            var configElement = waypoint.FindExtensionElement(typeof(MarkSolved));
             if (configElement == null)
                 return;
 
@@ -69,12 +69,12 @@ namespace GeoTransformer.Transformers.MarkSolved
         }
 
         /// <summary>
-        /// Binds the control to the given XML <paramref name="data"/> object. For consequent calls the method removes previous bindings and sets up new ones.
+        /// Binds the control to the given GPX <paramref name="waypoint"/> object. For consequent calls the method removes previous bindings and sets up new ones.
         /// </summary>
-        /// <param name="data">The data object.</param>
-        public void BindControl(System.Xml.Linq.XElement data)
+        /// <param name="waypoint">The GPX waypoint object that will be edited by the control.</param>
+        public void BindControl(Gpx.GpxWaypoint waypoint)
         {
-            this._editorControl.BoundElement = data;
+            this._editorControl.BoundElement = waypoint == null ? null : waypoint.FindExtensionElement(typeof(MarkSolved), true);
         }
     }
 }

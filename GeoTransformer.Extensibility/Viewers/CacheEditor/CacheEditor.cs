@@ -49,32 +49,15 @@ namespace GeoTransformer.Viewers.CacheEditor
         /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
         public void DisplayWaypoints(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-#warning Implement without XElement
-            System.Xml.Linq.XElement data = null;
-            if (waypoints.Count > 0)
-                data = waypoints[0].Serialize(new Gpx.GpxSerializationOptions() 
-                {
-                    GpxVersion = Gpx.GpxVersion.Gpx_1_0,
-                    EnableUnsupportedExtensions = true,
-                    EnableInvalidElements = true,
-                    GeocacheVersion = Gpx.GeocacheVersion.Geocache_1_0_1,
-                });
+            var wpt = waypoints.FirstOrDefault();
 
-            this._container.BindElement(data);
+            this._container.BindElement(wpt);
 
-            this._container.flowLayoutPanel.Enabled = data != null;
+            this._container.flowLayoutPanel.Enabled = wpt != null;
 
             foreach (var editor in this._editors)
             {
-                if (data == null)
-                    editor.Item1.BindControl(null);
-                else
-                {
-                    var elem = data.Element(XmlExtensions.CreateExtensionName(editor.Item1.GetType()));
-                    if (elem == null)
-                        data.Add(elem = new System.Xml.Linq.XElement(XmlExtensions.CreateExtensionName(editor.Item1.GetType())));
-                    editor.Item1.BindControl(elem);
-                }
+                editor.Item1.BindControl(wpt);
             }
         }
 

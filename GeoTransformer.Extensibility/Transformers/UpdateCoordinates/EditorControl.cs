@@ -16,21 +16,24 @@ namespace GeoTransformer.Transformers.UpdateCoordinates
 {
     public partial class EditorControl : UI.UserControlBase
     {
+        private Gpx.GpxWaypoint _waypoint;
+
         public EditorControl()
         {
             InitializeComponent();
         }
 
-        public System.Xml.Linq.XElement BoundElement 
+        public Gpx.GpxWaypoint BoundElement 
         {
             get
             {
-                return this.coordinateEditor1.BoundElement;
+                return this._waypoint;
             }
 
             set
             {
-                this.coordinateEditor1.BoundElement = value;
+                this._waypoint = value;
+                this.coordinateEditor1.BoundElement = this._waypoint == null ? null : this._waypoint.FindExtensionElement(typeof(UpdateCoordinates), true);
             }
         }
     }

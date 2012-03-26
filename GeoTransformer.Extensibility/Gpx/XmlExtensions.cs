@@ -92,19 +92,6 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Creates the name for the extension element for a given <paramref name="extensionType"/>.
-        /// </summary>
-        /// <param name="extensionType">The type of the extension for which to create the name.</param>
-        /// <returns>The <see cref="XName"/> of the element.</returns>
-        public static XName CreateExtensionName(Type extensionType)
-        {
-            if (extensionType == null)
-                throw new ArgumentNullException("extensionType");
-
-            return GeoTransformerSchema + extensionType.FullName;
-        }
-
-        /// <summary>
         /// Checks if the given element contains any significant information (empty elements and attributes are not counted as well as namespace declaration attributes).
         /// </summary>
         /// <param name="element">The element that has to be checked.</param>
