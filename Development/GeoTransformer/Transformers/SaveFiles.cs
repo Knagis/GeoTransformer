@@ -66,7 +66,7 @@ namespace GeoTransformer.Transformers
             if (origname.Name.EndsWith("-wpts.gpx", StringComparison.OrdinalIgnoreCase))
                 document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._waypointDirectory ?? this._cacheDirectory, fname));
             else
-                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._cacheDirectory, fname), System.Xml.Linq.SaveOptions.DisableFormatting);
+                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._cacheDirectory, fname));
         }
     }
 }
