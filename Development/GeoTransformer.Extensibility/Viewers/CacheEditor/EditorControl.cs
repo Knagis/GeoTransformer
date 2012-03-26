@@ -16,7 +16,7 @@ namespace GeoTransformer.Viewers.CacheEditor
 {
     internal partial class EditorControl : UserControl
     {
-        private System.Xml.Linq.XElement _element;
+        private Gpx.GpxWaypoint _element;
         private CacheEditor _editor;
 
         public EditorControl(CacheEditor editor)
@@ -29,11 +29,11 @@ namespace GeoTransformer.Viewers.CacheEditor
             this.toolStripButtonRemove.Image = global::GeoTransformer.Viewers.CacheEditor.Resources.Remove;
         }
 
-        public void BindElement(System.Xml.Linq.XElement element)
+        public void BindElement(Gpx.GpxWaypoint waypoint)
         {
-            this._element = element;
+            this._element = waypoint;
 
-            if (element == null)
+            if (waypoint == null)
             {
                 this.toolStripButtonRemove.Enabled = false;
                 this.SetTitle(null);
@@ -41,7 +41,7 @@ namespace GeoTransformer.Viewers.CacheEditor
             else
             {
                 this.toolStripButtonRemove.Enabled = true;
-                this.SetTitle(element.Element(XmlExtensions.GpxSchema_1_1 + "desc").GetValue() ?? element.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue());
+                this.SetTitle(waypoint.Description ?? waypoint.Name);
             }
         }
 
@@ -59,16 +59,25 @@ namespace GeoTransformer.Viewers.CacheEditor
             if (res != DialogResult.Yes)
                 return;
 
-            foreach (var elem in this._element.Elements().ToList())
-                if (elem.Name.Namespace  == XmlExtensions.GeoTransformerSchema)
-                    elem.Remove();
+            var extelems = this._element.ExtensionElements;
+            for (int i = extelems.Count - 1; i >= 0; i--)
+                if (extelems[i].Name.Namespace == XmlExtensions.GeoTransformerSchema)
+                    extelems.RemoveAt(i);
 
-            if (!this._element.ContainsSignificantInformation() 
-                || string.Equals(this._element.GetAttributeValue(XmlExtensions.GeoTransformerSchema + "EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
-                this._element.Remove();
+
+            if (string.Equals(this._element.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
+            {
+                // find the document that contains the waypoint and remove the waypoint from it
+                foreach (var doc in Extensions.ExtensionLoader.ApplicationService.RetrieveDisplayedCaches())
+                    if (doc.Waypoints.Remove(this._element))
+                        break;
+
+                // clear the selection as the waypoint no longer exists
+                this.BindElement(null);
+            }
 
             Extensions.ExtensionLoader.ApplicationService.RefreshCacheList();
-            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element.Element(XmlExtensions.GpxSchema_1_1 + "name").GetValue());
+            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element.Name);
         }
 
         private void toolStripButtonEditAnother_Click(object sender, EventArgs e)

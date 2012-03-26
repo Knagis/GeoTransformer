@@ -36,7 +36,7 @@ namespace GeoTransformer.Transformers.UpdateCoordinates
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
         protected override void Process(Gpx.GpxWaypoint waypoint, TransformerOptions options)
         {
-            var configElement = waypoint.ExtensionElements.FirstOrDefault(o => o.Name == XmlExtensions.CreateExtensionName(typeof(UpdateCoordinates)));
+            var configElement = waypoint.FindExtensionElement(typeof(UpdateCoordinates));
             if (configElement == null)
                 return;
 
@@ -52,15 +52,25 @@ namespace GeoTransformer.Transformers.UpdateCoordinates
 
         private EditorControl _editorControl;
 
+        /// <summary>
+        /// Creates the control that is used to edit the data for the waypoints. Note that the same control is reused for all caches.
+        /// </summary>
+        /// <returns>
+        /// The user interface editor control.
+        /// </returns>
         public System.Windows.Forms.Control CreateControl()
         {
             this._editorControl = new EditorControl();
             return this._editorControl;
         }
 
-        public void BindControl(System.Xml.Linq.XElement data)
+        /// <summary>
+        /// Binds the control to the given GPX <paramref name="waypoint"/> object. For consequent calls the method removes previous bindings and sets up new ones.
+        /// </summary>
+        /// <param name="waypoint">The GPX waypoint object that will be edited by the control.</param>
+        public void BindControl(Gpx.GpxWaypoint waypoint)
         {
-            this._editorControl.BoundElement = data;
+            this._editorControl.BoundElement = waypoint;
         }
 
         #endregion
