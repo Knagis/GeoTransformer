@@ -262,11 +262,20 @@ namespace GeoTransformer.Modules
                     doc.PropertyChanged += this._viewerCache_GpxDocumentChanged;
         }
 
-        void _viewerCache_GpxDocumentChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void _viewerCache_GpxDocumentChanged(object sender, Gpx.ObservableElementChangedEventArgs e)
         {
-#warning Has to be enhanced to detect only changes to editor extension elements.
-            //if (e.ObjectChange == System.Xml.Linq.XObjectChange.Value || sender is System.Xml.Linq.XText)
-            this.ParentForm.UnsavedData = true;
+            // if the marker is already set, no need to spend any more time on this
+            if (this.ParentForm.UnsavedData)
+                return;
+
+            // find the inner most change that triggered the event.
+            var innerMost = e.FindFirstChange();
+
+            // for now the change detection is limited to extension elements as those are the only data that is saved
+            // once "Save" is clicked (assuming no ISaveData external extensions are added).
+            // TODO: this should be forwarded to the extensions doing the actual saving
+            if (innerMost.XObjectChange.HasValue && (innerMost.XObjectChange == System.Xml.Linq.XObjectChange.Value || innerMost.Target is System.Xml.Linq.XText))
+                this.ParentForm.UnsavedData = true;
         }
 
         /// <summary>
