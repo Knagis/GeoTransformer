@@ -33,7 +33,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheImage"/> class.
         /// </summary>
-        /// <param name="type">The geocache image XML element.</param>
+        /// <param name="image">The geocache image XML element.</param>
         public GeocacheImage(XElement image)
             : base(true)
         {
@@ -68,7 +68,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Parses the contents of <c>groundspeak:images</c> element and returns a collection of images (one for each child element).
         /// </summary>
-        /// <param name="attributes">The <c>groundspeak:images</c> XML element.</param>
+        /// <param name="images">The <c>groundspeak:images</c> XML element.</param>
         /// <returns>A collection with one <see cref="GeocacheImage"/> instance per XML element.</returns>
         public static ObservableCollection<GeocacheImage> Parse(XElement images)
         {

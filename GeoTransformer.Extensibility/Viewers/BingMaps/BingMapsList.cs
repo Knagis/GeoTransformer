@@ -17,11 +17,17 @@ namespace GeoTransformer.Viewers.BingMaps
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]
     public class BingMapsList : Extensions.IWaypointListViewer, Extensions.ILocalStorage
     {
+        /// <summary>
+        /// Gets the icon to be displayed on the button.
+        /// </summary>
         public System.Drawing.Image ButtonImage
         {
             get { return Resources.icon; }
         }
 
+        /// <summary>
+        /// Gets the text to be displayed on the button.
+        /// </summary>
         public string ButtonText
         {
             get { return "Bing maps"; }
@@ -33,6 +39,12 @@ namespace GeoTransformer.Viewers.BingMaps
         private bool _setBoundsCalled;
         private Dictionary<string, Gpx.GpxWaypoint> _pushpinCache = new Dictionary<string, Gpx.GpxWaypoint>();
 
+        /// <summary>
+        /// Creates the control that will display the caches in the main form. The method is called only once and after that the control is reused.
+        /// </summary>
+        /// <returns>
+        /// An initialized control that display the cache list.
+        /// </returns>
         public System.Windows.Forms.Control Initialize()
         {
             this._browser = new System.Windows.Forms.WebBrowser();
@@ -149,6 +161,10 @@ namespace GeoTransformer.Viewers.BingMaps
             this._browser.ObjectForScripting = this;
         }
 
+        /// <summary>
+        /// Method called via COM when the user clicks on a pushpin within the browser.
+        /// </summary>
+        /// <param name="cacheCode">The geocache code.</param>
         public void PushpinOnClick(string cacheCode)
         {
             if (!this._pushpinCache.ContainsKey(cacheCode))
@@ -276,6 +292,9 @@ namespace GeoTransformer.Viewers.BingMaps
                                       + desc.Replace("'", @"\'") + "')");
         }
 
+        /// <summary>
+        /// Occurs when the currently selected waypoints have been changed from within the control.
+        /// </summary>
         public event EventHandler<SelectedWaypointsChangedEventArgs> SelectedCacheChanged;
 
         /// <summary>

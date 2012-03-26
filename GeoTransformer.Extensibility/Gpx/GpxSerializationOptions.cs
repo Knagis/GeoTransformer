@@ -70,12 +70,12 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Gets or sets the GPX version for the resulting XML document. Default is <see cref="GpxVersion.Gpx_1_1"/>.
+        /// Gets or sets the GPX version for the resulting XML document. Default is <see cref="F:GeoTransformer.Gpx.GpxVersion.Gpx_1_1"/>.
         /// </summary>
         public GpxVersion GpxVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets the version of Groundspeak extensions for the resulting XML document. Default is <see cref="GeocacheVersion.Geocache_1_0_1"/>.
+        /// Gets or sets the version of Groundspeak extensions for the resulting XML document. Default is <see cref="F:GeoTransformer.Gpx.GeocacheVersion.Geocache_1_0_1"/>.
         /// </summary>
         public GeocacheVersion GeocacheVersion { get; set; }
 
@@ -83,7 +83,7 @@ namespace GeoTransformer.Gpx
         /// Gets or sets whether the resulting XML document will include all extension attributes and elements even on XML elements where the schema does not
         /// allow it. Should be <c>false</c> for the resulting document to be interchangeable with other applications and hardware and <c>true</c> if the saved
         /// data must contain all details from the <see cref="GpxDocument"/>.
-        /// Note that if setting this to <c>true</c>, <see cref="GpxVersion.Gpx_1_1"/> should be used.
+        /// Note that if setting this to <c>true</c>, <see cref="F:GeoTransformer.Gpx.GpxVersion.Gpx_1_1"/> should be used.
         /// Default is <c>false</c>.
         /// </summary>
         public bool EnableUnsupportedExtensions { get; set; }

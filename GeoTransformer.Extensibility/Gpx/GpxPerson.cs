@@ -47,7 +47,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="options">The GPX serialization options.</param>
         /// <param name="localName">The name of the XML element that will be created.</param>
-        /// <returns>The link as XML element. If the <see cref="Href"/> property is not set, returns <c>null</c> (unless <paramref name="options"/> specify otherwise).</returns>
+        /// <returns>The person as XML element.</returns>
         public XElement Serialize(GpxSerializationOptions options, string localName = "author")
         {
             if (options == null)

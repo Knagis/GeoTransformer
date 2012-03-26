@@ -13,6 +13,10 @@ using GeoTransformer.Extensions;
 
 namespace GeoTransformer.Viewers.TableView
 {
+    /// <summary>
+    /// Waypoint viewer that displays them in a table form.
+    /// Can be exteneded by derived classes to customize what data and how is displayed.
+    /// </summary>
     public class TableView : IWaypointListViewer
     {
         /// <summary>
@@ -104,6 +108,9 @@ namespace GeoTransformer.Viewers.TableView
             }
         }
 
+        /// <summary>
+        /// Occurs when the currently selected waypoints have been changed from within the control.
+        /// </summary>
         public event EventHandler<SelectedWaypointsChangedEventArgs> SelectedCacheChanged;
     }
 }

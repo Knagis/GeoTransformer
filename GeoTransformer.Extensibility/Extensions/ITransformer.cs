@@ -31,7 +31,7 @@ namespace GeoTransformer.Extensions
         event EventHandler<Transformers.ProgressUpdateEventArgs> ProgressUpdate;
 
         /// <summary>
-        /// Notifies the transformer that the <see cref="Execute"/> method should be now terminated. This is called from a separate thread by the controlling form.
+        /// Notifies the transformer that the <see cref="Process"/> method should be now terminated. This is called from a separate thread by the controlling form.
         /// Note that the implementing method has to support multiple calls to <see cref="Process"/> method on the same instance so the cancellation
         /// has to leave the instance in valid state.
         /// </summary>

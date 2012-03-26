@@ -262,11 +262,27 @@ namespace GeoTransformer.Coordinates
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Implements the equality operator. 
+        /// </summary>
+        /// <param name="left">The left side operand.</param>
+        /// <param name="right">The right side operand.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(Wgs84Point left, Wgs84Point right)
         {
             return left._latitude == right._latitude && left._longitude == right._longitude;
         }
 
+        /// <summary>
+        /// Implements the inequality operator. 
+        /// </summary>
+        /// <param name="left">The left side operand.</param>
+        /// <param name="right">The right side operand.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(Wgs84Point left, Wgs84Point right)
         {
             return left._latitude != right._latitude || left._longitude != right._longitude;
@@ -329,8 +345,7 @@ namespace GeoTransformer.Coordinates
         /// Determines if the two coordinates are approximately equal (uses the <see cref="ToString"/> result for comparison).
         /// </summary>
         /// <param name="first">The first coordinates.</param>
-        /// <param name="right">The second coordinates.</param>
-        /// <param name="precision">The precision (number of digits after decimal point) to which to round.</param>
+        /// <param name="second">The second coordinates.</param>
         /// <returns><c>True</c> if the coordinates are approximately the same.</returns>
         public static bool ApproximateEquals(Wgs84Point? first, Wgs84Point? second)
         {

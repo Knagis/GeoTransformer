@@ -19,6 +19,10 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
     {
         public Dictionary<string, string> FieldValues { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CaptchaForm"/> class.
+        /// </summary>
+        /// <param name="htmlScript">The HTML script that will be displayed on the form.</param>
         public CaptchaForm(string htmlScript)
         {
             this.FieldValues = new Dictionary<string, string>();

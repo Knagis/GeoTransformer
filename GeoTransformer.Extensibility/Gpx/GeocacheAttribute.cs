@@ -33,7 +33,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheAttribute"/> class.
         /// </summary>
-        /// <param name="type">The attribute XML element.</param>
+        /// <param name="attribute">The attribute XML element.</param>
         public GeocacheAttribute(XElement attribute)
             : base(true)
         {

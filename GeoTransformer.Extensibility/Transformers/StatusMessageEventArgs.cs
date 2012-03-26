@@ -16,11 +16,11 @@ namespace GeoTransformer.Transformers
     public class StatusMessageEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatusReportEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="StatusMessageEventArgs"/> class.
         /// </summary>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="message">The message text.</param>
-        /// <param name="args">The arguments to pass to <see cref="String.Format"/> function; if specified, the <paramref name="message"/> is considered
+        /// <param name="args">The arguments to pass to <see cref="String.Format(string, object[])"/> function; if specified, the <paramref name="message"/> is considered
         /// to contain the formatting template.</param>
         public StatusMessageEventArgs(StatusSeverity severity, string message, params object[] args)
         {

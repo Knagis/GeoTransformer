@@ -12,6 +12,9 @@ using GeoTransformer.Extensions;
 
 namespace GeoTransformer.Transformers.Translator
 {
+    /// <summary>
+    /// Transformer that uses Bing Translator to automatically translate descriptions, hints and logs.
+    /// </summary>
     public class Translator : TransformerBase, IConfigurable, ILocalStorage
     {
         /// <summary>
@@ -320,7 +323,7 @@ namespace GeoTransformer.Transformers.Translator
 
         /// <summary>
         /// Processes the specified GPX documents. If the method is not overriden in the derived class,
-        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// calls <see cref="TransformerBase.Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
         /// </summary>
         /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
@@ -382,6 +385,14 @@ namespace GeoTransformer.Transformers.Translator
 
         private ConfigurationControl Configuration;
 
+        /// <summary>
+        /// Initializes the extension with the specified current configuration (can be <c>null</c> if the extension is initialized for the very first time) and
+        /// returns the configuration UI control (can return <c>null</c> if the user interface is not needed).
+        /// </summary>
+        /// <param name="currentConfiguration">The current configuration.</param>
+        /// <returns>
+        /// The configuration UI control.
+        /// </returns>
         public System.Windows.Forms.Control Initialize(byte[] currentConfiguration)
         {
             this.Configuration = new ConfigurationControl();
@@ -389,16 +400,31 @@ namespace GeoTransformer.Transformers.Translator
             return this.Configuration;
         }
 
+        /// <summary>
+        /// Retrieves the configuration from the extension's configuration UI control.
+        /// </summary>
+        /// <returns>
+        /// The serialized configuration data.
+        /// </returns>
         public byte[] SerializeConfiguration()
         {
             return this.Configuration.Data.Serialize();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the this extension should be executed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this extension is enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool IsEnabled
         {
             get { return this.Configuration.Data.IsEnabled; }
         }
 
+        /// <summary>
+        /// Gets the category of the extension.
+        /// </summary>
         Category IHasCategory.Category { get { return Category.Transformers; } }
 
         #endregion

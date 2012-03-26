@@ -109,7 +109,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Parses the contents of <c>groundspeak:logs</c> element and returns a collection of logs (one for each child element).
         /// </summary>
-        /// <param name="attributes">The <c>groundspeak:logs</c> XML element.</param>
+        /// <param name="logs">The <c>groundspeak:logs</c> XML element.</param>
         /// <returns>A collection with one <see cref="GeocacheLog"/> instance per XML element.</returns>
         public static ObservableCollection<GeocacheLog> Parse(XElement logs)
         {

@@ -17,7 +17,7 @@ namespace GeoTransformer.Transformers
     public abstract class TransformerBase : Extensions.ITransformer
     {
         /// <summary>
-        /// Stores a value indication whether <see cref="CancelExecution"/> method has been called.
+        /// Stores a value indication whether <see cref="Extensions.ITransformer.CancelExecution"/> method has been called.
         /// </summary>
         private bool _cancelExecutionCalled;
 
@@ -47,7 +47,7 @@ namespace GeoTransformer.Transformers
         /// </summary>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="message">The message text.</param>
-        /// <param name="args">The arguments to pass to <see cref="String.Format"/> function; if specified, the <paramref name="message"/> is considered
+        /// <param name="args">The arguments to pass to <see cref="String.Format(string, object[])"/> function; if specified, the <paramref name="message"/> is considered
         /// to contain the formatting template.</param>
         protected virtual void ReportStatus(StatusSeverity severity, string message, params object[] args)
         {
@@ -60,7 +60,7 @@ namespace GeoTransformer.Transformers
         /// Reports the current status of the execution to the user. The message severity is set to <see cref="StatusSeverity.Information"/>.
         /// </summary>
         /// <param name="message">The message text.</param>
-        /// <param name="args">The arguments to pass to <see cref="String.Format"/> function; if specified, the <paramref name="message"/> is considered
+        /// <param name="args">The arguments to pass to <see cref="String.Format(string, object[])"/> function; if specified, the <paramref name="message"/> is considered
         /// to contain the formatting template.</param>
         protected void ReportStatus(string message, params object[] args)
         {
@@ -94,19 +94,19 @@ namespace GeoTransformer.Transformers
 
         /// <summary>
         /// Holds a value how many GPX waypoints have already been processed in previous documents in regards to
-        /// the current <see cref="Process(Gpx.GpxDocument)"/> call.
+        /// the current <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> call.
         /// </summary>
         private int _waypointsAlreadyProcessed;
 
         /// <summary>
-        /// Holds a value how many GPX waypoints were provided in the parameter to <see cref="Process(IList`1, Transformers.TransformerOptions)"/>.
+        /// Holds a value how many GPX waypoints were provided in the parameter to <see cref="Process(IList{Gpx.GpxDocument}, Transformers.TransformerOptions)"/>.
         /// </summary>
         private int _waypointsTotal;
 
         /// <summary>
         /// Holds a value if <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> report progress update
         /// after processing certain number of waypoints. This is enabled only when the default implementation of 
-        /// <paramref name="Process(IList`1, Transformers.TransformerOptions)"/> is used.
+        /// <see name="Process(IList{Gpx.GpxDocument}, Transformers.TransformerOptions)"/> is used.
         /// </summary>
         private bool _reportWaypointProgress;
 
@@ -186,8 +186,8 @@ namespace GeoTransformer.Transformers
         }
 
         /// <summary>
-        /// Notifies the transformer that the <see cref="Execute"/> method should be now terminated. This is called from a separate thread by the controlling form.
-        /// Note that the implementing method has to support multiple calls to <see cref="Process"/> method on the same instance so the cancellation
+        /// Notifies the transformer that the <see cref="Extensions.ITransformer.Process"/> method should be now terminated. This is called from a separate thread by the controlling form.
+        /// Note that the implementing method has to support multiple calls to <see cref="Extensions.ITransformer.Process"/> method on the same instance so the cancellation
         /// has to leave the instance in valid state.
         /// </summary>
         void Extensions.ITransformer.CancelExecution()

@@ -14,15 +14,24 @@ using System.Windows.Forms;
 
 namespace GeoTransformer.Transformers.UpdateCoordinates
 {
+    /// <summary>
+    /// Edit control for <see cref="UpdateCoordinates"/> extension.
+    /// </summary>
     public partial class EditorControl : UI.UserControlBase
     {
         private Gpx.GpxWaypoint _waypoint;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorControl"/> class.
+        /// </summary>
         public EditorControl()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets or sets the element that is modified by this editor control.
+        /// </summary>
         public Gpx.GpxWaypoint BoundElement 
         {
             get
