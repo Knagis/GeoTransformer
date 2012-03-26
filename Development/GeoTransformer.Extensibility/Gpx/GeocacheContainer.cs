@@ -29,7 +29,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheContainer"/> class.
         /// </summary>
-        /// <param name="type">The cache container XML element.</param>
+        /// <param name="container">The cache container XML element.</param>
         public GeocacheContainer(XElement container)
             : base(true)
         {

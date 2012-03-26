@@ -14,10 +14,16 @@ using System.Windows.Forms;
 
 namespace GeoTransformer.Viewers.CacheEditor
 {
+    /// <summary>
+    /// Forms that displays UI for entering the geocache code that will be edited.
+    /// </summary>
     public partial class EnterAnother : Form
     {
         private Dictionary<string, string> _cacheNameCache;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnterAnother"/> class.
+        /// </summary>
         public EnterAnother()
         {
             InitializeComponent();
@@ -38,6 +44,9 @@ namespace GeoTransformer.Viewers.CacheEditor
             }                                
         }
 
+        /// <summary>
+        /// Gets the geocache code as entered by the user.
+        /// </summary>
         public string EnteredCacheCode
         {
             get

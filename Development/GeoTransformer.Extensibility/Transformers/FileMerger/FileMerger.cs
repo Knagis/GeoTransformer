@@ -37,8 +37,7 @@ namespace GeoTransformer.Transformers.FileMerger
         }
 
         /// <summary>
-        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
-        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// Processes the specified GPX documents.
         /// </summary>
         /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
@@ -71,6 +70,14 @@ namespace GeoTransformer.Transformers.FileMerger
             }
         }
 
+        /// <summary>
+        /// Initializes the extension with the specified current configuration (can be <c>null</c> if the extension is initialized for the very first time) and
+        /// returns the configuration UI control (can return <c>null</c> if the user interface is not needed).
+        /// </summary>
+        /// <param name="currentConfiguration">The current configuration.</param>
+        /// <returns>
+        /// The configuration UI control.
+        /// </returns>
         public System.Windows.Forms.Control Initialize(byte[] currentConfiguration)
         {
             this.Configuration = new SimpleConfigurationControl(this.Title, 
@@ -89,16 +96,31 @@ geocaches or waypoints loaded.");
             return this.Configuration;
         }
 
+        /// <summary>
+        /// Retrieves the configuration from the extension's configuration UI control.
+        /// </summary>
+        /// <returns>
+        /// The serialized configuration data.
+        /// </returns>
         public byte[] SerializeConfiguration()
         {
             return new byte[] { this.IsEnabled ? (byte)1 : (byte)0 };
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the this extension should be executed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this extension is enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool IsEnabled
         {
             get { return this.Configuration.checkBoxEnabled.Checked; }
         }
 
+        /// <summary>
+        /// Gets the category of the extension.
+        /// </summary>
         Category IHasCategory.Category { get { return Category.Transformers; } }
     }
 }

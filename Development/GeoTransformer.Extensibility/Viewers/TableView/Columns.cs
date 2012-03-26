@@ -92,7 +92,7 @@ namespace GeoTransformer.Viewers.TableView
 
         /// <summary>
         /// Gets the display value for the "Currently loaded" column.
-        /// Handles the value produced by <see cref="CreateSortableKey"/> method.
+        /// Handles the value produced by <see cref="CurrentlyLoadedAspect"/> method.
         /// </summary>
         private static string CurrentlyLoadedDisplayValue(object value)
         {

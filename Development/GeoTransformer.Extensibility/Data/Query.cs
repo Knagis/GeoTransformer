@@ -687,16 +687,27 @@ namespace GeoTransformer.Data
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="SelectResult&lt;TTable&gt;"/> is reclaimed by garbage collection.
+        /// </summary>
         ~SelectResult()
         {
             this.Dispose(false);
         }
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             this._reader.Close();
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);

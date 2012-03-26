@@ -10,13 +10,22 @@ using System.Text;
 
 namespace GeoTransformer.Viewers.CacheEditor
 {
+    /// <summary>
+    /// Displays waypoint editor controls (extensions derived from <see cref="Extensions.IEditor"/>).
+    /// </summary>
     public class CacheEditor : Extensions.IWaypointViewer
     {
+        /// <summary>
+        /// Gets the icon to be displayed on the button.
+        /// </summary>
         public System.Drawing.Image ButtonImage
         {
             get { return Resources.Edit; }
         }
 
+        /// <summary>
+        /// Gets the text to be displayed on the button.
+        /// </summary>
         public string ButtonText
         {
             get { return "Editor"; }
@@ -25,6 +34,12 @@ namespace GeoTransformer.Viewers.CacheEditor
         private EditorControl _container;
         private List<Tuple<Extensions.IEditor, System.Windows.Forms.Control>> _editors = new List<Tuple<Extensions.IEditor,System.Windows.Forms.Control>>();
 
+        /// <summary>
+        /// Creates the control that will display the detailed waypoint information. The method is called only once and after that the control is reused.
+        /// </summary>
+        /// <returns>
+        /// An initialized control that displays waypoint(-s).
+        /// </returns>
         public System.Windows.Forms.Control Initialize()
         {
             this._container = new EditorControl(this);

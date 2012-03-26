@@ -202,8 +202,8 @@ namespace GeoTransformer.GeocachingService
         /// <summary>
         /// Retrieves a single geocache by its code.
         /// </summary>
-        /// <param name="code, "The code of the geocache to search for.</param>
-        /// <param name="liteVersion, "if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
+        /// <param name="code">The code of the geocache to search for.</param>
+        /// <param name="liteVersion">if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
         /// <returns>The <see cref="Geocache"/> object or <c>null</c> if the service is disabled or the cache cannot be found.</returns>
         public Geocache GetGeocacheByCode(string code, bool? liteVersion = null)
         {
@@ -237,12 +237,12 @@ namespace GeoTransformer.GeocachingService
         /// <summary>
         /// Gets the user profile of the currently logged in user. Automatically populates the request with access token.
         /// </summary>
-        /// <param name="challenges, "if set to <c>true</c>, downloads challenge data.</param>
-        /// <param name="favoritePoints, "if set to <c>true</c>, downloads favorite points.</param>
-        /// <param name="geocaches, "if set to <c>true</c>, downloads geocache data.</param>
-        /// <param name="publicProfile, "if set to <c>true</c>, downloads public profile.</param>
-        /// <param name="souvenirs, "if set to <c>true</c>, downloads souvenir data.</param>
-        /// <param name="trackables, "if set to <c>true</c>, downloads trackable data.</param>
+        /// <param name="challenges">if set to <c>true</c>, downloads challenge data.</param>
+        /// <param name="favoritePoints">if set to <c>true</c>, downloads favorite points.</param>
+        /// <param name="geocaches">if set to <c>true</c>, downloads geocache data.</param>
+        /// <param name="publicProfile">if set to <c>true</c>, downloads public profile.</param>
+        /// <param name="souvenirs">if set to <c>true</c>, downloads souvenir data.</param>
+        /// <param name="trackables">if set to <c>true</c>, downloads trackable data.</param>
         public GetUserProfileResponse GetYourUserProfile(bool challenges = false, bool favoritePoints = false, bool geocaches = false, bool publicProfile = false, bool souvenirs = false, bool trackables = false)
         {
             var req = new GeoTransformer.GeocachingService.GetYourUserProfileRequest();

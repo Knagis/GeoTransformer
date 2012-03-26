@@ -19,7 +19,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GpxExtendableElement"/> class.
         /// </summary>
-        /// <param name="suspendObservation">if set to <c>true</c> suspends the observation until <see cref="ResumeObservation"/> method is called. Should be set to <c>true</c> when the constructor loads the data.</param>
+        /// <param name="suspendObservation">if set to <c>true</c> suspends the observation until <see cref="ObservableElement.ResumeObservation"/> method is called. Should be set to <c>true</c> when the constructor loads the data.</param>
         protected GpxExtendableElement(bool suspendObservation = false)
             : base(suspendObservation)
         {
@@ -112,10 +112,10 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Finds the extension attribute with the given <paramref name="name"/> (assuming <see cref="XmlExtensions.GeoTransformerSchema"/>) and returns the value.
+        /// Finds the extension attribute with the given <paramref name="localName"/> (assuming <see cref="XmlExtensions.GeoTransformerSchema"/>) and returns the value.
         /// </summary>
         /// <param name="localName">Name of the local.</param>
-        /// <returns>The value of the attribute or <c>null</c> if the attribute with the given <paramref name="name"/> does not exist.</returns>
+        /// <returns>The value of the attribute or <c>null</c> if the attribute with the given <paramref name="localName"/> does not exist.</returns>
         public string FindExtensionAttributeValue(string localName)
         {
             return this.FindExtensionAttributeValue(XmlExtensions.GeoTransformerSchema + localName);
@@ -138,7 +138,7 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Finds the extension element with the given <paramref name="name"/> assuming <see cref="XmlExtensions.GeoTransformerSchema"/>.
+        /// Finds the extension element with the given <paramref name="localName"/> assuming <see cref="XmlExtensions.GeoTransformerSchema"/>.
         /// If <paramref name="create"/> is set to <c>true</c> will create a new element if one does not exist.
         /// </summary>
         /// <param name="localName">The local name of the extension element.</param>

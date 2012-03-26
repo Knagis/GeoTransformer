@@ -10,20 +10,35 @@ using System.Text;
 
 namespace GeoTransformer.Viewers.CacheWebPage
 {
+    /// <summary>
+    /// Waypoint viewer that displays an embedded browser pointing to the online cache site.
+    /// </summary>
     public class CacheWebPage : Extensions.IWaypointViewer
     {
         private System.Windows.Forms.WebBrowser _browser;
 
+        /// <summary>
+        /// Gets the icon to be displayed on the button.
+        /// </summary>
         public System.Drawing.Image ButtonImage
         {
             get { return Resources.Web; }
         }
 
+        /// <summary>
+        /// Gets the text to be displayed on the button.
+        /// </summary>
         public string ButtonText
         {
             get { return "Online version"; }
         }
 
+        /// <summary>
+        /// Creates the control that will display the detailed waypoint information. The method is called only once and after that the control is reused.
+        /// </summary>
+        /// <returns>
+        /// An initialized control that displays waypoint(-s).
+        /// </returns>
         public System.Windows.Forms.Control Initialize()
         {
             this._browser = new System.Windows.Forms.WebBrowser();

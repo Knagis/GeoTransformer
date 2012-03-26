@@ -18,7 +18,6 @@ namespace GeoTransformer.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="TableVersionTable"/> class.
         /// </summary>
-        /// <param name="schema">The database schema this table is created for.</param>
         public TableVersionTable()
             : base("TableVersionTable", 10000)
         {

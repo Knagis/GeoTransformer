@@ -11,7 +11,7 @@ using System.Text;
 namespace GeoTransformer.Transformers
 {
     /// <summary>
-    /// Contains the event arguments for <see cref="ITransformer2.ProgressChanged"/> event.
+    /// Contains the event arguments for <see cref="Extensions.ITransformer.ProgressUpdate"/> event.
     /// </summary>
     public class ProgressUpdateEventArgs : EventArgs
     {

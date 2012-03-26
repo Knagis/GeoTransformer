@@ -367,6 +367,16 @@
     <xs:sequence />
   </xs:complexType>
   <xs:element name="BaseGeocacheFilter" nillable="true" type="tns:BaseGeocacheFilter" />
+  <xs:complexType name="GeocacheTypeFilter">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseGeocacheFilter">
+        <xs:sequence>
+          <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="GeocacheTypeIds" nillable="true" type="q4:ArrayOflong" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GeocacheTypeFilter" nillable="true" type="tns:GeocacheTypeFilter" />
   <xs:complexType name="TrackableCountFilter">
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseGeocacheFilter">
@@ -382,7 +392,7 @@
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseGeocacheFilter">
         <xs:sequence>
-          <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="UserNames" nillable="true" type="q4:ArrayOfstring" />
+          <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="UserNames" nillable="true" type="q5:ArrayOfstring" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -392,7 +402,7 @@
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseGeocacheFilter">
         <xs:sequence>
-          <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="UserNames" nillable="true" type="q5:ArrayOfstring" />
+          <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="UserNames" nillable="true" type="q6:ArrayOfstring" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -434,22 +444,12 @@
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseGeocacheFilter">
         <xs:sequence>
-          <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="CacheCodes" nillable="true" type="q6:ArrayOfstring" />
+          <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="CacheCodes" nillable="true" type="q7:ArrayOfstring" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="CacheCodeFilter" nillable="true" type="tns:CacheCodeFilter" />
-  <xs:complexType name="GeocacheTypeFilter">
-    <xs:complexContent mixed="false">
-      <xs:extension base="tns:BaseGeocacheFilter">
-        <xs:sequence>
-          <xs:element xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="GeocacheTypeIds" nillable="true" type="q7:ArrayOflong" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="GeocacheTypeFilter" nillable="true" type="tns:GeocacheTypeFilter" />
   <xs:complexType name="GeocacheContainerSizeFilter">
     <xs:complexContent mixed="false">
       <xs:extension base="tns:BaseGeocacheFilter">

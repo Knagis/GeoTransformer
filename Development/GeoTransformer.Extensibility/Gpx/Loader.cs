@@ -20,7 +20,7 @@ namespace GeoTransformer.Gpx
         #region [ GPX files ]
 
         /// <summary>
-        /// Loads a <see cref="Gpx.GpxDocument"/> from the given file name.
+        /// Loads a <see cref="GpxDocument"/> from the given file name.
         /// This method sets <see cref="GpxMetadata.OriginalFileName"/> property.
         /// </summary>
         /// <param name="fileName">Path to the GPX file.</param>
@@ -37,7 +37,7 @@ namespace GeoTransformer.Gpx
         #region [ ZIP archives ]
 
         /// <summary>
-        /// Unzips all GPX files from the specified ZIP archive and loads them into <see cref="Gpx.GpxDocument"/> instances.
+        /// Unzips all GPX files from the specified ZIP archive and loads them into <see cref="GpxDocument"/> instances.
         /// All files with extension other than <c>.gpx</c> are ignored.
         /// </summary>
         /// <param name="fileName">Path to the ZIP file.</param>
@@ -60,7 +60,7 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Unzips the specified <paramref name="entry"/> from the ZIP archive and loads it into a <see cref="Gpx.GpxDocument"/>.
+        /// Unzips the specified <paramref name="entry"/> from the ZIP archive and loads it into a <see cref="GpxDocument"/>.
         /// </summary>
         /// <param name="fileName">Path to the ZIP file.</param>
         /// <param name="entry">The name of the ZIP archive entry.</param>

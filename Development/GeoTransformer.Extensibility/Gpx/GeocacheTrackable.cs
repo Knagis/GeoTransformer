@@ -39,7 +39,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GeocacheTrackable"/> class.
         /// </summary>
-        /// <param name="travelBug">The geocache travelbug XML element.</param>
+        /// <param name="travelbug">The geocache travelbug XML element.</param>
         public GeocacheTrackable(XElement travelbug)
             : base(true)
         {
@@ -74,7 +74,7 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Parses the contents of <c>groundspeak:travelbugs</c> element and returns a collection of trackables (one for each child element).
         /// </summary>
-        /// <param name="attributes">The <c>groundspeak:travelbugs</c> XML element.</param>
+        /// <param name="travelbugs">The <c>groundspeak:travelbugs</c> XML element.</param>
         /// <returns>A collection with one <see cref="GeocacheTrackable"/> instance per XML element.</returns>
         public static ObservableCollection<GeocacheTrackable> Parse(XElement travelbugs)
         {

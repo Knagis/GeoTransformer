@@ -18,6 +18,9 @@ namespace GeoTransformer.Transformers.AdditionalHints
     {
         private System.Xml.Linq.XElement _boundElement;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorControl"/> class.
+        /// </summary>
         public EditorControl()
         {
             InitializeComponent();

@@ -35,7 +35,7 @@ namespace GeoTransformer.Transformers.WaypointEnhancer
 
         /// <summary>
         /// Processes the specified GPX documents. If the method is not overriden in the derived class,
-        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// calls <see cref="TransformerBase.Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
         /// </summary>
         /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
         /// <param name="options">The options that instruct how the transformer should proceed.</param>

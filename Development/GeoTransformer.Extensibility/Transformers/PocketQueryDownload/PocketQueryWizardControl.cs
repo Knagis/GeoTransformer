@@ -18,6 +18,9 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
     {
         private PocketQueryDownloadOptions _configControl;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PocketQueryWizardControl"/> class.
+        /// </summary>
         public PocketQueryWizardControl()
         {
             InitializeComponent();

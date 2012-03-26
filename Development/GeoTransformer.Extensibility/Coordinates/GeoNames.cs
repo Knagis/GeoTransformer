@@ -12,6 +12,9 @@ using System.Globalization;
 
 namespace GeoTransformer.Coordinates
 {
+    /// <summary>
+    /// Static utility class containing code to call service on <c>geonames.org</c>.
+    /// </summary>
     public static class GeoNames
     {
         /// <summary>
@@ -112,6 +115,12 @@ namespace GeoTransformer.Coordinates
             }
         }
 
+        /// <summary>
+        /// Searches for the specified place name and returns the coordinates of the best result.
+        /// </summary>
+        /// <param name="name">The name of the place.</param>
+        /// <param name="fullName">The full name of the place as returned by the search results.</param>
+        /// <returns>The coordinates of the best result.</returns>
         public static Wgs84Point? Search(string name, out string fullName)
         {
             fullName = null;
