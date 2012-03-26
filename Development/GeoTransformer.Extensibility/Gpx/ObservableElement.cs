@@ -21,9 +21,14 @@ namespace GeoTransformer.Gpx
             public ObservableElement Container;
             public string PropertyName;
 
+            public void OnObservableElementChange(object sender, ObservableElementChangedEventArgs args)
+            {
+                this.Container.OnPropertyChanged(new ObservableElementChangedEventArgs(sender, this.PropertyName, null, args));
+            }
+
             public void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
             {
-                this.Container.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(this.PropertyName));
+                this.Container.OnPropertyChanged(new ObservableElementChangedEventArgs(sender, this.PropertyName));
 
                 if (args.NewItems != null)
                     foreach (var n in args.NewItems)
@@ -36,12 +41,12 @@ namespace GeoTransformer.Gpx
 
             public void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs args)
             {
-                this.Container.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(this.PropertyName));
+                this.Container.OnPropertyChanged(new ObservableElementChangedEventArgs(sender, this.PropertyName));
             }
 
             public void OnXObjectChanged(object sender, System.Xml.Linq.XObjectChangeEventArgs args)
             {
-                this.Container.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(this.PropertyName));
+                this.Container.OnPropertyChanged(new ObservableElementChangedEventArgs(sender, this.PropertyName, args.ObjectChange));
             }
         }
 
@@ -121,7 +126,7 @@ namespace GeoTransformer.Gpx
             this.AttachListener(key, value);
 
             if (!suppressChangeEvent && !object.Equals(value, oldVal))
-                this.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(key));
+                this.OnPropertyChanged(new ObservableElementChangedEventArgs(this, key));
         }
 
         private ChangeHandler GetChangeHandler(string key)
@@ -169,6 +174,14 @@ namespace GeoTransformer.Gpx
                 return;
             }
 
+            var observable = val as ObservableElement;
+            if (observable != null)
+            {
+                if (handler == null) handler = this.GetChangeHandler(key);
+                observable.PropertyChanged += handler.OnObservableElementChange;
+                return;
+            }
+
             var propChanged = val as System.ComponentModel.INotifyPropertyChanged;
             if (propChanged != null)
             {
@@ -200,6 +213,14 @@ namespace GeoTransformer.Gpx
                 return;
             }
 
+            var observable = val as ObservableElement;
+            if (observable != null)
+            {
+                if (handler == null) handler = this.GetChangeHandler(key);
+                observable.PropertyChanged -= handler.OnObservableElementChange;
+                return;
+            }
+
             var propChanged = val as System.ComponentModel.INotifyPropertyChanged;
             if (propChanged != null)
             {
@@ -217,12 +238,37 @@ namespace GeoTransformer.Gpx
             }
         }
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Occurs when a property value changes or a property value issues a property changed notification of its own.
+        /// </summary>
+        public event EventHandler<ObservableElementChangedEventArgs> PropertyChanged;
+        
+        /// <summary>
+        /// Holds the handler for the explicit implementation of <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>.
+        /// </summary>
+        private event System.ComponentModel.PropertyChangedEventHandler _notifyPropertyChangeEvent;
 
-        protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs args)
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        event System.ComponentModel.PropertyChangedEventHandler System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+        {
+            add { this._notifyPropertyChangeEvent += value; }
+            remove { this._notifyPropertyChangeEvent -= value; }
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:PropertyChanged"/> event.
+        /// </summary>
+        /// <param name="args">The <see cref="ObservableElementChangedEventArgs"/> instance containing the event data.</param>
+        protected virtual void OnPropertyChanged(ObservableElementChangedEventArgs args)
         {
             var handler = this.PropertyChanged;
             if (handler != null)
+                handler(this, args);
+
+            var handler2 = this._notifyPropertyChangeEvent;
+            if (handler2 != null)
                 handler(this, args);
         }
     }

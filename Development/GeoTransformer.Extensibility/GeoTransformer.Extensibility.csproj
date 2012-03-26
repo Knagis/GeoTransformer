@@ -177,6 +177,7 @@
     <Compile Include="Gpx\GpxWaypoint.cs" />
     <Compile Include="Gpx\ObservableCollection.cs" />
     <Compile Include="Gpx\ObservableElement.cs" />
+    <Compile Include="Gpx\ObservableElementChangedEventArgs.cs" />
     <Compile Include="Service References\GeocachingService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
