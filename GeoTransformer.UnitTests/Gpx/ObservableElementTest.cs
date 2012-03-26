@@ -233,5 +233,45 @@ namespace GeoTransformer.UnitTests.Gpx
             dict.Set(key1, 234);
             Assert.AreEqual(1, eventsRaised);
         }
+
+        /// <summary>
+        /// Tests if the event arguments correctly contain recursive arguments.
+        /// </summary>
+        [TestMethod]
+        public void TestEventArgsDepth()
+        {
+            var parent = new SimpleImplementation();
+            var child = new SimpleImplementation();
+            var xml = new System.Xml.Linq.XElement(XmlExtensions.GeoTransformerSchema + "test");
+
+            GeoTransformer.Gpx.ObservableElementChangedEventArgs pargs = null;
+            GeoTransformer.Gpx.ObservableElementChangedEventArgs cargs = null;
+            parent.PropertyChanged += (a, b) => { pargs = b; };
+            child.PropertyChanged += (a, b) => { cargs = b; };
+
+            parent.Set("c", child);
+            Assert.IsNull(cargs);
+            Assert.AreEqual("c", pargs.PropertyName);
+            Assert.IsNull(pargs.InnerChange);
+            Assert.AreEqual(pargs, pargs.FindFirstChange());
+            pargs = null;
+
+            child.Set("xml", xml);
+            Assert.IsNotNull(cargs);
+            Assert.IsNotNull(pargs);
+            Assert.AreEqual("c", pargs.PropertyName);
+            Assert.AreSame(cargs, pargs.InnerChange);
+            Assert.AreSame(cargs, pargs.FindFirstChange());
+            Assert.AreEqual("xml", cargs.PropertyName);
+            Assert.AreSame(child, cargs.Target);
+            cargs = null;
+            pargs = null;
+
+            xml.Value = "data";
+            Assert.IsNotNull(cargs);
+            Assert.IsNotNull(pargs);
+            Assert.AreSame(cargs, pargs.InnerChange);
+            Assert.IsNotNull(pargs.FindFirstChange().XObjectChange);
+        }
     }
 }

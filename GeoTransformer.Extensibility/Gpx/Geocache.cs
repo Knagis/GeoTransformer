@@ -238,8 +238,8 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Raises the <see cref="E:PropertyChanged"/> event.
         /// </summary>
-        /// <param name="args">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
-        protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs args)
+        /// <param name="args">The <see cref="ObservableElementChangedEventArgs"/> instance containing the event data.</param>
+        protected override void OnPropertyChanged(ObservableElementChangedEventArgs args)
         {
             this._isDefinedCachedValue = null;
 
