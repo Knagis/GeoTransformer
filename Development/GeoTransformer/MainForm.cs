@@ -168,6 +168,7 @@ namespace GeoTransformer
             InitializeComponent();
             this.cachePanel.SplitterWidth = 2; // need to be set here because of bug in the framework
 
+            // the icon is rather large so we reuse the resource from welcome screen form
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WelcomeScreen.WelcomeScreen));
             using (var icon = new Icon((System.Drawing.Icon)resources.GetObject("$this.Icon"), new Size(24, 24)))
                 this.launchWizardToolStripMenuItem.Image = icon.ToBitmap();
