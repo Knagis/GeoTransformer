@@ -218,6 +218,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Transformers\ManualPublish\EditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\ManualPublish\EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\ManualPublish\ManualPublish.cs" />
+    <Compile Include="Transformers\ManualPublish\ManualPublishMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Transformers\MarkSolved\EditorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -431,6 +441,9 @@
     <EmbeddedResource Include="Transformers\LoadLocalFiles\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\ManualPublish\EditorControl.resx">
+      <DependentUpon>EditorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Transformers\MarkSolved\EditorControl.resx">
       <DependentUpon>EditorControl.cs</DependentUpon>

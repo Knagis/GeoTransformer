@@ -62,84 +62,83 @@ namespace GeoTransformer.Transformers.EditorExtensions
                 }
             }
 
-            if ((options & TransformerOptions.LoadingViewerCache) == TransformerOptions.LoadingViewerCache)
+            // create placeholder waypoints that have been edited but are not loaded from the persistent sources
+            // by default ManualPublish extension will clean these out before publishing
+            var newDoc = new Gpx.GpxDocument();
+            newDoc.Metadata.OriginalFileName = "EditorCachedCopies.gpx";
+
+            // the service proxy is only created if needed to improve performance
+            GeocachingService.LiveClient service = null;
+
+            try
             {
-                var newDoc = new Gpx.GpxDocument();
-                newDoc.Metadata.OriginalFileName = "EditorCachedCopies.gpx";
-
-                // the service proxy is only created if needed to improve performance
-                GeocachingService.LiveClient service = null;
-
-                try
+                foreach (var tempResult in cachedResults)
                 {
-                    foreach (var tempResult in cachedResults)
+                    if (existingCodes.Contains(tempResult.Key))
+                        continue;
+
+                    Gpx.GpxWaypoint gpx = null;
+                    var wpt = tempResult.LastOrDefault(o => o.Name == XmlExtensions.GeoTransformerSchema + "CachedCopy");
+                    if (wpt != null)
                     {
-                        if (existingCodes.Contains(tempResult.Key))
+                        gpx = new Gpx.GpxWaypoint(wpt.Elements().FirstOrDefault());
+
+                        // ignore situations when the cached copy is empty copy from the previous versions.
+                        if (gpx.Description == null)
+                            gpx = null;
+                    }
+
+                    if (gpx == null && tempResult.Key.StartsWith("GC", StringComparison.OrdinalIgnoreCase)
+                        && (options & TransformerOptions.UseLocalStorage) == 0)
+                    {
+                        this.TerminateExecutionIfNeeded();
+
+                        this.ReportStatus("Loading " + tempResult.Key + " from Live API.");
+
+                        if (service == null)
+                            service = GeocachingService.LiveClient.CreateClientProxy();
+
+                        var online = service.GetGeocacheByCode(tempResult.Key, true);
+                        if (online != null)
+                        {
+                            gpx = new Gpx.GpxWaypoint(online);
+
+                            // as the CachedCopy should have been in the database already and loading from the Live API
+                            // is an exception, save it right now.
+                            var iq = table.Insert();
+                            iq.Value(o => o.CacheCode, tempResult.Key);
+                            var copy = new XElement(XmlExtensions.GeoTransformerSchema + "CachedCopy");
+                            copy.Add(gpx.OriginalValues.Serialize(Gpx.GpxSerializationOptions.Default));
+                            iq.Value(o => o.Data, copy.ToString());
+                            iq.Execute();
+                        }
+                        this.ReportStatus(string.Empty);
+                    }
+
+                    if (gpx == null)
+                        gpx = new Gpx.GpxWaypoint();
+
+                    gpx.ExtensionAttributes.Add(new XAttribute(XmlExtensions.GeoTransformerSchema + "EditorOnly", true));
+
+                    foreach (var elem in tempResult)
+                    {
+                        if (elem.Name == XmlExtensions.GeoTransformerSchema + "CachedCopy")
                             continue;
 
-                        Gpx.GpxWaypoint gpx = null;
-                        var wpt = tempResult.LastOrDefault(o => o.Name == XmlExtensions.GeoTransformerSchema + "CachedCopy");
-                        if (wpt != null)
-                        {
-                            gpx = new Gpx.GpxWaypoint(wpt.Elements().FirstOrDefault());
-
-                            // ignore situations when the cached copy is empty copy from the previous versions.
-                            if (gpx.Description == null)
-                                gpx = null;
-                        }
-
-                        if (gpx == null && tempResult.Key.StartsWith("GC", StringComparison.OrdinalIgnoreCase)
-                            && (options & TransformerOptions.UseLocalStorage) == 0)
-                        {
-                            this.TerminateExecutionIfNeeded();
-
-                            this.ReportStatus("Loading " + tempResult.Key + " from Live API.");
-
-                            if (service == null)
-                                service = GeocachingService.LiveClient.CreateClientProxy();
-
-                            var online = service.GetGeocacheByCode(tempResult.Key, true);
-                            if (online != null)
-                            {
-                                gpx = new Gpx.GpxWaypoint(online);
-
-                                // as the CachedCopy should have been in the database already and loading from the Live API
-                                // is an exception, save it right now.
-                                var iq = table.Insert();
-                                iq.Value(o => o.CacheCode, tempResult.Key);
-                                var copy = new XElement(XmlExtensions.GeoTransformerSchema + "CachedCopy");
-                                copy.Add(gpx.OriginalValues.Serialize(Gpx.GpxSerializationOptions.Default));
-                                iq.Value(o => o.Data, copy.ToString());
-                                iq.Execute();
-                            }
-                            this.ReportStatus(string.Empty);
-                        }
-
-                        if (gpx == null)
-                            gpx = new Gpx.GpxWaypoint();
-
-                        gpx.ExtensionAttributes.Add(new XAttribute(XmlExtensions.GeoTransformerSchema + "EditorOnly", true));
-
-                        foreach (var elem in tempResult)
-                        {
-                            if (elem.Name == XmlExtensions.GeoTransformerSchema + "CachedCopy")
-                                continue;
-
-                            gpx.ExtensionElements.Add(elem);
-                        }
-
-                        newDoc.Waypoints.Add(gpx);
+                        gpx.ExtensionElements.Add(elem);
                     }
-                }
-                finally
-                {
-                    if (service != null)
-                        service.Close();
-                }
 
-                if (newDoc.Waypoints.Count > 0)
-                    documents.Add(newDoc);
+                    newDoc.Waypoints.Add(gpx);
+                }
             }
+            finally
+            {
+                if (service != null)
+                    service.Close();
+            }
+
+            if (newDoc.Waypoints.Count > 0)
+                documents.Add(newDoc);
         }
     }
 }

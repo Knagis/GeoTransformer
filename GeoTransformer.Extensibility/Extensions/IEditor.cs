@@ -10,7 +10,7 @@ namespace GeoTransformer.Extensions
     /// <summary>
     /// An interface that enables the extension to provide controls for the waypoint editor.
     /// </summary>
-    public interface IEditor
+    public interface IEditor : IExtension
     {
         /// <summary>
         /// Creates the control that is used to edit the data for the waypoints. Note that the same control is reused for all caches.
