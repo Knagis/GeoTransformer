@@ -54,8 +54,22 @@ namespace GeoTransformer.Viewers.TableView
         protected virtual IEnumerable<Gpx.GpxWaypoint> FilterData(IEnumerable<Gpx.GpxDocument> data)
         {
             return data.SelectMany(o => o.Waypoints)
-                    .Where(o => o.Geocache.IsDefined() 
-                    && !string.Equals(bool.TrueString, o.FindExtensionAttributeValue("EditorOnly"), StringComparison.OrdinalIgnoreCase));
+                    .Where(o => 
+                        {
+                            if (!o.Geocache.IsDefined())
+                                return false;
+
+                            var editorOnly = string.Equals(o.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+                            Transformers.ManualPublish.ManualPublishMode publishMode;
+                            Enum.TryParse(o.FindExtensionElement(typeof(Transformers.ManualPublish.ManualPublish)).GetValue(), out publishMode);
+                            if (publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysSkip)
+                                return false;
+
+                            if (editorOnly && publishMode != Transformers.ManualPublish.ManualPublishMode.AlwaysPublish)
+                                return false;
+
+                            return true;
+                        });
         }
 
         private BrightIdeasSoftware.ObjectListView _control;

@@ -252,7 +252,13 @@ namespace GeoTransformer.Viewers.BingMaps
                 if (!wpt.Geocache.IsDefined())
                     continue;
 
-                if (string.Equals(wpt.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
+                var editorOnly = string.Equals(wpt.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+                Transformers.ManualPublish.ManualPublishMode publishMode;
+                Enum.TryParse(wpt.FindExtensionElement(typeof(Transformers.ManualPublish.ManualPublish)).GetValue(), out publishMode);
+                if (publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysSkip)
+                    continue;
+
+                if (editorOnly && publishMode != Transformers.ManualPublish.ManualPublishMode.AlwaysPublish)
                     continue;
 
                 this.CreatePushpin(sb, wpt, ref minLat, ref minLon, ref maxLat, ref maxLon);
