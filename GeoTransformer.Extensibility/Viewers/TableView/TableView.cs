@@ -17,7 +17,7 @@ namespace GeoTransformer.Viewers.TableView
     /// Waypoint viewer that displays them in a table form.
     /// Can be exteneded by derived classes to customize what data and how is displayed.
     /// </summary>
-    public class TableView : IWaypointListViewer
+    public class TableView : IWaypointListViewer, IConfigurable
     {
         /// <summary>
         /// Gets the icon to be displayed on the button.
@@ -73,7 +73,8 @@ namespace GeoTransformer.Viewers.TableView
         }
 
         private BrightIdeasSoftware.ObjectListView _control;
-        
+        private byte[] _controlState;
+
         /// <summary>
         /// Creates the control that will display the caches in the main form. The method is called only once and after that the control is reused.
         /// </summary>
@@ -86,6 +87,12 @@ namespace GeoTransformer.Viewers.TableView
             this.PrepareListView(this._control);
             this._control.Columns.AddRange(this._control.AllColumns.ToArray());
             this._control.SetObjects(new Gpx.GpxWaypoint[0]);
+
+            if (this._controlState != null)
+            {
+                this._control.RestoreState(this._controlState);
+                this._controlState = null;
+            }
 
             this._control.SelectionChanged += ListView_SelectedIndexChanged;
 
@@ -126,5 +133,57 @@ namespace GeoTransformer.Viewers.TableView
         /// Occurs when the currently selected waypoints have been changed from within the control.
         /// </summary>
         public event EventHandler<SelectedWaypointsChangedEventArgs> SelectedCacheChanged;
+
+        #region [ IConfigurable members ]
+
+        /// <summary>
+        /// Initializes the extension with the specified current configuration (can be <c>null</c> if the extension is initialized for the very first time) and
+        /// returns the configuration UI control (can return <c>null</c> if the user interface is not needed).
+        /// </summary>
+        /// <param name="currentConfiguration">The current configuration.</param>
+        /// <returns>
+        /// The configuration UI control.
+        /// </returns>
+        Control IConfigurable.Initialize(byte[] currentConfiguration)
+        {
+            this._controlState = currentConfiguration;
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves the configuration from the extension's configuration UI control.
+        /// </summary>
+        /// <returns>
+        /// The serialized configuration data.
+        /// </returns>
+        byte[] IConfigurable.SerializeConfiguration()
+        {
+            // if Initialize() has not yet been called...
+            if (this._control == null)
+                return this._controlState;
+
+            return this._control.SaveState();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the this extension should be executed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this extension is enabled; otherwise, <c>false</c>.
+        /// </value>
+        bool IConditional.IsEnabled
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Gets the category of the extension.
+        /// </summary>
+        Category IHasCategory.Category
+        {
+            get { return Category.Viewers; }
+        }
+
+        #endregion
     }
 }
