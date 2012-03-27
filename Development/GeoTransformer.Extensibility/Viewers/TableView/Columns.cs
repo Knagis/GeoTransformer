@@ -78,7 +78,21 @@ namespace GeoTransformer.Viewers.TableView
         {
             var wpt = (GpxWaypoint)obj;
 
-            return (wpt.FindExtensionAttributeValue("EditorOnly") ?? bool.FalseString).ToUpperInvariant() + wpt.Name;
+            var editorOnly = string.Equals(wpt.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+            Transformers.ManualPublish.ManualPublishMode publishMode;
+            Enum.TryParse(wpt.FindExtensionElement(typeof(Transformers.ManualPublish.ManualPublish)).GetValue(), out publishMode);
+
+            char nr;
+            if (!editorOnly && publishMode != Transformers.ManualPublish.ManualPublishMode.AlwaysSkip)
+                nr = '1';
+            else if (editorOnly && publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysPublish)
+                nr = '2';
+            else if (!editorOnly && publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysSkip)
+                nr = '3';
+            else
+                nr = '4';
+
+            return nr + wpt.Name;
         }
 
         /// <summary>
@@ -87,7 +101,19 @@ namespace GeoTransformer.Viewers.TableView
         private static object CurrentlyLoadedGroupKey(object obj)
         {
             var wpt = (GpxWaypoint)obj;
-            return string.Equals(bool.TrueString, wpt.FindExtensionAttributeValue("EditorOnly"), StringComparison.OrdinalIgnoreCase);
+            
+            var editorOnly = string.Equals(wpt.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+            Transformers.ManualPublish.ManualPublishMode publishMode;
+            Enum.TryParse(wpt.FindExtensionElement(typeof(Transformers.ManualPublish.ManualPublish)).GetValue(), out publishMode);
+
+            if (!editorOnly && publishMode != Transformers.ManualPublish.ManualPublishMode.AlwaysSkip)
+                return '1';
+            else if (editorOnly && publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysPublish)
+                return '2';
+            else if (!editorOnly && publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysSkip)
+                return '3';
+            else
+                return '4';
         }
 
         /// <summary>
@@ -96,15 +122,31 @@ namespace GeoTransformer.Viewers.TableView
         /// </summary>
         private static string CurrentlyLoadedDisplayValue(object value)
         {
-            // boolean values will be when the group title has to be determined.
-            if (value is bool)
-                return ((bool)value) ? "Not loaded" : "Currently loaded";
+            char nr;
 
-            var v = (string)value;
-            if (v[0] == 'F')
-                return "Currently loaded";
+            // char values will be when the group title has to be determined.
+            if (value is char)
+                nr = (char)value;
             else
-                return "Not loaded";
+                nr = ((string)value)[0];
+
+            switch (nr)
+            {
+                case '1':
+                    return "Will be published";
+
+                case '2':
+                    return "Will be published from a cached copy";
+
+                case '3':
+                    return "Will be skipped";
+
+                case '4':
+                    return "Not loaded";
+
+                default:
+                    return null;
+            }
         }
 
         #endregion
@@ -126,7 +168,7 @@ namespace GeoTransformer.Viewers.TableView
             {
                 olv.AllColumns.Add(new BrightIdeasSoftware.OLVColumn()
                 {
-                    Text = "Currently loaded",
+                    Text = "Publish mode",
                     AspectGetter = CurrentlyLoadedAspect,
                     AspectToStringConverter = CurrentlyLoadedDisplayValue,
                     GroupKeyGetter = CurrentlyLoadedGroupKey
