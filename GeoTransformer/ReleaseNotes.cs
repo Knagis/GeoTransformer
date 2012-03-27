@@ -15,6 +15,7 @@ namespace GeoTransformer
         public static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
             { Version.Parse("4.1.0.0"), "Added an option to put geocache attributes in a log entry so it can be read on GPS." + Environment.NewLine +
+                                        "Added an option to select which caches should be ignored when publishing." + Environment.NewLine +
                                         "Added support for loading GPX 1.1 files." + Environment.NewLine + 
                                         "Partial support for geocaching.com GPX 1.0.2 extensions (still under development by Groundspeak)." + Environment.NewLine +
                                         "Virtual caches are now displayed on the map with the correct symbol." },
