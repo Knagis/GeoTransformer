@@ -109,11 +109,11 @@ namespace GeoTransformer.Transformers.RemoveDuplicates
         /// <returns>Date and time when the waypoint was updated (usually when the GPX file was initially created). Returns <see cref="DateTime.MinValue"/> if the document does not have a creation time.</returns>
         private DateTime ReadGpxTime(Gpx.GpxDocument document, Gpx.GpxWaypoint waypoint)
         {
-            var val = document.Metadata.CreationTime;
+            var val = waypoint.LastRefresh ?? document.Metadata.LastRefresh;
             if (!val.HasValue)
             {
                 if (!this._issuedWarnings.Contains(document.Metadata.OriginalFileName))
-                    this.ReportStatus("GPX file '{0}' does not have a creation time defined so the removal might not produce correct results.", document.Metadata.OriginalFileName);
+                    this.ReportStatus(StatusSeverity.Warning, "GPX file '{0}' does not have a creation time defined so the removal might not produce correct results.", document.Metadata.OriginalFileName);
                 else
                     this._issuedWarnings.Add(document.Metadata.OriginalFileName);
 

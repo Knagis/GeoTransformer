@@ -67,6 +67,8 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GeocacheSchema_1_0_0 + "cache", (o, e) => o.Geocache = new Geocache(e) },
             { XmlExtensions.GeocacheSchema_1_0_1 + "cache", (o, e) => o.Geocache = new Geocache(e) },
             { XmlExtensions.GeocacheSchema_1_0_2 + "cache", (o, e) => o.Geocache = new Geocache(e) },
+
+            { XmlExtensions.GeoTransformerSchema + "lastRefresh", (o, e) => o.LastRefresh = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
         };
 
         /// <summary>
@@ -213,6 +215,8 @@ namespace GeoTransformer.Gpx
                 if (options.GpxVersion == GpxVersion.Gpx_1_0)
                 {
                     el.Add(this.Geocache.Serialize(options));
+                    if (this.CreationTime.HasValue)
+                        el.Add(new XElement(XmlExtensions.GeoTransformerSchema + "lastRefresh", this.CreationTime.Value));
 
                     if (options.EnableUnsupportedExtensions)
                         foreach (var ext in this.ExtensionAttributes)
@@ -228,7 +232,10 @@ namespace GeoTransformer.Gpx
                             el.Add(new XAttribute(attr));
 
                     var extel = new XElement(options.GpxNamespace + "extensions");
+
                     el.Add(this.Geocache.Serialize(options));
+                    if (this.CreationTime.HasValue)
+                        el.Add(new XElement(XmlExtensions.GeoTransformerSchema + "lastRefresh", this.CreationTime.Value));
 
                     foreach (var elem in this.ExtensionElements)
                         extel.Add(new XElement(elem));
@@ -285,6 +292,16 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
+        /// Gets or sets the last time the waypoint data was refreshed. If this is not specified the caller should default to <see cref="GpxMetadata.LastRefresh"/>.
+        /// </summary>
+        /// <remarks>Stored in <c>geotransformer:lastRefresh</c> extension element.</remarks>
+        public DateTime? LastRefresh
+        {
+            get { return this.GetValue<DateTime?>("LastRefresh"); }
+            set { this.SetValue("LastRefresh", value); }
+        }
+
+        /// <summary>
         /// Gets or sets the coordinates of the waypoint.
         /// </summary>
         public Coordinates.Wgs84Point Coordinates
@@ -303,7 +320,7 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Gets or sets the creation/modification timestamp for element.
+        /// Gets or sets the creation/modification timestamp for element. For geocaches this is the date when it was placed.
         /// </summary>
         public DateTime? CreationTime
         {

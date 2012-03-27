@@ -24,7 +24,7 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GpxSchema_1_1 + "author", (o, e) => o.Author = new GpxPerson(e) },
             { XmlExtensions.GpxSchema_1_1 + "copyright", (o, e) => o.Copyright = new GpxCopyright(e) },
             { XmlExtensions.GpxSchema_1_1 + "link", (o, e) => o.Links.Add(new GpxLink(e)) },
-            { XmlExtensions.GpxSchema_1_1 + "time", (o, e) => o.CreationTime = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
+            { XmlExtensions.GpxSchema_1_1 + "time", (o, e) => o.LastRefresh = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
             { XmlExtensions.GpxSchema_1_1 + "keywords", (o, e) => o.Keywords = e.Value },
             { XmlExtensions.GpxSchema_1_1 + "bounds", (o, e) => o.Bounds = new GpxBounds(e) },
             { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxMetadata>(e, null, null) },
@@ -87,8 +87,8 @@ namespace GeoTransformer.Gpx
             el.Add(this.Copyright.Serialize(options));
             foreach (var link in this.Links)
                 el.Add(link.Serialize(options));
-            if (this.CreationTime.HasValue)
-                el.Add(new XElement(options.GpxNamespace + "time", this.CreationTime.Value.ToUniversalTime()));
+            if (this.LastRefresh.HasValue)
+                el.Add(new XElement(options.GpxNamespace + "time", this.LastRefresh.Value.ToUniversalTime()));
             if (!string.IsNullOrEmpty(this.Keywords))
                 el.Add(new XElement(options.GpxNamespace + "keywords", this.Keywords));
             el.Add(this.Bounds.Serialize(options));
@@ -177,9 +177,10 @@ namespace GeoTransformer.Gpx
         }
 
         /// <summary>
-        /// Gets or sets creation date of the file.
+        /// Gets or sets the time when the file data was last refreshed.
         /// </summary>
-        public DateTime? CreationTime
+        /// <seealso cref="GpxWaypoint.LastRefresh"/>
+        public DateTime? LastRefresh
         {
             get { return this.GetValue<DateTime?>("CreationTime"); }
             set { this.SetValue("CreationTime", value); }
