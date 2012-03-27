@@ -261,8 +261,19 @@ namespace GeoTransformer.Gpx
 
             if (!el.IsEmpty || this.Coordinates.Latitude != 0 || this.Coordinates.Longitude != 0)
             {
-                el.Add(new XAttribute("lat", this.Coordinates.Latitude));
-                el.Add(new XAttribute("lon", this.Coordinates.Longitude));
+                if (!options.EnableUnsupportedExtensions)
+                {
+                    // only put full precision values if this is a roundtrip serialization.
+                    // this is done to ensure maximum application compatibility.
+                    el.Add(new XAttribute("lat", this.Coordinates.Latitude));
+                    el.Add(new XAttribute("lon", this.Coordinates.Longitude));
+                }
+                else
+                {
+                    // usually the coordinates are given with 6 decimal places. Assuming that 7 will not break any application
+                    el.Add(new XAttribute("lat", decimal.Round(this.Coordinates.Latitude, 7)));
+                    el.Add(new XAttribute("lon", decimal.Round(this.Coordinates.Longitude, 7)));
+                }
             }
 
             if (el.IsEmpty)
