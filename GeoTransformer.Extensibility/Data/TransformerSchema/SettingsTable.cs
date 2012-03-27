@@ -27,6 +27,7 @@ namespace GeoTransformer.Data.TransformerSchema
             this.AddColumn<string>("MainFormColumnSettings", 7);
             this.AddColumn<string>("LastVersionShown", 11);
             this.AddColumn<bool>("DoNotShowWelcomeScreen", 17);
+            this.AddColumn<int>("ListViewerHeight", 18);
 
             // obsolete columns
             this.AddColumn<byte[]>("PocketQueryDownload", 12);
@@ -60,6 +61,11 @@ namespace GeoTransformer.Data.TransformerSchema
         public DatabaseColumn<string> MainFormColumnSettings { get { return this.GetColumn<string>("MainFormColumnSettings"); } }
         public DatabaseColumn<string> LastVersionShown { get { return this.GetColumn<string>("LastVersionShown"); } }
         public DatabaseColumn<bool> DoNotShowWelcomeScreen { get { return this.GetColumn<bool>("DoNotShowWelcomeScreen"); } }
+        
+        /// <summary>
+        /// Gets the column that stores the height of the list viewer on the main form.
+        /// </summary>
+        public DatabaseColumn<int> ListViewerHeight { get { return this.GetColumn<int>("ListViewerHeight"); } }
 
         /*
          * Obsolete columns

@@ -37,6 +37,7 @@ namespace GeoTransformer
                 query.Value(o => o.MainFormWindowHeight, this.RestoreBounds.Height);
                 query.Value(o => o.MainFormDefaultUrl, this.toolStripOpenDefaultWebPage.Tag as string);
                 query.Value(o => o.DoNotShowWelcomeScreen, WelcomeScreen.WelcomeScreen.DoNotShowWelcomeScreen);
+                query.Value(o => o.ListViewerHeight, this.cachePanel.SplitterDistance * 1000 / this.cachePanel.Height);
                 query.Execute();
 
                 Extensions.ExtensionLoader.PersistExtensionConfiguration();
@@ -58,6 +59,7 @@ namespace GeoTransformer
                 if (res.Value(o => o.MainFormWindowTop) != 0) this.Top = res.Value(o => o.MainFormWindowTop);
                 if (res.Value(o => o.MainFormWindowWidth) != 0) this.Width = res.Value(o => o.MainFormWindowWidth);
                 if (res.Value(o => o.MainFormWindowHeight) != 0) this.Height = res.Value(o => o.MainFormWindowHeight);
+                if (res.Value(o => o.ListViewerHeight) != 0) this.cachePanel.SplitterDistance = res.Value(o => o.ListViewerHeight) * this.cachePanel.Height / 1000;
                 var durl = res.Value(o => o.MainFormDefaultUrl);
                 if (!string.IsNullOrWhiteSpace(durl))
                 {
