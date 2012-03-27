@@ -31,11 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Label label1;
             System.Windows.Forms.Label label3;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.PictureBox pictureBoxLiveLogo;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
             System.Windows.Forms.ToolStripMenuItem openPocketQueriesToolStripMenuItem;
             System.Windows.Forms.ToolStripMenuItem openGeocachingcomToolStripMenuItem;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabPageCaches = new System.Windows.Forms.TabPage();
             this.cachePanel = new System.Windows.Forms.SplitContainer();
             this.listViewers = new GeoTransformer.Modules.ListViewers();
@@ -48,8 +48,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.labelVersion2 = new System.Windows.Forms.Label();
             this.labelAbout = new System.Windows.Forms.Label();
-            this.pictureBoxPayPal = new System.Windows.Forms.PictureBox();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.toolTipForOptions = new System.Windows.Forms.ToolTip(this.components);
+            this.pictureBoxPayPal = new System.Windows.Forms.PictureBox();
             this.toolStripOpenDefaultWebPage = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripWebPageChangeDefault = new System.Windows.Forms.ToolStripMenuItem();
             this.openGeoTransformerHomePageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,15 +60,13 @@
             this.toolStripExport = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripDropDownHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.launchWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.toolTipForOptions = new System.Windows.Forms.ToolTip(this.components);
+            this.onlineDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             label1 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             pictureBoxLiveLogo = new System.Windows.Forms.PictureBox();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             openPocketQueriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openGeocachingcomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(pictureBoxLiveLogo)).BeginInit();
             this.tabPageCaches.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cachePanel)).BeginInit();
             this.cachePanel.Panel1.SuspendLayout();
@@ -75,8 +75,9 @@
             this.tabControl.SuspendLayout();
             this.tabPageAbout.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPayPal)).BeginInit();
             this.toolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(pictureBoxLiveLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPayPal)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -99,44 +100,6 @@
             label3.TabIndex = 3;
             label3.Text = "Groundspeak’s Geocaching.com Cache Type Icons © 2011 Groundspeak Inc. All rights " +
     "reserved. Used with Permission.";
-            // 
-            // pictureBoxLiveLogo
-            // 
-            pictureBoxLiveLogo.Cursor = System.Windows.Forms.Cursors.Hand;
-            pictureBoxLiveLogo.Image = global::GeoTransformer.Properties.Resources.Geocaching_LIVE_poweredby_64;
-            pictureBoxLiveLogo.Location = new System.Drawing.Point(-1, 0);
-            pictureBoxLiveLogo.Margin = new System.Windows.Forms.Padding(2);
-            pictureBoxLiveLogo.Name = "pictureBoxLiveLogo";
-            pictureBoxLiveLogo.Size = new System.Drawing.Size(64, 73);
-            pictureBoxLiveLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            pictureBoxLiveLogo.TabIndex = 0;
-            pictureBoxLiveLogo.TabStop = false;
-            pictureBoxLiveLogo.Click += new System.EventHandler(this.pictureBoxLiveLogo_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
-            // 
-            // openPocketQueriesToolStripMenuItem
-            // 
-            openPocketQueriesToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.PocketQuery;
-            openPocketQueriesToolStripMenuItem.Name = "openPocketQueriesToolStripMenuItem";
-            openPocketQueriesToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            openPocketQueriesToolStripMenuItem.Tag = "http://www.geocaching.com/pocket/";
-            openPocketQueriesToolStripMenuItem.Text = "Open pocket query page";
-            openPocketQueriesToolStripMenuItem.ToolTipText = "http://www.geocaching.com/pocket/";
-            openPocketQueriesToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
-            // 
-            // openGeocachingcomToolStripMenuItem
-            // 
-            openGeocachingcomToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.Geocaching;
-            openGeocachingcomToolStripMenuItem.Name = "openGeocachingcomToolStripMenuItem";
-            openGeocachingcomToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            openGeocachingcomToolStripMenuItem.Tag = "http://www.geocaching.com/";
-            openGeocachingcomToolStripMenuItem.Text = "Open geocaching.com";
-            openGeocachingcomToolStripMenuItem.ToolTipText = "http://www.geocaching.com/";
-            openGeocachingcomToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
             // 
             // tabPageCaches
             // 
@@ -288,19 +251,6 @@
             this.labelAbout.Text = resources.GetString("labelAbout.Text");
             this.labelAbout.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pictureBoxPayPal
-            // 
-            this.pictureBoxPayPal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxPayPal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBoxPayPal.Image = global::GeoTransformer.Properties.Resources.Donate;
-            this.pictureBoxPayPal.Location = new System.Drawing.Point(3, 3);
-            this.pictureBoxPayPal.Name = "pictureBoxPayPal";
-            this.pictureBoxPayPal.Size = new System.Drawing.Size(831, 66);
-            this.pictureBoxPayPal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBoxPayPal.TabIndex = 1;
-            this.pictureBoxPayPal.TabStop = false;
-            this.pictureBoxPayPal.Click += new System.EventHandler(this.pictureBoxPayPal_Click);
-            // 
             // toolStrip
             // 
             this.toolStrip.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -317,6 +267,46 @@
             this.toolStrip.TabIndex = 1;
             this.toolStrip.TabStop = true;
             this.toolStrip.Text = "toolStrip";
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.Description = "Pick the folder where you want to publish the .gpx files to. Note that both cache" +
+    "s and waypoints will be published there.";
+            // 
+            // toolTipForOptions
+            // 
+            this.toolTipForOptions.AutoPopDelay = 32767;
+            this.toolTipForOptions.InitialDelay = 100;
+            this.toolTipForOptions.IsBalloon = true;
+            this.toolTipForOptions.ReshowDelay = 100;
+            this.toolTipForOptions.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTipForOptions.ToolTipTitle = "Description";
+            // 
+            // pictureBoxLiveLogo
+            // 
+            pictureBoxLiveLogo.Cursor = System.Windows.Forms.Cursors.Hand;
+            pictureBoxLiveLogo.Image = global::GeoTransformer.Properties.Resources.Geocaching_LIVE_poweredby_64;
+            pictureBoxLiveLogo.Location = new System.Drawing.Point(-1, 0);
+            pictureBoxLiveLogo.Margin = new System.Windows.Forms.Padding(2);
+            pictureBoxLiveLogo.Name = "pictureBoxLiveLogo";
+            pictureBoxLiveLogo.Size = new System.Drawing.Size(64, 73);
+            pictureBoxLiveLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            pictureBoxLiveLogo.TabIndex = 0;
+            pictureBoxLiveLogo.TabStop = false;
+            pictureBoxLiveLogo.Click += new System.EventHandler(this.pictureBoxLiveLogo_Click);
+            // 
+            // pictureBoxPayPal
+            // 
+            this.pictureBoxPayPal.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxPayPal.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pictureBoxPayPal.Image = global::GeoTransformer.Properties.Resources.Donate;
+            this.pictureBoxPayPal.Location = new System.Drawing.Point(3, 3);
+            this.pictureBoxPayPal.Name = "pictureBoxPayPal";
+            this.pictureBoxPayPal.Size = new System.Drawing.Size(831, 66);
+            this.pictureBoxPayPal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxPayPal.TabIndex = 1;
+            this.pictureBoxPayPal.TabStop = false;
+            this.pictureBoxPayPal.Click += new System.EventHandler(this.pictureBoxPayPal_Click);
             // 
             // toolStripOpenDefaultWebPage
             // 
@@ -339,15 +329,20 @@
             // toolStripWebPageChangeDefault
             // 
             this.toolStripWebPageChangeDefault.Name = "toolStripWebPageChangeDefault";
-            this.toolStripWebPageChangeDefault.Size = new System.Drawing.Size(255, 22);
+            this.toolStripWebPageChangeDefault.Size = new System.Drawing.Size(263, 30);
             this.toolStripWebPageChangeDefault.Text = "Change the default";
             this.toolStripWebPageChangeDefault.Click += new System.EventHandler(this.toolStripWebPageChangeDefault_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(260, 6);
             // 
             // openGeoTransformerHomePageToolStripMenuItem
             // 
             this.openGeoTransformerHomePageToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.GeoTransformer;
             this.openGeoTransformerHomePageToolStripMenuItem.Name = "openGeoTransformerHomePageToolStripMenuItem";
-            this.openGeoTransformerHomePageToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.openGeoTransformerHomePageToolStripMenuItem.Size = new System.Drawing.Size(263, 30);
             this.openGeoTransformerHomePageToolStripMenuItem.Tag = "http://knagis.miga.lv/blog/?tag=/GeoTransformer";
             this.openGeoTransformerHomePageToolStripMenuItem.Text = "Open GeoTransformer home page";
             this.openGeoTransformerHomePageToolStripMenuItem.ToolTipText = "http://knagis.miga.lv/blog/?tag=/GeoTransformer";
@@ -357,11 +352,31 @@
             // 
             this.openGpxTautaiToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.Latvia;
             this.openGpxTautaiToolStripMenuItem.Name = "openGpxTautaiToolStripMenuItem";
-            this.openGpxTautaiToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.openGpxTautaiToolStripMenuItem.Size = new System.Drawing.Size(263, 30);
             this.openGpxTautaiToolStripMenuItem.Tag = "http://www.geoforums.lv/";
             this.openGpxTautaiToolStripMenuItem.Text = "Open GPX Tautai forum page";
             this.openGpxTautaiToolStripMenuItem.ToolTipText = "http://www.geoforums.lv/";
             this.openGpxTautaiToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
+            // 
+            // openPocketQueriesToolStripMenuItem
+            // 
+            openPocketQueriesToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.PocketQuery;
+            openPocketQueriesToolStripMenuItem.Name = "openPocketQueriesToolStripMenuItem";
+            openPocketQueriesToolStripMenuItem.Size = new System.Drawing.Size(263, 30);
+            openPocketQueriesToolStripMenuItem.Tag = "http://www.geocaching.com/pocket/";
+            openPocketQueriesToolStripMenuItem.Text = "Open pocket query page";
+            openPocketQueriesToolStripMenuItem.ToolTipText = "http://www.geocaching.com/pocket/";
+            openPocketQueriesToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
+            // 
+            // openGeocachingcomToolStripMenuItem
+            // 
+            openGeocachingcomToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.Geocaching;
+            openGeocachingcomToolStripMenuItem.Name = "openGeocachingcomToolStripMenuItem";
+            openGeocachingcomToolStripMenuItem.Size = new System.Drawing.Size(263, 30);
+            openGeocachingcomToolStripMenuItem.Tag = "http://www.geocaching.com/";
+            openGeocachingcomToolStripMenuItem.Text = "Open geocaching.com";
+            openGeocachingcomToolStripMenuItem.ToolTipText = "http://www.geocaching.com/";
+            openGeocachingcomToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
             // 
             // toolStripSave
             // 
@@ -385,7 +400,8 @@
             // 
             this.toolStripDropDownHelp.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripDropDownHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.launchWizardToolStripMenuItem});
+            this.launchWizardToolStripMenuItem,
+            this.onlineDocumentationToolStripMenuItem});
             this.toolStripDropDownHelp.Image = global::GeoTransformer.Properties.Resources.Help;
             this.toolStripDropDownHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownHelp.Name = "toolStripDropDownHelp";
@@ -395,23 +411,18 @@
             // launchWizardToolStripMenuItem
             // 
             this.launchWizardToolStripMenuItem.Name = "launchWizardToolStripMenuItem";
-            this.launchWizardToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.launchWizardToolStripMenuItem.Size = new System.Drawing.Size(202, 30);
             this.launchWizardToolStripMenuItem.Text = "Launch wizard";
             this.launchWizardToolStripMenuItem.Click += new System.EventHandler(this.launchWizardToolStripMenuItem_Click);
             // 
-            // folderBrowserDialog
+            // onlineDocumentationToolStripMenuItem
             // 
-            this.folderBrowserDialog.Description = "Pick the folder where you want to publish the .gpx files to. Note that both cache" +
-    "s and waypoints will be published there.";
-            // 
-            // toolTipForOptions
-            // 
-            this.toolTipForOptions.AutoPopDelay = 32767;
-            this.toolTipForOptions.InitialDelay = 100;
-            this.toolTipForOptions.IsBalloon = true;
-            this.toolTipForOptions.ReshowDelay = 100;
-            this.toolTipForOptions.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.toolTipForOptions.ToolTipTitle = "Description";
+            this.onlineDocumentationToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.FAQ;
+            this.onlineDocumentationToolStripMenuItem.Name = "onlineDocumentationToolStripMenuItem";
+            this.onlineDocumentationToolStripMenuItem.Size = new System.Drawing.Size(202, 30);
+            this.onlineDocumentationToolStripMenuItem.Tag = "http://geotransformer.codeplex.com/documentation";
+            this.onlineDocumentationToolStripMenuItem.Text = "Online documentation";
+            this.onlineDocumentationToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
             // 
             // MainForm
             // 
@@ -424,7 +435,6 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "GeoTransformer";
-            ((System.ComponentModel.ISupportInitialize)(pictureBoxLiveLogo)).EndInit();
             this.tabPageCaches.ResumeLayout(false);
             this.cachePanel.Panel1.ResumeLayout(false);
             this.cachePanel.Panel1.PerformLayout();
@@ -436,9 +446,10 @@
             this.tabPageAbout.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPayPal)).EndInit();
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(pictureBoxLiveLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPayPal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -470,6 +481,7 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownHelp;
         private System.Windows.Forms.ToolStripMenuItem launchWizardToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPageCaches;
+        private System.Windows.Forms.ToolStripMenuItem onlineDocumentationToolStripMenuItem;
     }
 }
 

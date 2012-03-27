@@ -139,6 +139,7 @@
       <Link>GeoTransformer.licenseheader</Link>
     </None>
     <None Include="Icons\Geocaching_LIVE_poweredby_128.png" />
+    <Content Include="Icons\FAQ-icon.png" />
     <Content Include="Icons\Wizard.ico" />
     <None Include="Icons\Actions-dialog-cancel-icon.png" />
     <Content Include="Icons\Actions-document-save-icon.png" />
