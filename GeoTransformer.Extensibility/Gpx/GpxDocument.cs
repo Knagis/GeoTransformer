@@ -28,7 +28,7 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GpxSchema_1_0 + "email", (o, e) => o.Metadata.Author.Email = e.Value },
             { XmlExtensions.GpxSchema_1_0 + "url", (o, e) => { var v = new Uri(e.Value); var l = o.Metadata.Links; if (l.Count == 0) l.Add(new GpxLink() { Href = v }); else l[0].Href = v; } },
             { XmlExtensions.GpxSchema_1_0 + "urlname", (o, e) => { var l = o.Metadata.Links; if (l.Count == 0) l.Add(new GpxLink() { Text = e.Value }); else l[0].Text = e.Value; } },
-            { XmlExtensions.GpxSchema_1_0 + "time", (o, e) => o.Metadata.CreationTime = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
+            { XmlExtensions.GpxSchema_1_0 + "time", (o, e) => o.Metadata.LastRefresh = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
             { XmlExtensions.GpxSchema_1_0 + "keywords", (o, e) => o.Metadata.Keywords = e.Value },
             { XmlExtensions.GpxSchema_1_0 + "bounds", (o, e) => o.Metadata.Bounds = new GpxBounds(e) },
 
@@ -52,7 +52,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         public GpxDocument()
         {
-            this.Metadata.CreationTime = DateTime.Now;
+            this.Metadata.LastRefresh = DateTime.Now;
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace GeoTransformer.Gpx
                         root.Add(new XElement(schema + "urlname", link.Text));
                 }
 
-                if (this.Metadata.CreationTime.HasValue && this.Metadata.CreationTime.Value != DateTime.MinValue)
-                    root.Add(new XElement(schema + "time", this.Metadata.CreationTime.Value.ToUniversalTime()));
+                if (this.Metadata.LastRefresh.HasValue && this.Metadata.LastRefresh.Value != DateTime.MinValue)
+                    root.Add(new XElement(schema + "time", this.Metadata.LastRefresh.Value.ToUniversalTime()));
 
                 if (!string.IsNullOrWhiteSpace(this.Metadata.Keywords))
                     root.Add(new XElement(schema + "keywords", this.Metadata.Keywords));

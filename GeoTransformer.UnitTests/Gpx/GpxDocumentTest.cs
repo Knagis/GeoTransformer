@@ -87,7 +87,7 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(1, gpxDoc.Metadata.Links.Count);
             Assert.AreEqual("http://www.topografix.com/gpx.asp", gpxDoc.Metadata.Links[0].Href.ToString());
             Assert.AreEqual("text/html", gpxDoc.Metadata.Links[0].MimeType);
-            Assert.AreEqual(new DateTime(2004, 6, 10, 12, 3, 26, DateTimeKind.Utc).ToLocalTime(), gpxDoc.Metadata.CreationTime);
+            Assert.AreEqual(new DateTime(2004, 6, 10, 12, 3, 26, DateTimeKind.Utc).ToLocalTime(), gpxDoc.Metadata.LastRefresh);
             Assert.AreEqual(40.451925327M, gpxDoc.Metadata.Bounds.MinLatitude);
             Assert.AreEqual(-74.266517M, gpxDoc.Metadata.Bounds.MinLongitude);
             Assert.AreEqual(-71.266517M, gpxDoc.Metadata.Bounds.MaxLongitude);
@@ -132,7 +132,7 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(1, gdoc.Metadata.Links.Count);
             Assert.AreEqual("http://www.geocaching.com/", gdoc.Metadata.Links[0].Href.ToString());
             Assert.AreEqual("Geocaching - High Tech Treasure Hunting", gdoc.Metadata.Links[0].Text);
-            Assert.AreEqual(new DateTime(2011, 7, 25, 12, 41, 18, 27, DateTimeKind.Utc).ToLocalTime(), gdoc.Metadata.CreationTime.Value);
+            Assert.AreEqual(new DateTime(2011, 7, 25, 12, 41, 18, 27, DateTimeKind.Utc).ToLocalTime(), gdoc.Metadata.LastRefresh.Value);
             Assert.AreEqual("cache, geocache", gdoc.Metadata.Keywords);
             Assert.AreEqual(56.990978M, gdoc.Metadata.Bounds.MinLatitude);
             Assert.AreEqual(23.522812M, gdoc.Metadata.Bounds.MinLongitude);
