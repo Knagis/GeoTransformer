@@ -143,5 +143,32 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(9, result.Root.Elements().Count());
             Assert.IsNotNull(result.Descendants(XmlExtensions.GpxSchema_1_0 + "urlname"));
         }
+
+        /// <summary>
+        /// Tests the memory usage of parsed gpx documents
+        /// </summary>
+        [DeploymentItem(@"GeoTransformer.UnitTests\Gpx\gpxtautai.zip")]
+        [TestMethod]
+        public void TestMemoryUsage()
+        {
+            GC.WaitForFullGCComplete();
+
+            System.Threading.Thread.MemoryBarrier();
+            var initialMemory = System.GC.GetTotalMemory(true);
+
+            var doc = GeoTransformer.Gpx.Loader.Zip(@"gpxtautai.zip").ToArray();
+
+            System.Threading.Thread.MemoryBarrier();
+            var finalMemory = System.GC.GetTotalMemory(true);
+
+            var consumption = finalMemory - initialMemory;
+
+            // .Inconclusive() is used for easy output while debugging
+            //Assert.Inconclusive((consumption / 1024m / 1024m).ToString());
+            Assert.IsTrue((consumption / 1024m / 1024m) < 60, "Memory consumption increased above 45Mb.");
+
+            // reference the value after the memory size is read as otherwise the variable is disposed too soon
+            doc.First();
+        }
     }
 }
