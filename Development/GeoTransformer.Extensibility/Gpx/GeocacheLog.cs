@@ -82,7 +82,8 @@ namespace GeoTransformer.Gpx
             if (this.Date.HasValue)
                 el.Add(new XElement(options.GeocacheNamespace + "date", this.Date.Value.ToUniversalTime()));
 
-            el.Add(this.Finder.Serialize(options));
+            el.Add(this.LogType.Serialize(options));
+            el.Add(this.Finder.Serialize(options, "finder"));
             el.Add(this.Text.Serialize(options));
 
             if (this.Waypoint.HasValue && (options.GeocacheVersion == GeocacheVersion.Geocache_1_0_2 || options.EnableUnsupportedExtensions))
