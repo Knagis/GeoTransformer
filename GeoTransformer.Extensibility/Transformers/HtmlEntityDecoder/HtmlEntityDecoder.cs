@@ -64,7 +64,7 @@ namespace GeoTransformer.Transformers.HtmlEntityDecoder
                 gc.ShortDescription.Text = System.Net.WebUtility.HtmlDecode(gc.ShortDescription.Text);
 
             if (!string.IsNullOrWhiteSpace(gc.LongDescription.Text))
-                gc.LongDescription.Text = System.Net.WebUtility.HtmlDecode(gc.ShortDescription.Text);
+                gc.LongDescription.Text = System.Net.WebUtility.HtmlDecode(gc.LongDescription.Text);
 
             foreach (var log in gc.Logs)
                 if (!string.IsNullOrWhiteSpace(log.Text.Text))
