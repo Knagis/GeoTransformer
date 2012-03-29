@@ -45,10 +45,11 @@ namespace GeoTransformer.Gpx
         /// Serializes the owner to XML element.
         /// </summary>
         /// <param name="options">The serialization options.</param>
+        /// <param name="localName">The name of the XML element that will be created.</param>
         /// <returns>The serialized object or <c>null</c> if this object is empty.</returns>
-        public XElement Serialize(GpxSerializationOptions options)
+        public XElement Serialize(GpxSerializationOptions options, string localName = "owner")
         {
-            var el = new XElement(options.GeocacheNamespace + "owner");
+            var el = new XElement(options.GeocacheNamespace + localName);
 
             // the schema specifies that the ID is mandatory but we will assume that the data provider will make sure of that and
             // also because most applications will probably not care about the ID, just the name.
