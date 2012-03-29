@@ -110,10 +110,7 @@ namespace GeoTransformer.Gpx
             : base(true)
         {
             if (!isCopy)
-            {
-                this._originalValues = new GpxWaypoint(waypoint, true);
-                this._originalValues.PropertyChanged += (a, b) => { throw new InvalidOperationException("Cannot modify the OriginalValues property."); };
-            }
+                this._originalValuesXml = waypoint;
 
             if (waypoint != null)
                 this.Initialize(waypoint, _attributeInitializers, _elementInitializers);
@@ -288,6 +285,12 @@ namespace GeoTransformer.Gpx
         private GpxWaypoint _originalValues;
 
         /// <summary>
+        /// Holds the XML element from which the waypoint was initialized. This is used by <see cref="OriginalValues"/> to initialize the in-memory
+        /// representation only when needed and not always (as the original values are not often needed, this results in significant reduce in memory usage).
+        /// </summary>
+        private XElement _originalValuesXml;
+
+        /// <summary>
         /// Gets the original values for this GPX waypoint. The object is read-only (any modification will result in an exception).
         /// </summary>
         public GpxWaypoint OriginalValues
@@ -296,7 +299,14 @@ namespace GeoTransformer.Gpx
             {
                 // this check will trigger when the property is requested for the instance that itself is a copy for another waypoint.
                 if (this._originalValues == null)
-                    return this;
+                {
+                    if (this._originalValuesXml == null)
+                        return this;
+
+                    this._originalValues = new GpxWaypoint(this._originalValuesXml, true);
+                    this._originalValues.PropertyChanged += (a, b) => { throw new InvalidOperationException("Cannot modify the OriginalValues property."); };
+                    this._originalValuesXml = null;
+                }
 
                 return this._originalValues;
             }
