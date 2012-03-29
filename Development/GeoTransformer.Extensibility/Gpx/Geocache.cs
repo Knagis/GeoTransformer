@@ -84,6 +84,7 @@ namespace GeoTransformer.Gpx
 
             { XmlExtensions.GeocacheSchema_1_0_2 + "favorite_points", (o, e) => o.FavoritePoints = XmlConvert.ToInt32(e.Value) },
 
+            { XmlExtensions.GeocacheSchema_1_0_0 + "attributes", (o, e) => o.Attributes = GeocacheAttribute.Parse(e) },
             { XmlExtensions.GeocacheSchema_1_0_1 + "attributes", (o, e) => o.Attributes = GeocacheAttribute.Parse(e) },
             { XmlExtensions.GeocacheSchema_1_0_2 + "attributes", (o, e) => o.Attributes = GeocacheAttribute.Parse(e) },
 
