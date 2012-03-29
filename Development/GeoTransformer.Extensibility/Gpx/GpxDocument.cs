@@ -60,7 +60,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="document">The document containing GPX 1.0 or 1.1 data.</param>
         public GpxDocument(XDocument document)
-            : base(true)
+            : base(true, 4)
         {
             if (document != null && document.Root != null)
                 this.Initialize(document.Root, _attributeInitializers, _elementInitializers);

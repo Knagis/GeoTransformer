@@ -38,7 +38,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="copyright">The copyright element from GPX 1.1 schema.</param>
         public GpxCopyright(XElement copyright)
-            : base(true)
+            : base(true, 3)
         {
             this.Initialize(copyright, _attributeInitializers, _elementInitializers);
             this.ResumeObservation();

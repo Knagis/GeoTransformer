@@ -111,7 +111,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="cache">The XML element (groundspeak:cache) that contains the cache extensions.</param>
         public Geocache(XElement cache)
-            : base(true)
+            : base(true, 23)
         {
             if (cache != null)
                 this.Initialize(cache, _attributeInitializers, _elementInitializers);

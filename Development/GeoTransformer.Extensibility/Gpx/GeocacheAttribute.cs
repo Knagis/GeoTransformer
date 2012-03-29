@@ -35,7 +35,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="attribute">The attribute XML element.</param>
         public GeocacheAttribute(XElement attribute)
-            : base(true)
+            : base(true, 3)
         {
             if (attribute != null)
             {

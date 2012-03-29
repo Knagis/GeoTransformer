@@ -50,8 +50,8 @@ namespace GeoTransformer.Gpx
             }
         }
 
-        private Dictionary<string, object> _values = new Dictionary<string, object>(StringComparer.Ordinal);
-        private Dictionary<string, ChangeHandler> _handlers = new Dictionary<string, ChangeHandler>(StringComparer.Ordinal);
+        private System.Collections.IDictionary _values;
+        private System.Collections.IDictionary _handlers;
         
         /// <summary>
         /// Holds a value indicating whether the observation is suspended. This is done to increase performance when performing the initial load
@@ -63,16 +63,33 @@ namespace GeoTransformer.Gpx
         /// Initializes a new instance of the <see cref="ObservableElement"/> class.
         /// </summary>
         /// <param name="suspendObservation">if set to <c>true</c> suspends the observation until <see cref="ResumeObservation"/> method is called. Should be set to <c>true</c> when the constructor loads the data.</param>
-        protected ObservableElement(bool suspendObservation = false)
+        /// <param name="propertyCount">Number of properties that will be stored using <see cref="SetValue"/>. This should be specified when the known number is large to optimize performance.</param>
+        protected ObservableElement(bool suspendObservation = false, int propertyCount = -1)
         {
             this._suspendObservation = suspendObservation;
+
+            if (propertyCount == -1)
+            {
+                this._values = new System.Collections.Specialized.HybridDictionary();
+                this._handlers = new System.Collections.Specialized.HybridDictionary();
+            }
+            else if (propertyCount < 6)
+            {
+                this._values = new System.Collections.Specialized.ListDictionary();
+                this._handlers = new System.Collections.Specialized.ListDictionary();
+            }
+            else
+            {
+                this._values = new System.Collections.Hashtable(propertyCount);
+                // since usually only part of the properties are observable, assume that hybrid dict will be better
+                this._handlers = new System.Collections.Specialized.HybridDictionary(); 
+            }
         }
 
         protected T GetValue<T>(string key, bool create = false)
             where T : new()
         {
-            object val;
-            if (!this._values.TryGetValue(key, out val))
+            if (!this._values.Contains(key))
             {
                 if (!create)
                     return default(T);
@@ -84,16 +101,15 @@ namespace GeoTransformer.Gpx
                 return newVal;
             }
             else
-                return (T)val;
+                return (T)this._values[key];
         }
 
         protected T GetValue<T>(string key)
         {
-            object val;
-            if (!this._values.TryGetValue(key, out val))
+            if (!this._values.Contains(key))
                 return default(T);
             else
-                return (T)val;
+                return (T)this._values[key];
         }
 
         /// <summary>
@@ -111,9 +127,11 @@ namespace GeoTransformer.Gpx
                 return;
             }
 
-            object oldVal;
-            if (this._values.TryGetValue(key, out oldVal))
+            object oldVal = null;
+            if (this._values.Contains(key))
             {
+                oldVal = this._values[key];
+
                 // use ReferenceEquals instead of Equals because the purpose is to remove the event handlers if the
                 // object is changed in order to remove any potential memory leaks.
                 if (object.ReferenceEquals(value, oldVal))
@@ -131,15 +149,15 @@ namespace GeoTransformer.Gpx
 
         private ChangeHandler GetChangeHandler(string key)
         {
-            ChangeHandler handler;
-            if (!this._handlers.TryGetValue(key, out handler))
+            if (!this._handlers.Contains(key))
             {
-                handler = new ChangeHandler();
+                var handler = new ChangeHandler();
                 handler.Container = this;
                 handler.PropertyName = key;
                 this._handlers.Add(key, handler);
+                return handler;
             }
-            return handler;
+            return (ChangeHandler)this._handlers[key];
         }
 
         /// <summary>
@@ -152,8 +170,8 @@ namespace GeoTransformer.Gpx
             if (!this._suspendObservation)
                 throw new InvalidOperationException("ResumeObservation can only be called once and if the ObservableElement constructor is called with argument suspendObservation=true.");
 
-            foreach (var k in this._values)
-                this.AttachListener(k.Key, k.Value);
+            foreach (System.Collections.DictionaryEntry k in this._values)
+                this.AttachListener((string)k.Key, k.Value);
 
             this._suspendObservation = false;
         }

@@ -31,7 +31,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="container">The cache container XML element.</param>
         public GeocacheContainer(XElement container)
-            : base(true)
+            : base(true, 2)
         {
             if (container != null)
             {

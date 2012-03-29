@@ -31,7 +31,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="description">The log text XML element.</param>
         public GeocacheLogText(XElement description)
-            : base(true)
+            : base(true, 2)
         {
             if (description != null)
             {

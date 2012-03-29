@@ -34,7 +34,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="person">The XML element containing the person description (GPX 1.1).</param>
         public GpxPerson(XElement person)
-            :base(true)
+            :base(true, 3)
         {
             if (person != null)
                 this.Initialize(person, null, _elementInitializers);
