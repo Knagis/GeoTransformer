@@ -42,7 +42,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="metadata">The GPX version 1.1 metadata element.</param>
         public GpxMetadata(XElement metadata)
-            : base(true)
+            : base(true, 10)
         {
             this.Initialize(metadata);
             this.ResumeObservation();

@@ -41,7 +41,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="travelbug">The geocache travelbug XML element.</param>
         public GeocacheTrackable(XElement travelbug)
-            : base(true)
+            : base(true, 2)
         {
             if (travelbug != null)
                 this.Initialize(travelbug, _attributeInitializers, _elementInitializers);

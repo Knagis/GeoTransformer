@@ -31,7 +31,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="logType">The geocache log type XML element.</param>
         public GeocacheLogType(XElement logType)
-            : base(true)
+            : base(true, 2)
         {
             if (logType != null)
             {

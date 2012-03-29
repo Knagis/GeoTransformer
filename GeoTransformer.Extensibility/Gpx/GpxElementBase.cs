@@ -20,8 +20,9 @@ namespace GeoTransformer.Gpx
         /// Initializes a new instance of the <see cref="GpxElementBase"/> class.
         /// </summary>
         /// <param name="suspendObservation">if set to <c>true</c> suspends the observation until <see cref="ObservableElement.ResumeObservation"/> method is called. Should be set to <c>true</c> when the constructor loads the data.</param>
-        protected GpxElementBase(bool suspendObservation = false)
-            : base(suspendObservation)
+        /// <param name="propertyCount">Number of properties that will be stored using <see cref="SetValue"/>. This should be specified when the known number is large to optimize performance.</param>
+        protected GpxElementBase(bool suspendObservation = false, int propertyCount = -1)
+            : base(suspendObservation, propertyCount)
         {
         }
 

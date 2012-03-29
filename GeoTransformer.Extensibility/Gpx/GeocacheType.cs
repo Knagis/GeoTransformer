@@ -31,7 +31,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="type">The cache type XML element.</param>
         public GeocacheType(XElement type)
-            : base(true)
+            : base(true, 2)
         {
             if (type != null)
             {

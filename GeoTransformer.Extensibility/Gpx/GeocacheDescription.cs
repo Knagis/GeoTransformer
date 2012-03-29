@@ -31,7 +31,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="description">The description XML element.</param>
         public GeocacheDescription(XElement description)
-            : base(true)
+            : base(true, 2)
         {
             if (description != null)
             {

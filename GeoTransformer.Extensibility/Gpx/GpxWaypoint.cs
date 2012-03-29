@@ -107,7 +107,7 @@ namespace GeoTransformer.Gpx
         /// <param name="waypoint">The waypoint XML element.</param>
         /// <param name="isCopy">if set to <c>true</c> indicates that the instance represents a copy of a waypoint.</param>
         private GpxWaypoint(XElement waypoint, bool isCopy)
-            : base(true)
+            : base(true, 21)
         {
             if (!isCopy)
                 this._originalValuesXml = waypoint;

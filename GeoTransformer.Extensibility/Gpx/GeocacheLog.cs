@@ -57,7 +57,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="log">The geocache log XML element.</param>
         public GeocacheLog(XElement log)
-            : base(true)
+            : base(true) // the propertyCount is not passed as it is 5 before 1.0.2 version and 7 after (6 is the magic number that changes implementation).
         {
             if (log != null)
                 this.Initialize(log, _attributeInitializers, _elementInitializers);

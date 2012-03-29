@@ -165,7 +165,7 @@ namespace GeoTransformer.UnitTests.Gpx
 
             // .Inconclusive() is used for easy output while debugging
             //Assert.Inconclusive((consumption / 1024m / 1024m).ToString());
-            Assert.IsTrue((consumption / 1024m / 1024m) < 45, "Memory consumption increased above 45Mb.");
+            Assert.IsTrue((consumption / 1024m / 1024m) < 40, "Memory consumption increased above 40Mb.");
 
             // reference the value after the memory size is read as otherwise the variable is disposed too soon
             doc.First();
