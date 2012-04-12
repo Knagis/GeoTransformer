@@ -213,7 +213,7 @@ namespace GeoTransformer
             }
             catch (Exception ex)
             {
-                tp.Controls.Add(new Label() { Text = "Unable to initialize this extension:" + Environment.NewLine + Environment.NewLine + ex.ToString() });
+                tp.Controls.Add(new Label() { Text = "Unable to initialize this extension:" + Environment.NewLine + Environment.NewLine + ex.ToString(), AutoSize = true });
             }
         }
 
