@@ -10,13 +10,22 @@ using System.Text;
 
 namespace GeoTransformer.Viewers.CacheEditor
 {
-    public class CacheEditor : Extensions.ICacheViewer
+    /// <summary>
+    /// Displays waypoint editor controls (extensions derived from <see cref="Extensions.IEditor"/>).
+    /// </summary>
+    public class CacheEditor : Extensions.IWaypointViewer
     {
+        /// <summary>
+        /// Gets the icon to be displayed on the button.
+        /// </summary>
         public System.Drawing.Image ButtonImage
         {
             get { return Resources.Edit; }
         }
 
+        /// <summary>
+        /// Gets the text to be displayed on the button.
+        /// </summary>
         public string ButtonText
         {
             get { return "Editor"; }
@@ -25,6 +34,12 @@ namespace GeoTransformer.Viewers.CacheEditor
         private EditorControl _container;
         private List<Tuple<Extensions.IEditor, System.Windows.Forms.Control>> _editors = new List<Tuple<Extensions.IEditor,System.Windows.Forms.Control>>();
 
+        /// <summary>
+        /// Creates the control that will display the detailed waypoint information. The method is called only once and after that the control is reused.
+        /// </summary>
+        /// <returns>
+        /// An initialized control that displays waypoint(-s).
+        /// </returns>
         public System.Windows.Forms.Control Initialize()
         {
             this._container = new EditorControl(this);
@@ -44,34 +59,36 @@ namespace GeoTransformer.Viewers.CacheEditor
         }
 
         /// <summary>
-        /// Called to display the cache details in the UI control.
+        /// Called to display the cache details in the UI control. The method is only called for waypoints after <see cref="IsEnabled"/> returns <c>true</c>.
         /// </summary>
-        /// <param name="data">The GPX element containing the cache information.</param>
-        public void DisplayCache(System.Xml.Linq.XElement data)
+        /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
+        public void DisplayWaypoints(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            this._container.BindElement(data);
+            var wpt = waypoints.FirstOrDefault();
 
-            this._container.flowLayoutPanel.Enabled = data != null;
+            this._container.BindElement(wpt);
+
+            this._container.flowLayoutPanel.Enabled = wpt != null;
 
             foreach (var editor in this._editors)
             {
-                if (data == null)
-                    editor.Item1.BindControl(null);
-                else
-                    editor.Item1.BindControl(data.ExtensionElement(editor.Item1.GetType(), true));
+                editor.Item1.BindControl(wpt);
             }
         }
 
         /// <summary>
         /// Called by the main application to determine if the viewer is enabled for the particular waypoint.
         /// </summary>
-        /// <param name="data">The GPX element containing the cache information (can be <c>null</c>).</param>
+        /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
         /// <returns>
         ///   <c>true</c> if the viewer is enabled for the specified waypoint; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsEnabled(System.Xml.Linq.XElement data)
+        public bool IsEnabled(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            return true;
+            if (waypoints == null)
+                return true;
+
+            return waypoints.Count <= 1;
         }
     }
 }

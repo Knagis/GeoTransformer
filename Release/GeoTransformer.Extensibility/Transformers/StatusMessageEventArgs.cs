@@ -16,29 +16,26 @@ namespace GeoTransformer.Transformers
     public class StatusMessageEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatusReportEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="StatusMessageEventArgs"/> class.
         /// </summary>
+        /// <param name="severity">The severity of the message.</param>
         /// <param name="message">The message text.</param>
-        public StatusMessageEventArgs(string message)
+        /// <param name="args">The arguments to pass to <see cref="String.Format(string, object[])"/> function; if specified, the <paramref name="message"/> is considered
+        /// to contain the formatting template.</param>
+        public StatusMessageEventArgs(StatusSeverity severity, string message, params object[] args)
         {
-            this.Message = message;
+            this.Severity = severity;
+
+            if (args != null && args.Length > 0)
+                this.Message = string.Format(System.Globalization.CultureInfo.CurrentCulture, message, args);
+            else
+                this.Message = message;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatusReportEventArgs"/> class.
+        /// Gets the severity of the status message.
         /// </summary>
-        /// <param name="isError">if set to <c>true</c> an error occurred in the transformer.</param>
-        /// <param name="message">The error text.</param>
-        public StatusMessageEventArgs(bool isError, string message)
-        {
-            this.IsError = isError;
-            this.Message = message;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the message describes an error in the transformer process.
-        /// </summary>
-        public bool IsError { get; private set; }
+        public StatusSeverity Severity { get; private set; }
 
         /// <summary>
         /// Gets the message text.

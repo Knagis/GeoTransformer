@@ -12,6 +12,9 @@ using GeoTransformer.Extensions;
 
 namespace GeoTransformer.Transformers.Translator
 {
+    /// <summary>
+    /// Transformer that uses Bing Translator to automatically translate descriptions, hints and logs.
+    /// </summary>
     public class Translator : TransformerBase, IConfigurable, ILocalStorage
     {
         /// <summary>
@@ -33,7 +36,11 @@ namespace GeoTransformer.Transformers.Translator
         /// </summary>
         public override ExecutionOrder ExecutionOrder
         {
-            get { return Transformers.ExecutionOrder.Process; }
+            get 
+            { 
+                // +100 means that the translation will be done after most transformers have done changing the values.
+                return Transformers.ExecutionOrder.Process + 100;
+            }
         }
 
         private static string RetrieveAzureToken(string clientId, string clientSecret)
@@ -144,6 +151,8 @@ namespace GeoTransformer.Transformers.Translator
             if (this._errorLogFileName == null)
                 this._errorLogFileName = System.IO.Path.Combine(this.LocalStoragePath, "ErrorLog." + DateTime.Now.ToString("yyyyMMdd.HHmmss") + ".txt");
 
+            if (!data.EndsWith(Environment.NewLine))
+                data += Environment.NewLine;
             System.IO.File.AppendAllText(this._errorLogFileName, data);
         }
 
@@ -280,22 +289,45 @@ namespace GeoTransformer.Transformers.Translator
             }
         }
 
-        private IEnumerable<System.Xml.Linq.XElement> FilterDescendants(System.Xml.Linq.XDocument xml)
+        private IEnumerable<TranslateData> RetrieveWork(Gpx.GpxDocument document)
         {
-            IEnumerable<System.Xml.Linq.XElement> q = new System.Xml.Linq.XElement[0];
-            if (this._processConfigCache.TranslateDescriptions)
-                q = q.Union(xml.CacheDescendants("short_description"))
-                     .Union(xml.CacheDescendants("long_description"))
-                     .Union(xml.WaypointDescendants("cmt"));
-            if (this._processConfigCache.TranslateHints)
-                q = q.Union(xml.CacheDescendants("encoded_hints"));
-            if (this._processConfigCache.TranslateLogs)
-                q = q.Union(xml.CacheDescendants("text"));
-
-            return q;
+            foreach (var wpt in document.Waypoints)
+            {
+                // create local variables to ensure closure scope
+                var w = wpt;
+                var g = wpt.Geocache;
+                if (this._processConfigCache.TranslateHints)
+                {
+                    if (!string.IsNullOrWhiteSpace(g.Hints))
+                        yield return new TranslateData(g.Hints, value => g.Hints = value);
+                }
+                if (this._processConfigCache.TranslateDescriptions)
+                {
+                    if (!string.IsNullOrWhiteSpace(w.Comment))
+                        yield return new TranslateData(w.Comment, value => w.Comment = value);
+                    if (!string.IsNullOrWhiteSpace(g.ShortDescription.Text))
+                        yield return new TranslateData(g.ShortDescription.Text, g.ShortDescription.IsHtml, value => g.ShortDescription.Text = value);
+                    if (!string.IsNullOrWhiteSpace(g.LongDescription.Text))
+                        yield return new TranslateData(g.LongDescription.Text, g.LongDescription.IsHtml, value => g.LongDescription.Text = value);
+                }
+                if (this._processConfigCache.TranslateLogs)
+                {
+                    foreach (var log in g.Logs)
+                    {
+                        var l = log;
+                        yield return new TranslateData(l.Text.Text, value => l.Text.Text = value);
+                    }
+                }
+            }
         }
 
-        public override void Process(IList<XDocument> xmlFiles, TransformerOptions options)
+        /// <summary>
+        /// Processes the specified GPX documents. If the method is not overriden in the derived class,
+        /// calls <see cref="TransformerBase.Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// </summary>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             if ((options & TransformerOptions.LoadingViewerCache) == TransformerOptions.LoadingViewerCache)
             {
@@ -307,14 +339,8 @@ namespace GeoTransformer.Transformers.Translator
             this._processConfigCache = this.Configuration.Data;
 
             List<TranslateData> data = new List<TranslateData>();
-            foreach (var xml in xmlFiles)
-                foreach (var elem in this.FilterDescendants(xml))
-                {
-                    if (string.IsNullOrWhiteSpace(elem.Value))
-                        continue;
-
-                    data.Add(new TranslateData(elem.Value, string.Equals(elem.Attribute("html").GetValue(), "true", StringComparison.OrdinalIgnoreCase)) { SourceElement = elem });
-                }
+            foreach (var gpx in documents)
+                data.AddRange(this.RetrieveWork(gpx));
 
             int ignored = 0;
 
@@ -345,8 +371,8 @@ namespace GeoTransformer.Transformers.Translator
                     this.ReportStatus(((double)i / data.Count).ToString("P2") + " of values updated");
 
                 var d = data[i];
-                if (d.Translation != d.Text)
-                    d.SourceElement.Value = d.Translation + (d.IsHtml ? "<hr/>" : Environment.NewLine + "-------------" + Environment.NewLine) + d.SourceElement.Value;
+                if (!string.Equals(d.Translation, d.Text, StringComparison.OrdinalIgnoreCase))
+                    d.UpdateValue(d.Translation + (d.IsHtml ? "<hr/>" : Environment.NewLine + "-------------" + Environment.NewLine) + d.Text);
             }
 
             var errors = data.Count(o => o.SourceLanguageError || o.TranslationError);
@@ -359,6 +385,14 @@ namespace GeoTransformer.Transformers.Translator
 
         private ConfigurationControl Configuration;
 
+        /// <summary>
+        /// Initializes the extension with the specified current configuration (can be <c>null</c> if the extension is initialized for the very first time) and
+        /// returns the configuration UI control (can return <c>null</c> if the user interface is not needed).
+        /// </summary>
+        /// <param name="currentConfiguration">The current configuration.</param>
+        /// <returns>
+        /// The configuration UI control.
+        /// </returns>
         public System.Windows.Forms.Control Initialize(byte[] currentConfiguration)
         {
             this.Configuration = new ConfigurationControl();
@@ -366,16 +400,31 @@ namespace GeoTransformer.Transformers.Translator
             return this.Configuration;
         }
 
+        /// <summary>
+        /// Retrieves the configuration from the extension's configuration UI control.
+        /// </summary>
+        /// <returns>
+        /// The serialized configuration data.
+        /// </returns>
         public byte[] SerializeConfiguration()
         {
             return this.Configuration.Data.Serialize();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the this extension should be executed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this extension is enabled; otherwise, <c>false</c>.
+        /// </value>
         public bool IsEnabled
         {
             get { return this.Configuration.Data.IsEnabled; }
         }
 
+        /// <summary>
+        /// Gets the category of the extension.
+        /// </summary>
         Category IHasCategory.Category { get { return Category.Transformers; } }
 
         #endregion

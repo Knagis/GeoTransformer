@@ -14,6 +14,13 @@ namespace GeoTransformer
     {
         public static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
+            { Version.Parse("4.1.0.0"), "Added an option to put geocache attributes in a log entry so it can be read on GPS." + Environment.NewLine +
+                                        "Added an option to select which caches should be ignored when publishing." + Environment.NewLine +
+                                        "Added support for loading GPX 1.1 files." + Environment.NewLine + 
+                                        "Partial support for geocaching.com GPX 1.0.2 extensions (still under development by Groundspeak)." + Environment.NewLine +
+                                        "Virtual caches are now displayed on the map with the correct symbol." + Environment.NewLine +
+                                        "Geocache list tables now remember sort, column widths and hidden columns." + Environment.NewLine +
+                                        "List view / editor size proportion is now saved between restarts." },
             { Version.Parse("4.0.0.3"), "Fixed the 'Not available' problem in Pocket Query download." + Environment.NewLine +
                                         "Cached PQ downloads are now removed if unused (freeing up space)." },
             { Version.Parse("4.0.0.0"), "Created a welcome screen that is shown to the users." + Environment.NewLine +
@@ -41,17 +48,23 @@ namespace GeoTransformer
         {
             var q = Program.Database.Settings.Update();
             q.Value(o => o.LastVersionShown, typeof(ReleaseNotes).Assembly.GetName().Version.ToString());
-            q.Execute();
+            var rows = q.Execute();
+
+            if (rows == 0)
+            {
+                var qi = Program.Database.Settings.Insert();
+                qi.Value(o => o.LastVersionShown, typeof(ReleaseNotes).Assembly.GetName().Version.ToString());
+                qi.Execute();
+            }
         }
 
         public static void ShowReleaseNotes()
         {
             var q = Program.Database.Settings.Select();
-            q.Select(o => o.MainFormWindowWidth);
             q.Select(o => o.LastVersionShown);
             
             // this is checked so that the release notes are not shown if the application was not updated but it is a clean install.
-            if (q.ExecuteScalar(o => o.MainFormWindowWidth) == 0)
+            if (q.ExecuteScalar(o => o.RowId) == 0)
             {
                 UpdateLastVersionShown();
                 return;

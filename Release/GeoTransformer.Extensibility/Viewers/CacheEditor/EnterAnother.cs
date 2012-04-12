@@ -14,10 +14,16 @@ using System.Windows.Forms;
 
 namespace GeoTransformer.Viewers.CacheEditor
 {
+    /// <summary>
+    /// Forms that displays UI for entering the geocache code that will be edited.
+    /// </summary>
     public partial class EnterAnother : Form
     {
         private Dictionary<string, string> _cacheNameCache;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnterAnother"/> class.
+        /// </summary>
         public EnterAnother()
         {
             InitializeComponent();
@@ -29,8 +35,8 @@ namespace GeoTransformer.Viewers.CacheEditor
             var caches = Extensions.ExtensionLoader.ApplicationService.RetrieveDisplayedCaches();
             if (caches != null)
             {
-                foreach (var c in caches.SelectMany(o => o.Root.WaypointElements("wpt"))
-                                        .Select(o => new { Code = o.WaypointElement("name").GetValue(), Name = o.WaypointElement("desc").GetValue() }))
+                foreach (var c in caches.SelectMany(o => o.Waypoints)
+                                        .Select(o => new { Code = o.Name, Name = o.Description }))
                 {
                     if (!this._cacheNameCache.ContainsKey(c.Code))
                         this._cacheNameCache.Add(c.Code, c.Name);
@@ -38,6 +44,9 @@ namespace GeoTransformer.Viewers.CacheEditor
             }                                
         }
 
+        /// <summary>
+        /// Gets the geocache code as entered by the user.
+        /// </summary>
         public string EnteredCacheCode
         {
             get

@@ -39,11 +39,10 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="link">The link element (GPX 1.1).</param>
         public GpxLink(XElement link)
+            : base(true, 3)
         {
-            if (link == null || link.Name.Namespace != XmlExtensions.GpxSchema_1_1)
-                return;
-
             this.Initialize(link, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -67,14 +66,6 @@ namespace GeoTransformer.Gpx
                 el.SetAttributeValue("href", this.Href);
                 el.SetElementValue(options.GpxNamespace + "text", this.Text);
                 el.SetElementValue(options.GpxNamespace + "type", this.MimeType);
-            }
-
-            if (!options.DisableExtensions && options.EnableUnsupportedExtensions)
-            {
-                foreach (var ext in this.ExtensionAttributes)
-                    el.Add(new XAttribute(ext));
-                foreach (var ext in this.ExtensionElements)
-                    el.Add(new XElement(ext));
             }
 
             if (el.IsEmpty)

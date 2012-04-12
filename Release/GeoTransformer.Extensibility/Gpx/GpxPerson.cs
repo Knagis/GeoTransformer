@@ -34,11 +34,12 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="person">The XML element containing the person description (GPX 1.1).</param>
         public GpxPerson(XElement person)
+            :base(true, 3)
         {
-            if (person == null || person.Name.Namespace != XmlExtensions.GpxSchema_1_1)
-                return;
+            if (person != null)
+                this.Initialize(person, null, _elementInitializers);
 
-            this.Initialize(person, null, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="options">The GPX serialization options.</param>
         /// <param name="localName">The name of the XML element that will be created.</param>
-        /// <returns>The link as XML element. If the <see cref="Href"/> property is not set, returns <c>null</c> (unless <paramref name="options"/> specify otherwise).</returns>
+        /// <returns>The person as XML element.</returns>
         public XElement Serialize(GpxSerializationOptions options, string localName = "author")
         {
             if (options == null)
@@ -69,14 +70,6 @@ namespace GeoTransformer.Gpx
                             ));
             }
             el.Add(this.Link.Serialize(options));
-
-            if (!options.DisableExtensions && options.EnableUnsupportedExtensions)
-            {
-                foreach (var ext in this.ExtensionAttributes)
-                    el.Add(new XAttribute(ext));
-                foreach (var ext in this.ExtensionElements)
-                    el.Add(new XElement(ext));
-            }
 
             if (el.IsEmpty)
                 return null;

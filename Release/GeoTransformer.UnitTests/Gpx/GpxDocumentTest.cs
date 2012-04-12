@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace GeoTransformer.UnitTests.Gpx
 <author>
 <name>Dan Foster</name>
 <email id=""gpx2004"" domain=""topografix.com""/>
-<link href=""http://www.topografix.com"">
+<link href=""http://www.topografix.com/"">
 <text>TopoGrafix</text>
 </link>
 </author>
@@ -87,7 +87,7 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(1, gpxDoc.Metadata.Links.Count);
             Assert.AreEqual("http://www.topografix.com/gpx.asp", gpxDoc.Metadata.Links[0].Href.ToString());
             Assert.AreEqual("text/html", gpxDoc.Metadata.Links[0].MimeType);
-            Assert.AreEqual(new DateTime(2004, 6, 10, 12, 3, 26, DateTimeKind.Utc).ToLocalTime(), gpxDoc.Metadata.CreationTime);
+            Assert.AreEqual(new DateTime(2004, 6, 10, 12, 3, 26, DateTimeKind.Utc).ToLocalTime(), gpxDoc.Metadata.LastRefresh);
             Assert.AreEqual(40.451925327M, gpxDoc.Metadata.Bounds.MinLatitude);
             Assert.AreEqual(-74.266517M, gpxDoc.Metadata.Bounds.MinLongitude);
             Assert.AreEqual(-71.266517M, gpxDoc.Metadata.Bounds.MaxLongitude);
@@ -132,7 +132,7 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(1, gdoc.Metadata.Links.Count);
             Assert.AreEqual("http://www.geocaching.com/", gdoc.Metadata.Links[0].Href.ToString());
             Assert.AreEqual("Geocaching - High Tech Treasure Hunting", gdoc.Metadata.Links[0].Text);
-            Assert.AreEqual(new DateTime(2011, 7, 25, 12, 41, 18, 27, DateTimeKind.Utc).ToLocalTime(), gdoc.Metadata.CreationTime.Value);
+            Assert.AreEqual(new DateTime(2011, 7, 25, 12, 41, 18, 27, DateTimeKind.Utc).ToLocalTime(), gdoc.Metadata.LastRefresh.Value);
             Assert.AreEqual("cache, geocache", gdoc.Metadata.Keywords);
             Assert.AreEqual(56.990978M, gdoc.Metadata.Bounds.MinLatitude);
             Assert.AreEqual(23.522812M, gdoc.Metadata.Bounds.MinLongitude);
@@ -140,6 +140,35 @@ namespace GeoTransformer.UnitTests.Gpx
             Assert.AreEqual(23.525483M, gdoc.Metadata.Bounds.MaxLongitude);
 
             var result = gdoc.Serialize(new GeoTransformer.Gpx.GpxSerializationOptions() { GpxVersion = GeoTransformer.Gpx.GpxVersion.Gpx_1_0 });
+            Assert.AreEqual(9, result.Root.Elements().Count());
+            Assert.IsNotNull(result.Descendants(XmlExtensions.GpxSchema_1_0 + "urlname"));
+        }
+
+        /// <summary>
+        /// Tests the memory usage of parsed gpx documents
+        /// </summary>
+        [DeploymentItem(@"GeoTransformer.UnitTests\Gpx\gpxtautai.zip")]
+        [TestMethod]
+        public void TestMemoryUsage()
+        {
+            GC.WaitForFullGCComplete();
+
+            System.Threading.Thread.MemoryBarrier();
+            var initialMemory = System.GC.GetTotalMemory(true);
+
+            var doc = GeoTransformer.Gpx.Loader.Zip(@"gpxtautai.zip").ToArray();
+
+            System.Threading.Thread.MemoryBarrier();
+            var finalMemory = System.GC.GetTotalMemory(true);
+
+            var consumption = finalMemory - initialMemory;
+
+            // .Inconclusive() is used for easy output while debugging
+            //Assert.Inconclusive((consumption / 1024m / 1024m).ToString());
+            Assert.IsTrue((consumption / 1024m / 1024m) < 40, "Memory consumption increased above 40Mb.");
+
+            // reference the value after the memory size is read as otherwise the variable is disposed too soon
+            doc.First();
         }
     }
 }

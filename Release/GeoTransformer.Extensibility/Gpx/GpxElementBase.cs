@@ -11,9 +11,29 @@ using System.Xml.Linq;
 
 namespace GeoTransformer.Gpx
 {
-    public class GpxElementBase : ObservableElement
+    /// <summary>
+    /// Base class common for all data objects parsed from GPX file.
+    /// </summary>
+    public abstract class GpxElementBase : ObservableElement
     {
-        protected void Initialize<T>(XElement container, 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GpxElementBase"/> class.
+        /// </summary>
+        /// <param name="suspendObservation">if set to <c>true</c> suspends the observation until <see cref="ObservableElement.ResumeObservation"/> method is called. Should be set to <c>true</c> when the constructor loads the data.</param>
+        /// <param name="propertyCount">Number of properties that will be stored using <see cref="SetValue"/>. This should be specified when the known number is large to optimize performance.</param>
+        protected GpxElementBase(bool suspendObservation = false, int propertyCount = -1)
+            : base(suspendObservation, propertyCount)
+        {
+        }
+
+        /// <summary>
+        /// Initializes the current instance from the given XML <paramref name="container"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the class that is derived from <see cref="GpxElementBase"/></typeparam>
+        /// <param name="container">The XML element that contains the data.</param>
+        /// <param name="attributeInitializers">The XML attribute to property mapping. Attributes that are not given are not persisted.</param>
+        /// <param name="elementInitializers">The XML element to property mapping. Elements that are not given are not persisted.</param>
+        protected virtual void Initialize<T>(XElement container, 
             IDictionary<XName, Action<T, XAttribute>> attributeInitializers, 
             IDictionary<XName, Action<T, XElement>> elementInitializers)
             where T : GpxElementBase
@@ -28,20 +48,13 @@ namespace GeoTransformer.Gpx
             if (elementInitializers == null)
                 elementInitializers = new Dictionary<XName, Action<T, XElement>>(0);
 
-            var extensionAttributes = this.ExtensionAttributes;
-            var extensionElements = this.ExtensionElements;
-
             foreach (var attr in container.Attributes())
             {
                 if (attr.IsNamespaceDeclaration)
                     continue;
 
                 Action<T, XAttribute> initializer;
-                if (!attributeInitializers.TryGetValue(attr.Name, out initializer))
-                {
-                    extensionAttributes.Add(new XAttribute(attr));
-                }
-                else
+                if (attributeInitializers.TryGetValue(attr.Name, out initializer))
                 {
                     try { initializer(obj, attr); }
                     catch { }
@@ -51,32 +64,12 @@ namespace GeoTransformer.Gpx
             foreach (var elem in container.Elements())
             {
                 Action<T, XElement> initializer;
-                if (!elementInitializers.TryGetValue(elem.Name, out initializer))
-                {
-                    extensionElements.Add(new XElement(elem));
-                }
-                else
+                if (elementInitializers.TryGetValue(elem.Name, out initializer))
                 {
                     try { initializer(obj, elem); }
                     catch { }
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets a collection of any extension attributes that are not defined by the schema of the element.
-        /// </summary>
-        public IList<XAttribute> ExtensionAttributes
-        {
-            get { return this.GetValue<ObservableCollection<XAttribute>>("ExtensionAttributes", true); }
-        }
-
-        /// <summary>
-        /// Gets a collection of any extension attributes that are not defined by the schema of the element.
-        /// </summary>
-        public IList<XElement> ExtensionElements
-        {
-            get { return this.GetValue<ObservableCollection<XElement>>("ExtensionElements", true); }
         }
     }
 }

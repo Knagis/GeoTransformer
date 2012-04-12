@@ -38,18 +38,17 @@ namespace GeoTransformer.Transformers
             this._waypointDirectory = waypointDirectory;
         }
 
-        public override void Process(IList<System.Xml.Linq.XDocument> xmlFiles, TransformerOptions options)
+        public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             this._usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            base.Process(xmlFiles, options);
+            base.Process(documents, options);
         }
 
-        public override void Process(XDocument xml)
+        protected override void Process(Gpx.GpxDocument document, TransformerOptions options)
         {
-            var fname = xml.Root.Attribute("originalFileName").GetValue();
-            xml.Root.Attribute("originalFileName").Remove();
+            var fname = document.Metadata.OriginalFileName;
             if (string.IsNullOrWhiteSpace(fname))
-                throw new InvalidOperationException("Error in GeoTransformer - no file name attached to the GPX file.");
+                fname = "GeoTransformer-Unnamed.gpx";
 
             foreach (var c in System.IO.Path.GetInvalidFileNameChars())
                 fname = fname.Replace(c, '_');
@@ -64,10 +63,10 @@ namespace GeoTransformer.Transformers
 
             this._usedNames.Add(fname);
 
-            if (origname.Extension.EndsWith("-wpts.gpx", StringComparison.OrdinalIgnoreCase))
-                xml.Save(System.IO.Path.Combine(this._waypointDirectory ?? this._cacheDirectory, fname), System.Xml.Linq.SaveOptions.DisableFormatting);
+            if (origname.Name.EndsWith("-wpts.gpx", StringComparison.OrdinalIgnoreCase))
+                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._waypointDirectory ?? this._cacheDirectory, fname));
             else
-                xml.Save(System.IO.Path.Combine(this._cacheDirectory, fname), System.Xml.Linq.SaveOptions.DisableFormatting);
+                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._cacheDirectory, fname));
         }
     }
 }

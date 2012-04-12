@@ -37,6 +37,7 @@ namespace GeoTransformer
                 query.Value(o => o.MainFormWindowHeight, this.RestoreBounds.Height);
                 query.Value(o => o.MainFormDefaultUrl, this.toolStripOpenDefaultWebPage.Tag as string);
                 query.Value(o => o.DoNotShowWelcomeScreen, WelcomeScreen.WelcomeScreen.DoNotShowWelcomeScreen);
+                query.Value(o => o.ListViewerHeight, this.cachePanel.SplitterDistance * 1000 / this.cachePanel.Height);
                 query.Execute();
 
                 Extensions.ExtensionLoader.PersistExtensionConfiguration();
@@ -58,6 +59,7 @@ namespace GeoTransformer
                 if (res.Value(o => o.MainFormWindowTop) != 0) this.Top = res.Value(o => o.MainFormWindowTop);
                 if (res.Value(o => o.MainFormWindowWidth) != 0) this.Width = res.Value(o => o.MainFormWindowWidth);
                 if (res.Value(o => o.MainFormWindowHeight) != 0) this.Height = res.Value(o => o.MainFormWindowHeight);
+                if (res.Value(o => o.ListViewerHeight) != 0) this.cachePanel.SplitterDistance = res.Value(o => o.ListViewerHeight) * this.cachePanel.Height / 1000;
                 var durl = res.Value(o => o.MainFormDefaultUrl);
                 if (!string.IsNullOrWhiteSpace(durl))
                 {
@@ -76,7 +78,7 @@ namespace GeoTransformer
         {
             this.SaveSettings();
 
-            var xmlFiles = this.listViewers.LoadedXmlFiles;
+            var xmlFiles = this.listViewers.LoadedGpxFiles;
             if (xmlFiles != null)
             {
                 foreach (var ext in ExtensionLoader.RetrieveExtensions<Extensions.ISaveData>())
@@ -166,6 +168,7 @@ namespace GeoTransformer
             InitializeComponent();
             this.cachePanel.SplitterWidth = 2; // need to be set here because of bug in the framework
 
+            // the icon is rather large so we reuse the resource from welcome screen form
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WelcomeScreen.WelcomeScreen));
             using (var icon = new Icon((System.Drawing.Icon)resources.GetObject("$this.Icon"), new Size(24, 24)))
                 this.launchWizardToolStripMenuItem.Image = icon.ToBitmap();
@@ -182,7 +185,7 @@ namespace GeoTransformer
 
             this.labelVersion2.Text = "Application version: " + Application.ProductVersion;
 
-            this.listViewers.SelectedCacheChanged += (sender, args) => { this.cacheViewers.DisplayCache(args.CacheXmlData); };
+            this.listViewers.SelectedWaypointsChanged += (sender, args) => { this.cacheViewers.DisplayWaypoints(args.Selection); };
 
             foreach (var tabPage in ExtensionLoader.RetrieveExtensions<Extensions.ITopLevelTabPage>())
             {
@@ -210,7 +213,7 @@ namespace GeoTransformer
             }
             catch (Exception ex)
             {
-                tp.Controls.Add(new Label() { Text = "Unable to initialize this extension:" + Environment.NewLine + Environment.NewLine + ex.ToString() });
+                tp.Controls.Add(new Label() { Text = "Unable to initialize this extension:" + Environment.NewLine + Environment.NewLine + ex.ToString(), AutoSize = true });
             }
         }
 

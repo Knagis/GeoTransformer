@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,8 @@ using System.Text;
 namespace GeoTransformer.Transformers.MarkSolved
 {
     /// <summary>
-    /// Transformer that can change the icon of the cache to mark it as solved on the GPS
+    /// Transformer that can change the icon of the cache to mark it as solved on the GPS. Current implementation sets a custom symbol that
+    /// will get rendered using the generic geocache icon on the GPS.
     /// </summary>
     public class MarkSolved : TransformerBase, Extensions.IEditor
     {
@@ -33,28 +34,25 @@ namespace GeoTransformer.Transformers.MarkSolved
         }
 
         /// <summary>
-        /// Processes the specified input document.
+        /// Processes the specified GPX waypoint.
         /// </summary>
-        public override void Process(System.Xml.Linq.XDocument xml)
+        /// <param name="waypoint">The waypoint that has to be processed.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
+        protected override void Process(Gpx.GpxWaypoint waypoint, TransformerOptions options)
         {
-            foreach (var wpt in xml.Root.WaypointElements("wpt"))
+            var configElement = waypoint.FindExtensionElement(typeof(MarkSolved));
+            if (configElement == null)
+                return;
+
+            bool val;
+            if (!bool.TryParse(configElement.Value, out val) || !val)
+                return;
+
+            waypoint.WaypointType = "Geocache|Solved Cache";
+            if (waypoint.Geocache.IsDefined())
             {
-                var configElement = wpt.ExtensionElement(typeof(MarkSolved));
-                if (configElement == null)
-                    continue;
-
-                bool val;
-                if (!bool.TryParse(configElement.Value, out val) || !val)
-                    continue;
-
-                wpt.SetElementValue(wpt.Name.Namespace + "type", "Geocache|Solved Cache");
-                var gc = wpt.CacheElement("cache");
-                if (gc != null)
-                {
-                    gc = gc.CacheElement("type");
-                    if (gc != null)
-                        gc.Value = "Solved Cache";
-                }
+                waypoint.Geocache.CacheType.Id = null;
+                waypoint.Geocache.CacheType.Name = "Solved Cache";
             }
         }
 
@@ -71,12 +69,12 @@ namespace GeoTransformer.Transformers.MarkSolved
         }
 
         /// <summary>
-        /// Binds the control to the given XML <paramref name="data"/> object. For consequent calls the method removes previous bindings and sets up new ones.
+        /// Binds the control to the given GPX <paramref name="waypoint"/> object. For consequent calls the method removes previous bindings and sets up new ones.
         /// </summary>
-        /// <param name="data">The data object.</param>
-        public void BindControl(System.Xml.Linq.XElement data)
+        /// <param name="waypoint">The GPX waypoint object that will be edited by the control.</param>
+        public void BindControl(Gpx.GpxWaypoint waypoint)
         {
-            this._editorControl.BoundElement = data;
+            this._editorControl.BoundElement = waypoint == null ? null : waypoint.FindExtensionElement(typeof(MarkSolved), true);
         }
     }
 }

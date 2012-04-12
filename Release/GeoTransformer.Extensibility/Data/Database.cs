@@ -15,6 +15,10 @@ namespace GeoTransformer.Data
     {
         private SQLiteConnection _connection;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Database"/> class.
+        /// </summary>
+        /// <param name="databaseFileName">Name and path of the database file.</param>
         public Database(string databaseFileName)
         {
             if (string.IsNullOrEmpty(databaseFileName))
@@ -95,6 +99,10 @@ namespace GeoTransformer.Data
 
         private bool _disposed;
 
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="Database"/> is reclaimed by garbage collection.
+        /// </summary>
         ~Database()
         {
             this.Dispose(false);

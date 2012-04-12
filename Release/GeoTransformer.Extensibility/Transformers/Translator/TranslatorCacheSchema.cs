@@ -19,6 +19,10 @@ namespace GeoTransformer.Transformers.Translator
 
     public class TranslatorCacheSchema : DatabaseSchema
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TranslatorCacheSchema"/> class.
+        /// </summary>
+        /// <param name="databaseFileName">The path to the database file.</param>
         public TranslatorCacheSchema(string databaseFileName)
             : base(databaseFileName)
         {
@@ -32,6 +36,9 @@ namespace GeoTransformer.Transformers.Translator
 
     public class TranslationsTable : DatabaseTable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TranslationsTable"/> class.
+        /// </summary>
         public TranslationsTable()
             : base("Translations", 1)
         {
@@ -52,6 +59,9 @@ namespace GeoTransformer.Transformers.Translator
 
     public class LanguageDetectTable : DatabaseTable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LanguageDetectTable"/> class.
+        /// </summary>
         public LanguageDetectTable()
             : base("LanguageDetect", 1)
         {

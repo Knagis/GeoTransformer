@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using XmlConvert = System.Xml.XmlConvert;
 
 namespace GeoTransformer.Gpx
 {
-    public class GpxDocument : GpxElementBase
+    public class GpxDocument : GpxExtendableElement
     {
         private static Dictionary<XName, Action<GpxDocument, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GpxDocument, XAttribute>>
         {
@@ -28,7 +28,7 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GpxSchema_1_0 + "email", (o, e) => o.Metadata.Author.Email = e.Value },
             { XmlExtensions.GpxSchema_1_0 + "url", (o, e) => { var v = new Uri(e.Value); var l = o.Metadata.Links; if (l.Count == 0) l.Add(new GpxLink() { Href = v }); else l[0].Href = v; } },
             { XmlExtensions.GpxSchema_1_0 + "urlname", (o, e) => { var l = o.Metadata.Links; if (l.Count == 0) l.Add(new GpxLink() { Text = e.Value }); else l[0].Text = e.Value; } },
-            { XmlExtensions.GpxSchema_1_0 + "time", (o, e) => o.Metadata.CreationTime = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
+            { XmlExtensions.GpxSchema_1_0 + "time", (o, e) => o.Metadata.LastRefresh = XmlConvert.ToDateTime(e.Value, System.Xml.XmlDateTimeSerializationMode.Local) },
             { XmlExtensions.GpxSchema_1_0 + "keywords", (o, e) => o.Metadata.Keywords = e.Value },
             { XmlExtensions.GpxSchema_1_0 + "bounds", (o, e) => o.Metadata.Bounds = new GpxBounds(e) },
 
@@ -43,6 +43,8 @@ namespace GeoTransformer.Gpx
 
             { XmlExtensions.GpxSchema_1_1 + "metadata", (o, e) => o.Metadata.Initialize(e) },
             { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxDocument>(e, null, null) },
+
+            { XmlExtensions.GeoTransformerSchema + "originalFileName", (o, e) => o.Metadata.OriginalFileName = e.Value },
         };
 
         /// <summary>
@@ -50,6 +52,7 @@ namespace GeoTransformer.Gpx
         /// </summary>
         public GpxDocument()
         {
+            this.Metadata.LastRefresh = DateTime.Now;
         }
 
         /// <summary>
@@ -57,11 +60,12 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="document">The document containing GPX 1.0 or 1.1 data.</param>
         public GpxDocument(XDocument document)
+            : base(true, 4)
         {
-            if (document == null || document.Root == null)
-                return;
+            if (document != null && document.Root != null)
+                this.Initialize(document.Root, _attributeInitializers, _elementInitializers);
 
-            this.Initialize(document.Root, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace GeoTransformer.Gpx
 
             var schema = options.GpxNamespace;
 
-            var root = new XElement(schema + "gpx", 
+            var root = new XElement(schema + "gpx",
                           new XAttribute("version", options.GpxVersion == GpxVersion.Gpx_1_0 ? "1.0" : "1.1"),
                           new XAttribute("creator", string.IsNullOrWhiteSpace(this.Metadata.Creator) ? ("GeoTransformer " + System.Windows.Forms.Application.ProductVersion) : this.Metadata.Creator)
                         );
@@ -104,8 +108,8 @@ namespace GeoTransformer.Gpx
                         root.Add(new XElement(schema + "urlname", link.Text));
                 }
 
-                if (this.Metadata.CreationTime.HasValue && this.Metadata.CreationTime.Value != DateTime.MinValue)
-                    root.Add(new XElement(schema + "time", this.Metadata.CreationTime.Value.ToUniversalTime()));
+                if (this.Metadata.LastRefresh.HasValue && this.Metadata.LastRefresh.Value != DateTime.MinValue)
+                    root.Add(new XElement(schema + "time", this.Metadata.LastRefresh.Value.ToUniversalTime()));
 
                 if (!string.IsNullOrWhiteSpace(this.Metadata.Keywords))
                     root.Add(new XElement(schema + "keywords", this.Metadata.Keywords));
@@ -118,7 +122,7 @@ namespace GeoTransformer.Gpx
             }
 
             foreach (var waypoint in this.Waypoints)
-                root.Add(null);
+                root.Add(waypoint.Serialize(options));
 
             foreach (var route in this.Routes)
                 root.Add(new XElement(route));
@@ -133,16 +137,34 @@ namespace GeoTransformer.Gpx
                     if (options.EnableUnsupportedExtensions)
                         foreach (var ext in this.Metadata.ExtensionAttributes)
                             root.Add(new XAttribute(ext));
-        
+
                     foreach (var ext in this.Metadata.ExtensionElements)
                         root.Add(new XElement(ext));
+
+                    foreach (var ext in this.ExtensionAttributes)
+                        root.Add(new XAttribute(ext));
+
+                    foreach (var ext in this.ExtensionElements)
+                        root.Add(new XElement(ext));
+
+                    if (!string.IsNullOrEmpty(this.Metadata.OriginalFileName))
+                        root.Add(new XElement(XmlExtensions.GeoTransformerSchema + "originalFileName", this.Metadata.OriginalFileName));
                 }
+                else
+                {
+                    foreach (var ext in this.ExtensionAttributes)
+                        root.Add(new XAttribute(ext));
 
-                foreach (var ext in this.ExtensionAttributes)
-                    root.Add(new XAttribute(ext));
+                    var extel = new XElement(options.GpxNamespace + "extensions");
+                    foreach (var ext in this.ExtensionElements)
+                        extel.Add(new XElement(ext));
 
-                foreach (var ext in this.ExtensionElements)
-                    root.Add(new XElement(ext));
+                    if (!string.IsNullOrEmpty(this.Metadata.OriginalFileName))
+                        extel.Add(new XElement(XmlExtensions.GeoTransformerSchema + "originalFileName", this.Metadata.OriginalFileName));
+
+                    if (!extel.IsEmpty)
+                        root.Add(extel);
+                }
             }
 
             return new XDocument(new XDeclaration("1.0", "utf-8", "yes"), root);

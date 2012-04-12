@@ -73,6 +73,12 @@ namespace GeoTransformer
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+#if DEBUG
+            // if there is a debugger attached, it will break on the exception and there is no added value of writing to the file or showing mbox
+            if (System.Diagnostics.Debugger.IsAttached)
+                return;
+#endif
+
             var fname = "Error-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".txt";
             try
             {

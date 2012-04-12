@@ -52,6 +52,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gpx\GeocacheTest.cs" />
     <Compile Include="Gpx\GpxDocumentTest.cs" />
     <Compile Include="Gpx\ObservableElementTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,7 @@
     <None Include="..\GeoTransformer.licenseheader">
       <Link>GeoTransformer.licenseheader</Link>
     </None>
+    <None Include="Gpx\gpxtautai.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

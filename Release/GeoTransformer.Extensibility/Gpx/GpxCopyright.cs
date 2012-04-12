@@ -38,11 +38,10 @@ namespace GeoTransformer.Gpx
         /// </summary>
         /// <param name="copyright">The copyright element from GPX 1.1 schema.</param>
         public GpxCopyright(XElement copyright)
+            : base(true, 3)
         {
-            if (copyright == null || copyright.Name.Namespace != XmlExtensions.GpxSchema_1_1)
-                return;
-
             this.Initialize(copyright, _attributeInitializers, _elementInitializers);
+            this.ResumeObservation();
         }
 
         /// <summary>
@@ -67,14 +66,6 @@ namespace GeoTransformer.Gpx
                     el.Add(new XElement(options.GpxNamespace + "year", this.Year)); // no need to use SoapYear as it is very unlikely that anyone would use something different than 2002 here.
                 if (this.License != null)
                     el.Add(new XElement(options.GpxNamespace + "license", this.License));
-            }
-
-            if (!options.DisableExtensions && options.EnableUnsupportedExtensions)
-            {
-                foreach (var ext in this.ExtensionAttributes)
-                    el.Add(new XAttribute(ext));
-                foreach (var ext in this.ExtensionElements)
-                    el.Add(new XElement(ext));
             }
 
             if (el.IsEmpty)

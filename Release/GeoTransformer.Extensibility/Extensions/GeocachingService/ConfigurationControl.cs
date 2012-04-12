@@ -95,6 +95,23 @@ namespace GeoTransformer.Extensions.GeocachingService
             this.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Called when it is not possible to connect to the service to retrieve user profile.
+        /// API is not disabled as the network connectivity might be restored later.
+        /// </summary>
+        private void UnableToConnect()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(this.UnableToConnect);
+                return;
+            }
+
+            this.labelUsernameValue.Font = new System.Drawing.Font(this.labelUsernameValue.Font, FontStyle.Italic);
+            this.labelUsernameValue.Text = "no Internet access";
+            this.pictureBoxAvatar.ImageLocation = null;
+        }
+
         private void OpenAuthenticationForm()
         {
             var dlg = new AuthenticationForm();
@@ -116,12 +133,7 @@ namespace GeoTransformer.Extensions.GeocachingService
         {
             if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
-                this.labelUsernameValue.Invoke(o =>
-                {
-                    o.Font = new System.Drawing.Font(this.labelUsernameValue.Font, FontStyle.Italic);
-                    o.Text = "no Internet access";
-                    this.pictureBoxAvatar.ImageLocation = null;
-                });
+                this.UnableToConnect();
                 return;
             }
 
@@ -130,6 +142,8 @@ namespace GeoTransformer.Extensions.GeocachingService
                 try
                 {
                     var resp = service.GetYourUserProfile(true, true, true, true, true, true);
+
+                    // if we did connect but the service returned an error message then most probably it is the access token being invalid
                     if (resp.Status.StatusCode != 0)
                     {
                         MessageBox.Show("Error while contacting Live API to retrieve your profile. The use of the API will be disabled." + Environment.NewLine + Environment.NewLine + resp.Status.StatusMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -146,17 +160,15 @@ namespace GeoTransformer.Extensions.GeocachingService
                 }
                 catch (System.TimeoutException)
                 {
-                    this.labelUsernameValue.Invoke(o =>
-                    {
-                        o.Font = new System.Drawing.Font(this.labelUsernameValue.Font, FontStyle.Italic);
-                        o.Text = "no Internet access";
-                        this.pictureBoxAvatar.ImageLocation = null;
-                    });
+                    this.UnableToConnect();
                 }
                 catch (Exception ex)
                 {
+#if DEBUG
+                    // only show the message in debug mode. in production it is not helpful that such a window pops up at the start the application.
                     MessageBox.Show("Unable to retrieve the user profile using Live API. The Live API will not be disabled but might not function properly." + Environment.NewLine + Environment.NewLine + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Disable();
+#endif
+                    this.UnableToConnect();
                 }
             }
         }

@@ -39,7 +39,7 @@ namespace GeoTransformer
         #region [ Invoke ]
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <param name="control">The control on which the method is called.</param>
         /// <param name="action">The action delegate that has to be invoked.</param>
@@ -56,7 +56,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <param name="control">The control on which the method is called.</param>
@@ -75,7 +75,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <typeparam name="TArg">The type of the delegate argument.</typeparam>
@@ -96,7 +96,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <param name="control">The control on which the method is called.</param>
         /// <param name="action">The action delegate that has to be invoked.</param>
@@ -113,7 +113,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <param name="control">The control on which the method is called.</param>
@@ -132,7 +132,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <typeparam name="TArg">The type of the delegate argument.</typeparam>
@@ -153,14 +153,14 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="control">The control on which the method is called.</param>
         /// <param name="func">The action delegate that has to be invoked.</param>
         /// <returns>The value as returned from the delegate.</returns>
-        /// <exception cref="ArgumentNullException">when <paramref name="action"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">when <paramref name="func"/> is <c>null</c></exception>
         public static TResult Invoke<TControl, TResult>(this TControl control, Func<TControl, TResult> func)
             where TControl : Control
         {
@@ -174,7 +174,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <typeparam name="TArg">The type of the delegate argument.</typeparam>
@@ -183,7 +183,7 @@ namespace GeoTransformer
         /// <param name="func">The action delegate that has to be invoked.</param>
         /// <param name="argument">The argument that will be passed to the delegate</param>
         /// <returns>The value as returned from the delegate.</returns>
-        /// <exception cref="ArgumentNullException">when <paramref name="action"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">when <paramref name="func"/> is <c>null</c></exception>
         public static TResult Invoke<TControl, TArg, TResult>(this TControl control, Func<TControl, TArg, TResult> func, TArg argument)
             where TControl : Control
         {
@@ -197,7 +197,7 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <typeparam name="TArg">The type of the delegate argument.</typeparam>
@@ -206,7 +206,7 @@ namespace GeoTransformer
         /// <param name="func">The action delegate that has to be invoked.</param>
         /// <param name="argument">The argument that will be passed to the delegate</param>
         /// <returns>The value as returned from the delegate.</returns>
-        /// <exception cref="ArgumentNullException">when <paramref name="action"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">when <paramref name="func"/> is <c>null</c></exception>
         public static TResult Invoke<TControl, TArg, TResult>(this TControl control, Func<TArg, TResult> func, TArg argument)
             where TControl : Control
         {
@@ -220,14 +220,14 @@ namespace GeoTransformer
         }
 
         /// <summary>
-        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke"/> method.
+        /// Checks if call to the control is made from another thread and if needed calls <see cref="Control.Invoke(System.Delegate)"/> method.
         /// </summary>
         /// <typeparam name="TControl">The type of the control.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="control">The control on which the method is called.</param>
         /// <param name="func">The action delegate that has to be invoked.</param>
         /// <returns>The value as returned from the delegate.</returns>
-        /// <exception cref="ArgumentNullException">when <paramref name="action"/> is <c>null</c></exception>
+        /// <exception cref="ArgumentNullException">when <paramref name="func"/> is <c>null</c></exception>
         public static TResult Invoke<TControl, TResult>(this TControl control, Func<TResult> func)
             where TControl : Control
         {
