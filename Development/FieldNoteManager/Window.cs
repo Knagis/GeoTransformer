@@ -57,29 +57,43 @@ namespace FieldNoteManager
                 HashSet<string> duplicateCache = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 using (var service = GeoTransformer.GeocachingService.LiveClient.CreateClientProxy())
                 {
-                    foreach (var n in parsed)
+                    for (int i = 0; i < parsed.Count; i += 50)
                     {
-                        this.toolStripStatusLabel.Text = "Loading data for " + n.CacheCode;
+                        this.toolStripStatusLabel.Text = "Loading geocache data: " + (i * 100 / parsed.Count) + "%";
+                        var subset = parsed.Skip(i).Take(50).ToList();
+                        var req = new GeoTransformer.GeocachingService.SearchForGeocachesRequest();
+                        req.AccessToken = service.AccessToken;
+                        req.CacheCode = new GeoTransformer.GeocachingService.CacheCodeFilter() { CacheCodes = subset.Select(o => o.CacheCode).ToArray() };
+                        req.MaxPerPage = subset.Count;
+                        req.IsLite = true;
+                        var res = service.SearchForGeocaches(req);
 
-                        var cache = service.GetGeocacheByCode(n.CacheCode, true);
-                        if (cache == null)
+                        foreach (var n in subset)
                         {
-                            n.Status = FieldNote.FieldNoteStatus.DoesNotExist;
-                        }
-                        else
-                        {
+                            if (res.Status.StatusCode != 0)
+                            {
+                                n.ErrorMessage = "Unable to retrieve geocache: " + res.Status.StatusMessage;
+                                continue;
+                            }
+
+                            var cache = res.Geocaches.FirstOrDefault(o => string.Equals(o.Code, n.CacheCode, StringComparison.OrdinalIgnoreCase));
+                            if (cache == null)
+                            {
+                                n.ErrorMessage = "The geocache does not exist on geocaching.com";
+                                continue;
+                            }
+
                             n.CacheTitle = cache.Name;
                             if (cache.HasbeenFoundbyUser.GetValueOrDefault())
                             {
-                                n.Status = FieldNote.FieldNoteStatus.AlreadyLogged;
+                                n.ErrorMessage = "You have already logged this cache";
                             }
                             else if (duplicateCache.Contains(n.CacheCode + ";" + n.LogType))
                             {
-                                n.Status = FieldNote.FieldNoteStatus.Duplicate;
+                                n.ErrorMessage = "This entry is duplicate";
                             }
                             else
                             {
-                                n.Status = FieldNote.FieldNoteStatus.OK;
                                 duplicateCache.Add(n.CacheCode + ";" + n.LogType);
                             }
                         }
@@ -91,11 +105,9 @@ namespace FieldNoteManager
                 foreach (DataGridViewRow row in this.dataGrid.Rows)
                 {
                     var fn = (FieldNote)row.DataBoundItem;
-                    if (fn.Status != FieldNote.FieldNoteStatus.OK)
+                    if (fn.ErrorMessage != null)
                     {
-                        row.ErrorText =  fn.Status == FieldNote.FieldNoteStatus.DoesNotExist ? "The cache code was not found on geocaching.com" :
-                            fn.Status == FieldNote.FieldNoteStatus.AlreadyLogged ? "You already logged this cache as found" :
-                            fn.Status == FieldNote.FieldNoteStatus.Duplicate ? "This entry is duplicate" : "Unknown error";
+                        row.ErrorText = fn.ErrorMessage;
                         row.ReadOnly = true;
                     }
                 }
@@ -136,7 +148,7 @@ namespace FieldNoteManager
 
         private void PublishLogs(IEnumerable<FieldNote> notes)
         {
-            this.dataGrid.Invoke(a => { a.ReadOnly = true; this.colResult.Visible = true; });
+            this.dataGrid.Invoke(a => { this.colResult.Visible = true; });
             this.toolStripStatusLabel.Text = "Publishing logs...";
 
             try
@@ -148,31 +160,40 @@ namespace FieldNoteManager
 
                     foreach (var n in notes)
                     {
-                        var logType = logTypes.WptLogTypes.FirstOrDefault(o => string.Equals(n.LogType, o.WptLogTypeName, StringComparison.OrdinalIgnoreCase));
-                        if (logType == null)
+                        try
                         {
-                            n.Result = "Error: cannot find the appropriate log type on the server.";
-                            continue;
+                            var logType = logTypes.WptLogTypes.FirstOrDefault(o => string.Equals(n.LogType, o.WptLogTypeName, StringComparison.OrdinalIgnoreCase));
+                            if (logType == null)
+                            {
+                                n.Result = "Error: cannot find the appropriate log type on the server.";
+                                continue;
+                            }
+
+                            this.toolStripStatusLabel.Text = "Publishing log for " + n.CacheTitle;
+                            var req = new GeoTransformer.GeocachingService.CreateFieldNoteAndPublishRequest();
+                            req.AccessToken = service.AccessToken;
+                            req.CacheCode = n.CacheCode;
+                            req.EncryptLogText = false;
+                            req.FavoriteThisCache = false;
+                            req.Note = n.Text;
+                            req.PromoteToLog = true;
+                            var visit = n.LogTime.ToLocalTime().Date;
+                            req.UTCDateLogged = new DateTime(visit.Year, visit.Month, visit.Day, 12, 0, 0, DateTimeKind.Utc);
+                            req.WptLogTypeId = logType.WptLogTypeId;
+
+                            var result = service.CreateFieldNoteAndPublish(req);
+                            if (result.Status.StatusCode != 0)
+                                n.Result = "Error: " + result.Status.StatusMessage;
+                            else
+                            {
+                                n.Result = "Done. Created log " + result.Log.Code;
+                                n.ShouldPublish = false;
+                                
+                            }
                         }
-
-                        this.toolStripStatusLabel.Text = "Publishing log for " + n.CacheTitle;
-                        var req = new GeoTransformer.GeocachingService.CreateFieldNoteAndPublishRequest();
-                        req.AccessToken = service.AccessToken;
-                        req.CacheCode = n.CacheCode;
-                        req.EncryptLogText = false;
-                        req.FavoriteThisCache = false;
-                        req.Note = n.Text;
-                        req.PromoteToLog = true;
-                        var visit = n.LogTime.ToLocalTime().Date;
-                        req.UTCDateLogged = new DateTime(visit.Year, visit.Month, visit.Day, 12, 0, 0, DateTimeKind.Utc);
-                        req.WptLogTypeId = logType.WptLogTypeId;
-
-                        var result = service.CreateFieldNoteAndPublish(req);
-                        if (result.Status.StatusCode != 0)
-                            n.Result = "Error: " + result.Status.StatusMessage;
-                        else
+                        catch (Exception ex)
                         {
-                            n.Result = "Done. Created log " + result.Log.Code;
+                            n.Result = "Error: " + ex.Message;
                         }
                     }
                 }
@@ -183,7 +204,13 @@ namespace FieldNoteManager
             }
 
             this.toolStripStatusLabel.Text = "Publish completed. Load a new file to continue.";
-            this.dataGrid.Invoke(a => a.AutoResizeColumns());
+            this.dataGrid.Invoke(a => {
+                a.Rows.OfType<DataGridViewRow>()
+                    .Where(o => ((FieldNote)o.DataBoundItem).Result.StartsWith("Done.", StringComparison.OrdinalIgnoreCase))
+                    .ToList()
+                    .ForEach(o => o.ReadOnly = true);
+                a.AutoResizeColumns();
+            });
         }
 
         private void btnPublish_Click(object sender, EventArgs e)
@@ -197,7 +224,7 @@ namespace FieldNoteManager
                 return;
             }
 
-            var res = MessageBox.Show("Do you want to publish " + cnt + " log(-s)?" + Environment.NewLine + Environment.NewLine + "Please make sure that you have specified the same time zone on geocaching.com as on this computer as otherwise the log dates might be incorrect.", "Field notes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            var res = MessageBox.Show("Do you want to publish " + cnt + " log(-s)?", "Field notes", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (res != DialogResult.OK)
                 return;
 
@@ -212,6 +239,15 @@ namespace FieldNoteManager
                 return;
 
             this.dataGrid[this.colPublish.DisplayIndex, e.RowIndex].Value = true;
+        }
+
+        private void dataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != this.colCacheCode.DisplayIndex || e.RowIndex == -1)
+                return;
+
+            var code = ((FieldNote)this.dataGrid.Rows[e.RowIndex].DataBoundItem).CacheCode;
+            System.Diagnostics.Process.Start("http://coord.info/" + code);
         }
     }
 }
