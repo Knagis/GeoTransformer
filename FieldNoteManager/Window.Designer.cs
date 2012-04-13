@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Window));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGrid = new System.Windows.Forms.DataGridView();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.btnLoad = new System.Windows.Forms.ToolStripButton();
@@ -37,7 +38,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.colLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCacheCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCacheCode = new System.Windows.Forms.DataGridViewLinkColumn();
             this.colCacheTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLogType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.colLogText = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,11 +64,13 @@
             this.colPublish,
             this.colResult});
             this.dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGrid.Location = new System.Drawing.Point(0, 27);
             this.dataGrid.Name = "dataGrid";
             this.dataGrid.RowTemplate.Height = 24;
             this.dataGrid.Size = new System.Drawing.Size(637, 285);
             this.dataGrid.TabIndex = 0;
+            this.dataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellContentClick);
             this.dataGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellValueChanged);
             // 
             // toolStrip
@@ -130,6 +133,8 @@
             this.colCacheCode.HeaderText = "Cache code";
             this.colCacheCode.Name = "colCacheCode";
             this.colCacheCode.ReadOnly = true;
+            this.colCacheCode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colCacheCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // colCacheTitle
             // 
@@ -168,12 +173,15 @@
             // 
             // colResult
             // 
-            this.colResult.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colResult.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.colResult.DataPropertyName = "Result";
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.colResult.DefaultCellStyle = dataGridViewCellStyle2;
             this.colResult.HeaderText = "Result";
             this.colResult.Name = "colResult";
             this.colResult.ReadOnly = true;
             this.colResult.Visible = false;
+            this.colResult.Width = 73;
             // 
             // Window
             // 
@@ -203,7 +211,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLogTime;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCacheCode;
+        private System.Windows.Forms.DataGridViewLinkColumn colCacheCode;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCacheTitle;
         private System.Windows.Forms.DataGridViewComboBoxColumn colLogType;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLogText;
