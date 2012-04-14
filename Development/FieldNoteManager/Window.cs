@@ -211,7 +211,7 @@ namespace FieldNoteManager
             this.toolStripStatusLabel.Text = "Publish completed. Load a new file to continue.";
             this.dataGrid.Invoke(a => {
                 a.Rows.OfType<DataGridViewRow>()
-                    .Where(o => ((FieldNote)o.DataBoundItem).Result.StartsWith("Done.", StringComparison.OrdinalIgnoreCase))
+                    .Where(o => (((FieldNote)o.DataBoundItem).Result ?? string.Empty).StartsWith("Done.", StringComparison.OrdinalIgnoreCase))
                     .ToList()
                     .ForEach(o => o.ReadOnly = true);
                 a.AutoResizeColumns();
