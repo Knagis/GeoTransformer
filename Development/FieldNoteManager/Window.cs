@@ -35,6 +35,11 @@ namespace FieldNoteManager
                 List<FieldNote> parsed = new List<FieldNote>();
 
                 var notes = System.IO.File.ReadAllLines(fileName);
+
+                // if the file is in Unicode, the standard read might not detect that and read it as ASCII with \0 chars in the middle
+                if (notes.Length > 0 && notes[0].IndexOf('\0') > -1)
+                    notes = System.IO.File.ReadAllLines(fileName, Encoding.Unicode);
+
                 foreach (var n in notes)
                 {
                     if (string.IsNullOrEmpty(n))
