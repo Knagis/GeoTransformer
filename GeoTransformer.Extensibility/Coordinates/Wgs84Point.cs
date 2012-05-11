@@ -97,7 +97,7 @@ namespace GeoTransformer.Coordinates
         /// Tries to parse the given coordinates. Returns <c>null</c> if the parsing could not be completed.
         /// </summary>
         /// <param name="coordinates">The coordinates to parse.</param>
-        /// <returns>The parsed coordinates object or <c>null</c> if they could not be parsed.</returns>
+        /// <returns>The parsed coordinates object or <c>null</c> if they could not be parsed. An empty string results in <c>null</c>.</returns>
         public static Wgs84Point? TryParse(string coordinates)
         {
             if (string.IsNullOrWhiteSpace(coordinates))
@@ -121,7 +121,11 @@ namespace GeoTransformer.Coordinates
                 return;
             }
 
-            coordinates = coordinates.Trim().ToUpperInvariant();
+            coordinates = coordinates
+                            .Trim()
+                            .Replace(", ", " ") // sometimes N and E coordinates are separated by a comma that
+                                                // will break the parsing (no error just result completely wrong)
+                            .ToUpperInvariant();
 
             var xi = coordinates.IndexOfAny(new char[] { 'E', 'W' });
             var yi = coordinates.IndexOfAny(new char[] { 'N', 'S' });
@@ -180,8 +184,8 @@ namespace GeoTransformer.Coordinates
 
         private static void ParseCoordinates(string latitude, string longitude, out decimal latitudeValue, out decimal longitudeValue)
         {
-            var x = longitude.Trim();
-            var y = latitude.Trim();
+            var x = longitude.Trim().TrimEnd(',', '.');
+            var y = latitude.Trim().TrimEnd(',', '.');
             x = x.Replace("E", "").Replace("e", "").Replace("W", "-").Replace("w", "-").Replace("- ", "-");
             y = y.Replace("N", "").Replace("n", "").Replace("S", "-").Replace("s", "-").Replace("- ", "-");
             x = x.Replace("°", " ").Replace("\"", "").Replace("'", "").Replace("`", "");
@@ -354,7 +358,7 @@ namespace GeoTransformer.Coordinates
             if (!second.HasValue)
                 return false;
 
-            return string.Equals(first.ToString(), second.ToString());
+            return string.Equals(first.ToString(), second.ToString(), StringComparison.Ordinal);
         }
     }
 }
