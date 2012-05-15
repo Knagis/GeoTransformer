@@ -4,7 +4,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
 --%>
 <%@ Page Language="C#" CodeBehind="Default.aspx.cs" Inherits="FetchStatistics.Web.Default" EnableViewState="false" %>
 <%@ Import Namespace="FetchStatistics.Web" %>
-<%@ OutputCache Duration="600" VaryByParam="sort;rev;country" %>
+<%@ OutputCache Duration="600" VaryByParam="sort;rev;country" VaryByContentEncoding="gzip;deflate" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
