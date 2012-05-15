@@ -1,0 +1,56 @@
+﻿<!--
+ This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
+ It is licensed under Microsoft Reciprocal License (Ms-RL).
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GeoTransformer Bing Maps</title>
+    <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0" type="text/javascript"></script>
+    <meta http-equiv="Content-type"" content="text/html;charset=UTF-8" /> 
+    <meta http-equiv="X-UA-Compatible"" content="IE=edge" /> 
+    <script type="text/javascript">
+        var map;
+        var pushpin;
+        var iconRoot;
+        function createPP(lat, lon, code, icon, desc) {
+            pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(lat, lon), { icon: iconRoot + icon, width: 16, height: 16, typeName: 'pin', id: code });
+            Microsoft.Maps.Events.addHandler(pushpin, 'click', function() { window.external.PushpinOnClick(code) });
+            map.entities.push(pushpin);
+            var ppel = document.getElementById(code);
+            if (ppel != null) ppel.title = desc;
+        }
+        function removePP(code) {
+            for (var i = map.entities.getLength() - 1; i >= 0; i--) {
+                var pushpin = map.entities.get(i);
+                if (pushpin.getId() != code)
+                    continue;
+
+                map.entities.removeAt(i);
+                break;
+            }
+        }
+        function updatePP(lat, lon, code, icon, desc) {
+            for (var i = map.entities.getLength() - 1; i >= 0; i--) {
+                var pushpin = map.entities.get(i);
+                if (pushpin.getId() != code)
+                    continue;
+
+                pushpin.setLocation(new Microsoft.Maps.Location(lat, lon));
+                pushpin.setOptions({ icon: iconRoot + icon });
+                var ppel = document.getElementById(code);
+                if (ppel != null) ppel.title = desc;
+                break;
+            }
+        }
+        function createMap() {
+            /*SCRIPT_GOES_HERE*/
+        }
+    </script>
+    <style type="text/css">
+        body, html { overflow: hidden }
+        .pin { cursor: pointer; }
+    </style>
+</head>
+<body onload="createMap();"></body>
+</html>
