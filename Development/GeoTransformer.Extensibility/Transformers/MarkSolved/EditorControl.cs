@@ -16,46 +16,47 @@ namespace GeoTransformer.Transformers.MarkSolved
 {
     internal partial class EditorControl : UI.UserControlBase
     {
-        private System.Xml.Linq.XElement _boundElement;
-
         public EditorControl()
         {
             InitializeComponent();
 
-            this.checkBox.CheckedChanged += checkBoxCheckedChanged;
+            this.checkBox.CheckedChanged += this.checkBox_CheckedChanged;
         }
 
-        void checkBoxCheckedChanged(object sender, EventArgs e)
+        private void checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (this._boundElement != null)
-            {
-                var v = this.checkBox.Checked ? bool.TrueString : string.Empty;
-                if (!string.Equals(v, this._boundElement.Value, StringComparison.OrdinalIgnoreCase))
-                    this._boundElement.Value = v;
-            }
+            var handler = this.Events[ValueChangedEvent] as EventHandler;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
-        public System.Xml.Linq.XElement BoundElement 
+        private static object ValueChangedEvent = new object();
+
+        /// <summary>
+        /// Occurs when the user changes the value of the checkbox.
+        /// </summary>
+        public event EventHandler ValueChanged
+        {
+            add { this.Events.AddHandler(ValueChangedEvent, value); }
+            remove { this.Events.RemoveHandler(ValueChangedEvent, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets a value for this editor (the checkbox).
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the checkbox is checked; otherwise, <c>false</c>.
+        /// </value>
+        public bool Value
         {
             get
             {
-                return this._boundElement;
+                return this.checkBox.Checked;
             }
 
             set
             {
-                if (this._boundElement == value)
-                    return;
-
-                this._boundElement = value;
-
-                if (value == null)
-                    this.checkBox.Checked = false;
-                else
-                {
-                    bool b;
-                    this.checkBox.Checked = bool.TryParse(value.Value, out b) & b;
-                }
+                this.checkBox.Checked = value;
             }
         }
     }
