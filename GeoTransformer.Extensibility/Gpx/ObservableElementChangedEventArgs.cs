@@ -18,6 +18,7 @@ namespace GeoTransformer.Gpx
         private ObservableElementChangedEventArgs _innerChange;
         private object _target;
         private System.Xml.Linq.XObjectChange? _xObjectChange;
+        private System.Collections.Specialized.NotifyCollectionChangedEventArgs _collectionChange;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableElementChangedEventArgs"/> class.
@@ -26,12 +27,18 @@ namespace GeoTransformer.Gpx
         /// <param name="propertyName">Name of the property that was changed.</param>
         /// <param name="xObjectChange">The the <see cref="System.Xml.Linq.XObjectChange"/> describing the change if the current arguments describe a change in an XML object.</param>
         /// <param name="innerChange">The <see cref="GeoTransformer.Gpx.ObservableElementChangedEventArgs"/> instance containing the nested event data.</param>
-        public ObservableElementChangedEventArgs(object target, string propertyName, System.Xml.Linq.XObjectChange? xObjectChange = null, ObservableElementChangedEventArgs innerChange = null)
+        public ObservableElementChangedEventArgs(
+                                object target, 
+                                string propertyName, 
+                                System.Xml.Linq.XObjectChange? xObjectChange = null, 
+                                ObservableElementChangedEventArgs innerChange = null,
+                                System.Collections.Specialized.NotifyCollectionChangedEventArgs collectionChange = null)
             : base(propertyName)
         {
             this._target = target;
             this._xObjectChange = xObjectChange;
             this._innerChange = innerChange;
+            this._collectionChange = collectionChange;
         }
 
         /// <summary>
@@ -60,6 +67,11 @@ namespace GeoTransformer.Gpx
         public ObservableElementChangedEventArgs InnerChange
         {
             get { return this._innerChange; }
+        }
+
+        public System.Collections.Specialized.NotifyCollectionChangedEventArgs CollectionChange
+        {
+            get { return this._collectionChange; }
         }
 
         /// <summary>

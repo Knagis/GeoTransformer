@@ -28,7 +28,7 @@ namespace GeoTransformer.Gpx
 
             public void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
             {
-                this.Container.OnPropertyChanged(new ObservableElementChangedEventArgs(sender, this.PropertyName));
+                this.Container.OnPropertyChanged(new ObservableElementChangedEventArgs(sender, this.PropertyName, collectionChange: args));
 
                 if (args.NewItems != null)
                     foreach (var n in args.NewItems)
