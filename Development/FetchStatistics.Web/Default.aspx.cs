@@ -9,11 +9,15 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO.Compression;
 
 namespace FetchStatistics.Web
 {
     public partial class Default : System.Web.UI.Page
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Default"/> class.
+        /// </summary>
         public Default()
         {
             if (_propertyCache == null)
@@ -25,6 +29,34 @@ namespace FetchStatistics.Web
                 _uiSettingsCache = typeof(StatisticsData)
                                     .GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
                                     .ToDictionary(o => o.Name, o => o.GetCustomAttributes(typeof(UISettingsAttribute), true).Cast<UISettingsAttribute>().DefaultIfEmpty(new UISettingsAttribute(o.Name)).First());
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Web.UI.Control.Init"/> event to initialize the page.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+
+            // apply manual compression since IIS 7.0 module requires server level configuration to
+            // enable compression when the page size is over 256Kb.
+            string compression = HttpContext.Current.Request.Headers["Accept-Encoding"];
+
+            if (string.IsNullOrEmpty(compression))
+            {
+                return;
+            }
+            else if (compression.Contains("gzip"))
+            {
+                Response.Filter = new GZipStream(Response.Filter, CompressionMode.Compress);
+                Response.Headers["Content-Encoding"] = "gzip";
+            }
+            else if (compression.Contains("deflate"))
+            {
+                Response.Filter = new DeflateStream(Response.Filter, CompressionMode.Compress);
+                Response.Headers["Content-Encoding"] = "deflate";
+            }
         }
 
         /// <summary>
