@@ -16,6 +16,10 @@ namespace GeoTransformer.Transformers.MarkSolved
     /// </summary>
     public class MarkSolved : TransformerBase, Extensions.IEditor
     {
+        private EditorControl _editorControl;
+
+        private Gpx.GpxWaypoint _boundWaypoint;
+        
         /// <summary>
         /// Gets the title of the transformer to display to the user.
         /// </summary>
@@ -48,15 +52,36 @@ namespace GeoTransformer.Transformers.MarkSolved
             if (!bool.TryParse(configElement.Value, out val) || !val)
                 return;
 
-            waypoint.WaypointType = "Geocache|Solved Cache";
-            if (waypoint.Geocache.IsDefined())
+            UpdateWaypoint(waypoint, true);
+        }
+
+        /// <summary>
+        /// Updates the waypoint by either setting the custom waypoint type or resetting it to the original value.
+        /// </summary>
+        /// <param name="waypoint">The waypoint that will be updated.</param>
+        /// <param name="markAsSolved">if set to <c>true</c> marks the waypoint as solved, otherwise resets the original value.</param>
+        private static void UpdateWaypoint(Gpx.GpxWaypoint waypoint, bool markAsSolved)
+        {
+            if (markAsSolved)
             {
-                waypoint.Geocache.CacheType.Id = null;
-                waypoint.Geocache.CacheType.Name = "Solved Cache";
+                waypoint.WaypointType = "Geocache|Solved Cache";
+                if (waypoint.Geocache.IsDefined())
+                {
+                    waypoint.Geocache.CacheType.Id = null;
+                    waypoint.Geocache.CacheType.Name = "Solved Cache";
+                }
+            }
+            else
+            {
+                waypoint.WaypointType = waypoint.OriginalValues.WaypointType;
+                if (waypoint.Geocache.IsDefined())
+                {
+                    waypoint.Geocache.CacheType.Id = waypoint.OriginalValues.Geocache.CacheType.Id;
+                    waypoint.Geocache.CacheType.Name = waypoint.OriginalValues.Geocache.CacheType.Name;
+                }
             }
         }
 
-        private EditorControl _editorControl;
         /// <summary>
         /// Creates the control that is used to edit the data for the caches. Note that the same control is reused for all caches.
         /// </summary>
@@ -65,7 +90,23 @@ namespace GeoTransformer.Transformers.MarkSolved
         /// </returns>
         public System.Windows.Forms.Control CreateControl()
         {
-            return this._editorControl = new EditorControl();
+            this._editorControl = new EditorControl();
+            this._editorControl.ValueChanged += EditorControlValueChanged;
+            return this._editorControl;
+        }
+
+        private void EditorControlValueChanged(object sender, EventArgs e)
+        {
+            if (this._boundWaypoint == null)
+                return;
+
+            var configElement = this._boundWaypoint.FindExtensionElement(typeof(MarkSolved), true);
+
+            if (string.Equals(configElement.Value, this._editorControl.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                return;
+                
+            configElement.Value = this._editorControl.Value.ToString();
+            UpdateWaypoint(this._boundWaypoint, this._editorControl.Value);
         }
 
         /// <summary>
@@ -74,7 +115,16 @@ namespace GeoTransformer.Transformers.MarkSolved
         /// <param name="waypoint">The GPX waypoint object that will be edited by the control.</param>
         public void BindControl(Gpx.GpxWaypoint waypoint)
         {
-            this._editorControl.BoundElement = waypoint == null ? null : waypoint.FindExtensionElement(typeof(MarkSolved), true);
+            this._boundWaypoint = waypoint;
+
+            if (waypoint == null)
+                this._editorControl.Value = false;
+            else
+            {
+                var configElement = waypoint.FindExtensionElement(typeof(MarkSolved));
+                bool val;
+                this._editorControl.Value = configElement != null && bool.TryParse(configElement.Value, out val) & val;
+            }
         }
     }
 }
