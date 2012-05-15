@@ -276,6 +276,12 @@ namespace GeoTransformer.Modules
             // TODO: this should be forwarded to the extensions doing the actual saving
             if (innerMost.XObjectChange.HasValue && (innerMost.XObjectChange == System.Xml.Linq.XObjectChange.Value || innerMost.Target is System.Xml.Linq.XText))
                 this.ParentForm.UnsavedData = true;
+
+            // handle the case when a editor extensions are removed from an object
+            if (string.Equals(innerMost.PropertyName, "ExtensionElements", StringComparison.Ordinal) 
+                    && innerMost.CollectionChange != null 
+                    && innerMost.CollectionChange.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+                this.ParentForm.UnsavedData = true;
         }
 
         /// <summary>
