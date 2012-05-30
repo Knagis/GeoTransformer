@@ -174,15 +174,12 @@ namespace GeoTransformer
                     clearMessage = false;
                     if (args.Severity == Transformers.StatusSeverity.FatalError)
                     {
-                        throw new Exception(args.Message);
+                        throw new TransformerException(args.Message, false);
                     }
                     else if (args.Severity == Transformers.StatusSeverity.Error)
                     {
                         var result = this.Invoke(t => MessageBox.Show(t, "The current step finished with an error: " + Environment.NewLine + Environment.NewLine + args.Message + Environment.NewLine + Environment.NewLine + "Do you want to ignore it and continue with the next step?", "Transformer error", MessageBoxButtons.YesNo, MessageBoxIcon.Question));
-                        if (result != System.Windows.Forms.DialogResult.Yes)
-                            throw new Exception(args.Message);
-                        else
-                            this.ReportProgress(new StatusMessage() { TaskIndex = i, Error = true, Message = args.Message });
+                        throw new TransformerException(args.Message, result == System.Windows.Forms.DialogResult.Yes);
                     }
                     else
                     {
@@ -195,6 +192,14 @@ namespace GeoTransformer
                     task.StatusUpdate += handler;
                     task.Process(data, this._options);
                     this.ReportProgress(new StatusMessage() { TaskIndex = i, Complete = true, Message = clearMessage ? "" : null });
+                }
+                catch (TransformerException ex)
+                {
+                    if (!ex.ContinueWithNextStep)
+                    {
+                        this.Invoke(new Action(() => this.toolStripClose.Text = "Close"));
+                        return;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -225,6 +230,17 @@ namespace GeoTransformer
         {
             if (e.KeyChar == 27)
                 this.Close();
+        }
+
+        private class TransformerException : Exception
+        {
+            public bool ContinueWithNextStep { get; private set; }
+
+            public TransformerException(string message, bool continueWithNextStep)
+                : base(message)
+            {
+                this.ContinueWithNextStep = continueWithNextStep;
+            }
         }
     }
 }
