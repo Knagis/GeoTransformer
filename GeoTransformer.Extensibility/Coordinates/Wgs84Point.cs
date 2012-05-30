@@ -57,6 +57,17 @@ namespace GeoTransformer.Coordinates
         /// <param name="latitude">The latitude (North/South coordinate).</param>
         /// <param name="longitude">The longitude (East/West coordinate).</param>
         /// <exception cref="ArgumentOutOfRangeException">when <paramref name="latitude"/> is out of [-90; 90] range or <paramref name="longitude"/> is out of [-180; 180] range.</exception>
+        public Wgs84Point(double latitude, double longitude)
+            : this((decimal)latitude, (decimal)longitude)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Wgs84Point"/> struct.
+        /// </summary>
+        /// <param name="latitude">The latitude (North/South coordinate).</param>
+        /// <param name="longitude">The longitude (East/West coordinate).</param>
+        /// <exception cref="ArgumentOutOfRangeException">when <paramref name="latitude"/> is out of [-90; 90] range or <paramref name="longitude"/> is out of [-180; 180] range.</exception>
         public Wgs84Point(decimal latitude, decimal longitude)
         {
             if (longitude < -180 || longitude > 180)

@@ -235,6 +235,62 @@ namespace GeoTransformer.GeocachingService
         }
 
         /// <summary>
+        /// Retrieves a list of geocaches by their codes.
+        /// </summary>
+        /// <param name="codes">The list of codes for the geocache to search for.</param>
+        /// <param name="liteVersion">if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
+        /// <returns>The <see cref="Geocache"/> objects for all loaded caches. If the service is disabled returns an empty list. All caches that cannot be loaded are not returned in the result set.</returns>
+        public IEnumerable<Geocache> GetGeocachesByCode(IEnumerable<string> codes, bool? liteVersion = null)
+        {
+            if (!IsEnabled || codes == null)
+                yield break;
+
+            bool useLite;
+            if (!liteVersion.HasValue)
+                useLite = this.IsBasicMember() ?? true;
+            else
+                useLite = liteVersion.Value;
+
+            var req = new SearchForGeocachesRequest();
+            req.AccessToken = this.AccessToken;
+            req.IsLite = useLite;
+
+            var subset = new List<string>();
+            foreach (var c in codes)
+            {
+                subset.Add(c);
+
+                if (subset.Count == 15)
+                {
+                    req.MaxPerPage = subset.Count;
+                    req.CacheCode = new CacheCodeFilter() { CacheCodes = subset.ToArray() };
+                    var res = this.SearchForGeocaches(req);
+
+                    if (res.Status.StatusCode != 0)
+                        yield break;
+
+                    foreach (var x in res.Geocaches)
+                        yield return x;
+
+                    subset.Clear();
+                }
+            }
+
+            if (subset.Count > 0)
+            {
+                req.MaxPerPage = subset.Count;
+                req.CacheCode = new CacheCodeFilter() { CacheCodes = subset.ToArray() };
+                var res = this.SearchForGeocaches(req);
+
+                if (res.Status.StatusCode != 0)
+                    yield break;
+
+                foreach (var x in res.Geocaches)
+                    yield return x;
+            }
+        }
+
+        /// <summary>
         /// Gets the user profile of the currently logged in user. Automatically populates the request with access token.
         /// </summary>
         /// <param name="challenges">if set to <c>true</c>, downloads challenge data.</param>
