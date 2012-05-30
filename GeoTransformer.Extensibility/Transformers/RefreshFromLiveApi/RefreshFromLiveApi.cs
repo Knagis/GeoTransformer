@@ -258,7 +258,10 @@ directly.");
                         {
                             int i = 0;
                             this.ReportStatus("Downloading geocache information using Live API.");
-                            foreach (var result in service.GetGeocachesByCode(waypointsToDownload.Values.Select(o => o.Item2.Name)))
+                            foreach (var result in service.GetGeocachesByCode(
+                                        waypointsToDownload.Values.Select(o => o.Item2.Name),
+                                        false,
+                                        err => this.ReportStatus(StatusSeverity.Error, err)))
                             {
                                 i++;
                                 var wpt = waypointsToDownload[result.Code];
