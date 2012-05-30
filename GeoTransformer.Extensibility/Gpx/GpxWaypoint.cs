@@ -19,8 +19,8 @@ namespace GeoTransformer.Gpx
     {
         private static Dictionary<XName, Action<GpxWaypoint, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GpxWaypoint, XAttribute>>
         {
-            { "lat", (o, a) => o.Coordinates = new Coordinates.Wgs84Point(XmlConvert.ToDecimal(a.Value), o.Coordinates.Longitude) },
-            { "lon", (o, a) => o.Coordinates = new Coordinates.Wgs84Point(o.Coordinates.Latitude, XmlConvert.ToDecimal(a.Value)) },
+            { "lat", (o, a) => o.Coordinates = new Coordinates.Wgs84Point(string.IsNullOrEmpty(a.Value) ? 0 : XmlConvert.ToDecimal(a.Value), o.Coordinates.Longitude) },
+            { "lon", (o, a) => o.Coordinates = new Coordinates.Wgs84Point(o.Coordinates.Latitude, string.IsNullOrEmpty(a.Value) ? 0 : XmlConvert.ToDecimal(a.Value)) },
         };
 
         private static Dictionary<XName, Action<GpxWaypoint, XElement>> _elementInitializers = new Dictionary<XName, Action<GpxWaypoint, XElement>>
