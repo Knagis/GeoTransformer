@@ -239,8 +239,9 @@ namespace GeoTransformer.GeocachingService
         /// </summary>
         /// <param name="codes">The list of codes for the geocache to search for.</param>
         /// <param name="liteVersion">if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
+        /// <param name="errorHandler">specifies the delegate that will be called if the Live API returns an error.</param>
         /// <returns>The <see cref="Geocache"/> objects for all loaded caches. If the service is disabled returns an empty list. All caches that cannot be loaded are not returned in the result set.</returns>
-        public IEnumerable<Geocache> GetGeocachesByCode(IEnumerable<string> codes, bool? liteVersion = null)
+        public IEnumerable<Geocache> GetGeocachesByCode(IEnumerable<string> codes, bool? liteVersion = null, Action<string> errorHandler = null)
         {
             if (!IsEnabled || codes == null)
                 yield break;
@@ -260,14 +261,18 @@ namespace GeoTransformer.GeocachingService
             {
                 subset.Add(c);
 
-                if (subset.Count == 15)
+                if (subset.Count == 50)
                 {
                     req.MaxPerPage = subset.Count;
                     req.CacheCode = new CacheCodeFilter() { CacheCodes = subset.ToArray() };
                     var res = this.SearchForGeocaches(req);
 
                     if (res.Status.StatusCode != 0)
+                    {
+                        if (errorHandler != null)
+                            errorHandler(res.Status.StatusMessage);
                         yield break;
+                    }
 
                     foreach (var x in res.Geocaches)
                         yield return x;
