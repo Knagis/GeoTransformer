@@ -195,6 +195,7 @@ namespace GeoTransformer
                 }
                 catch (TransformerException ex)
                 {
+                    this.ReportProgress(new StatusMessage() { TaskIndex = i, Error = true, Message = ex.Message });
                     if (!ex.ContinueWithNextStep)
                     {
                         this.Invoke(new Action(() => this.toolStripClose.Text = "Close"));
