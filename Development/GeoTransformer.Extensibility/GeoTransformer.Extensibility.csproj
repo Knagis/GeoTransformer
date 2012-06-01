@@ -143,6 +143,7 @@
       <DependentUpon>WizardControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\IHasCategory.cs" />
+    <Compile Include="Extensions\IPublisher.cs" />
     <Compile Include="Extensions\ITopLevelTabPage.cs" />
     <Compile Include="Extensions\ExtensionEditorDataTable.cs" />
     <Compile Include="Extensions\IApplicationService.cs" />
@@ -178,6 +179,16 @@
     <Compile Include="Gpx\ObservableCollection.cs" />
     <Compile Include="Gpx\ObservableElement.cs" />
     <Compile Include="Gpx\ObservableElementChangedEventArgs.cs" />
+    <Compile Include="Publishers\ExportGpx\ExportGpx.cs" />
+    <Compile Include="Publishers\ExportGpx\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Publishers\GarminGps\GarminGps.cs" />
+    <Compile Include="Publishers\MagellanGps\MagellanGps.cs" />
+    <Compile Include="Publishers\PublisherTarget.cs" />
+    <Compile Include="Publishers\PublisherTargetsChangedEventArgs.cs" />
     <Compile Include="Service References\GeocachingService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -257,6 +268,15 @@
     <Compile Include="Transformers\ReadableAttributes\ReadableAttributes.cs" />
     <Compile Include="Transformers\RefreshFromLiveApi\RefreshFromLiveApi.cs" />
     <Compile Include="Transformers\RefreshFromLiveApi\CachedDataSchema.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\SafelyRemoveGps.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Device.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\DeviceCapabilities.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\DeviceClass.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\DiskDeviceClass.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Native.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Volume.cs" />
+    <Compile Include="Transformers\SafelyRemoveGps\UsbEject\VolumeDeviceClass.cs" />
+    <Compile Include="Transformers\SaveFiles\SaveFiles.cs" />
     <Compile Include="Transformers\StatusMessageEventArgs.cs" />
     <Compile Include="Transformers\StatusSeverity.cs" />
     <Compile Include="Transformers\TransformerOptions.cs" />
@@ -415,6 +435,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Extensions\GeocachingService\WizardControl.resx">
       <DependentUpon>WizardControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Publishers\ExportGpx\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Transformers\AdditionalHints\EditorControl.resx">
       <DependentUpon>EditorControl.cs</DependentUpon>
@@ -732,6 +757,7 @@
     <None Include="Transformers\LoadFromLiveApi\delete.png" />
     <None Include="Transformers\LoadFromLiveApi\edit.png" />
     <None Include="Transformers\LoadFromLiveApi\create.png" />
+    <Content Include="Publishers\ExportGpx\Icon.png" />
     <Content Include="Transformers\LoadLocalFiles\gpx.png" />
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
     <Content Include="UI\CacheTypeIcons\VirtualCache.gif" />
