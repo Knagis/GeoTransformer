@@ -175,7 +175,7 @@ namespace GeoTransformer.Gpx
                     gc.Attributes.Add(new GeocacheAttribute()
                                         {
                                             Id = a.AttributeTypeID,
-                                            Name = attributeTypeCache[a.AttributeTypeID].Name,
+                                            Name = attributeTypeCache[a.AttributeTypeID],
                                             IsInclusive = a.IsOn
                                         });
                 }
