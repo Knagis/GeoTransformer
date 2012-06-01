@@ -16,7 +16,8 @@ namespace GeoTransformer
         {
             { Version.Parse("4.2.0.0"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
                                         "Added an option to load advanced data (such as favorite points and images from Live API)." + Environment.NewLine +
-                                        "Fixed some bugs related to removing edited data." },
+                                        "Fixed some bugs related to removing edited data." + Environment.NewLine +
+                                        "Added ability to import XML files with invalid characters in them." },
             { Version.Parse("4.1.0.0"), "Added an option to put geocache attributes in a log entry so it can be read on GPS." + Environment.NewLine +
                                         "Added an option to select which caches should be ignored when publishing." + Environment.NewLine +
                                         "Added support for loading GPX 1.1 files." + Environment.NewLine + 
