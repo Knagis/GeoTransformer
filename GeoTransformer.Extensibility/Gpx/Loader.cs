@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,133 @@ namespace GeoTransformer.Gpx
     /// </summary>
     public static class Loader
     {
+        #region [ Xml self-cleaning reader ]
+
+        /// <summary>
+        /// <see cref="TextReader"/> implementation for reading streams and skipping all characters that cause XML
+        /// parsing to fail.
+        /// </summary>
+        /// <remarks>The implementation is not optimized for performance and should only be used if standard parsing does not work.</remarks>
+        private class SafeXmlTextReader : TextReader
+        {
+            private Stream _stream;
+            private StreamReader _reader;
+            private Queue<int> _pending;
+
+            public SafeXmlTextReader(Stream stream)
+            {
+                if (stream == null)
+                    throw new ArgumentNullException("stream");
+
+                this._stream = stream;
+                this._reader = new StreamReader(stream);
+                this._pending = new Queue<int>();
+            }
+
+            private bool MoveForward()
+            {
+                while (this._pending.Count == 0)
+                {
+                    var c1 = this._reader.Read();
+                    if (c1 == -1)
+                        return false;
+
+                    if (System.Xml.XmlConvert.IsXmlChar((char)c1))
+                    {
+                        this._pending.Enqueue(c1);
+                    }
+                    else
+                    {
+                        var c2 = this._reader.Read();
+                        if (c2 == -1)
+                            return false;
+
+                        if (System.Xml.XmlConvert.IsXmlSurrogatePair((char)c1, (char)c2))
+                        {
+                            this._pending.Enqueue(c1);
+                            this._pending.Enqueue(c2);
+                        }
+                        else if (System.Xml.XmlConvert.IsXmlChar((char)c2))
+                        {
+                            this._pending.Enqueue(c2);
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            public override int Peek()
+            {
+                if (!this.MoveForward())
+                    return -1;
+                    
+                return this._pending.Peek();
+            }
+
+            public override int Read()
+            {
+                if (!this.MoveForward())
+                    return -1;
+
+                return this._pending.Dequeue();
+            }
+        }
+
+        #endregion
+
         #region [ GPX files ]
+
+        /// <summary>
+        /// Loads a <see cref="XDocument"/> from the given <paramref name="stream"/>. If the loading fails
+        /// asks the user if he allows to try to work around the issue. Second parsing is done with all non-XML
+        /// characters removed.
+        /// </summary>
+        /// <param name="stream">A delegate to create the stream from which to load the XML document.</param>
+        /// <returns>The <see cref="XDocument"/> loaded from the stream</returns>
+        private static XDocument LoadXDocument(Func<Stream> stream)
+        {
+            long pos = 0;
+            Stream str = null;
+            try
+            {
+                str = stream();
+                pos = str.Position;
+                return XDocument.Load(str);
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                try
+                {
+                    if (str != null)
+                        str.Dispose();
+
+                    // recreate the stream to avoid non-seekable streams
+                    str = stream();
+
+                    var res = System.Windows.Forms.MessageBox.Show("Unable to read the GPX file:" + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "GeoTransformer can try to work around the problem but the data might not be loaded correctly. Do you want GeoTransformer to try the workaround?", "Invalid GPX data", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question, System.Windows.Forms.MessageBoxDefaultButton.Button2);
+                    if (res != System.Windows.Forms.DialogResult.Yes)
+                        throw;
+
+                    var settings = new System.Xml.XmlReaderSettings();
+                    settings.CheckCharacters = false;
+                    using (var safeReader = new SafeXmlTextReader(str))
+                    using (var xmlReader = System.Xml.XmlReader.Create(safeReader, settings))
+                    {
+                        return XDocument.Load(xmlReader);
+                    }
+                }
+                catch
+                {
+                    throw new System.Xml.XmlException("The GPX document cannot be parsed and error recovery is not possible for this file." + Environment.NewLine + ex.Message, ex);
+                }
+            }
+            finally
+            {
+                if (str != null)
+                    str.Dispose();
+            }
+        }
 
         /// <summary>
         /// Loads a <see cref="GpxDocument"/> from the given file name.
@@ -27,7 +153,7 @@ namespace GeoTransformer.Gpx
         /// <returns>A GPX document with data from the file.</returns>
         public static Gpx.GpxDocument Gpx(string fileName)
         {
-            var gpx = new GpxDocument(XDocument.Load(fileName));
+            var gpx = new GpxDocument(LoadXDocument(() => System.IO.File.OpenRead(fileName)));
             gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(fileName);
             return gpx;
         }
@@ -50,12 +176,9 @@ namespace GeoTransformer.Gpx
                     if (!zipEntry.IsFile || !string.Equals(System.IO.Path.GetExtension(zipEntry.Name), ".gpx", StringComparison.OrdinalIgnoreCase))
                         continue;
 
-                    using (var zips = zip.GetInputStream(zipEntry))
-                    {
-                        var gpx = new GpxDocument(XDocument.Load(zips));
-                        gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(zipEntry.Name);
-                        yield return gpx;
-                    }
+                    var gpx = new GpxDocument(LoadXDocument(() => zip.GetInputStream(zipEntry)));
+                    gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(zipEntry.Name);
+                    yield return gpx;
                 }
         }
 
@@ -68,9 +191,8 @@ namespace GeoTransformer.Gpx
         public static Gpx.GpxDocument Zip(string fileName, string entry)
         {
             using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fileName))
-            using (var zips = zip.GetInputStream(zip.GetEntry(entry)))
             {
-                var gpx = new GpxDocument(XDocument.Load(zips));
+                var gpx = new GpxDocument(LoadXDocument(() => zip.GetInputStream(zip.GetEntry(entry))));
                 gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(entry);
                 return gpx;
             }
@@ -117,12 +239,12 @@ namespace GeoTransformer.Gpx
             var gc1 = target.Geocache;
             var gc2 = source.Geocache;
             if (gc1.Attributes.Count == 0 && gc2.Attributes.Count > 0) foreach (var a in gc2.Attributes) gc1.Attributes.Add(a);
-            if ((gc1.CacheType.Id == null && gc2.CacheType.Id != null) || (gc1.CacheType.Name == null && gc2.CacheType.Name != null)) 
-            {   
+            if ((gc1.CacheType.Id == null && gc2.CacheType.Id != null) || (gc1.CacheType.Name == null && gc2.CacheType.Name != null))
+            {
                 gc1.CacheType.Id = gc2.CacheType.Id;
                 gc1.CacheType.Name = gc2.CacheType.Name;
             }
-            if ((gc1.Container.Id == null && gc2.Container.Id != null) || (gc1.Container.Name == null && gc2.Container.Name != null)) 
+            if ((gc1.Container.Id == null && gc2.Container.Id != null) || (gc1.Container.Name == null && gc2.Container.Name != null))
             {
                 gc1.Container.Id = gc2.Container.Id;
                 gc1.Container.Name = gc2.Container.Name;
@@ -139,7 +261,7 @@ namespace GeoTransformer.Gpx
             if (gc1.Hints == null && gc2.Hints != null) gc1.Hints = gc2.Hints;
             if (gc1.Id == null && gc2.Id != null) gc1.Id = gc2.Id;
             if (gc1.Images.Count == 0 && gc2.Images.Count > 0) foreach (var i in gc2.Images) gc1.Images.Add(i);
-            if ((gc1.LongDescription.Text == null && gc2.LongDescription.Text != null) 
+            if ((gc1.LongDescription.Text == null && gc2.LongDescription.Text != null)
                 || (gc1.ShortDescription.Text == null && gc2.ShortDescription.Text != null))
             {
                 gc1.LongDescription.Text = gc2.LongDescription.Text;
