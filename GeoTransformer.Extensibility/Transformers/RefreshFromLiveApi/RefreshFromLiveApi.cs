@@ -248,40 +248,47 @@ directly.");
                 // download geocaches that are not in cache or cached version has expired.
                 if (!useLocalStorage && GeocachingService.LiveClient.IsEnabled && waypointsToDownload.Count > 0)
                 {
-                    using (var service = GeocachingService.LiveClient.CreateClientProxy())
+                    try
                     {
-                        if (service.IsBasicMember().GetValueOrDefault(true))
+                        using (var service = GeocachingService.LiveClient.CreateClientProxy())
                         {
-                            this.ReportStatus(StatusSeverity.Warning, "You are not premium member on geocaching.com and cannot download full data using the API.");
-                        }
-                        else
-                        {
-                            int i = 0;
-                            this.ReportStatus("Downloading geocache information using Live API.");
-                            foreach (var result in service.GetGeocachesByCode(
-                                        waypointsToDownload.Values.Select(o => o.Item2.Name),
-                                        false,
-                                        err => this.ReportStatus(StatusSeverity.Error, err)))
+                            if (service.IsBasicMember().GetValueOrDefault(true))
                             {
-                                i++;
-                                var wpt = waypointsToDownload[result.Code];
-                                Merge(wpt.Item1, wpt.Item2, new Gpx.GpxWaypoint(result) { LastRefresh = DateTime.Now });
-                                waypointsToUpdateIfDownloadFails.Remove(result.Code);
+                                this.ReportStatus(StatusSeverity.Warning, "You are not premium member on geocaching.com and cannot download full data using the API.");
+                            }
+                            else
+                            {
+                                int i = 0;
+                                this.ReportStatus("Downloading geocache information using Live API.");
+                                foreach (var result in service.GetGeocachesByCode(
+                                            waypointsToDownload.Values.Select(o => o.Item2.Name),
+                                            false,
+                                            err => this.ReportStatus(StatusSeverity.Error, err)))
+                                {
+                                    i++;
+                                    var wpt = waypointsToDownload[result.Code];
+                                    Merge(wpt.Item1, wpt.Item2, new Gpx.GpxWaypoint(result) { LastRefresh = DateTime.Now });
+                                    waypointsToUpdateIfDownloadFails.Remove(result.Code);
 
-                                var insQ = db.Geocaches.Replace();
-                                insQ.Value(o => o.Code, result.Code);
-                                insQ.Value(o => o.Data, Serialize(serializer, result));
-                                insQ.Value(o => o.RetrievedOn, DateTime.Now);
-                                insQ.Execute();
+                                    var insQ = db.Geocaches.Replace();
+                                    insQ.Value(o => o.Code, result.Code);
+                                    insQ.Value(o => o.Data, Serialize(serializer, result));
+                                    insQ.Value(o => o.RetrievedOn, DateTime.Now);
+                                    insQ.Execute();
 
-                                this.ReportProgress(i, waypointsToDownload.Count);
+                                    this.ReportProgress(i, waypointsToDownload.Count);
 
-                                //TODO: remove once the transformer progress shows progress indicator
-                                this.ReportStatus("Progress: {0}%", i * 100 / waypointsToDownload.Count);
+                                    //TODO: remove once the transformer progress shows progress indicator
+                                    this.ReportStatus("Progress: {0}%", i * 100 / waypointsToDownload.Count);
 
-                                this.TerminateExecutionIfNeeded();
+                                    this.TerminateExecutionIfNeeded();
+                                }
                             }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ReportStatus(StatusSeverity.Warning, "Unable to download geocaches: " + ex.Message);
                     }
                 }
 

@@ -9,9 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace GeoTransformer.Transformers
+namespace GeoTransformer.Transformers.SaveFiles
 {
-    class SaveFiles : TransformerBase, Extensions.ISpecial
+    /// <summary>
+    /// Extension that persists the GPX files to a file system folder.
+    /// </summary>
+    public class SaveFiles : TransformerBase, Extensions.ISpecial
     {
         /// <summary>
         /// Gets the title of the transformer to display to the user.
@@ -21,6 +24,10 @@ namespace GeoTransformer.Transformers
             get { return "Publish GPX files"; }
         }
 
+        /// <summary>
+        /// Gets the required execution for this transformer. Smaller values indicate that the transformer has to be executed earlier.
+        /// The values are not limited to the enumeration.
+        /// </summary>
         public override ExecutionOrder ExecutionOrder
         {
             get { return Transformers.ExecutionOrder.Publish; }

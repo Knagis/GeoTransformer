@@ -10,9 +10,13 @@ using System.Text;
 using System.Runtime.InteropServices;
 using UsbEject.Library;
 
-namespace GeoTransformer.Transformers
+namespace GeoTransformer.Transformers.SafelyRemoveGps
 {
-    class SafelyRemoveGps : TransformerBase, Extensions.ISpecial
+    /// <summary>
+    /// A transformer that should be run after an USB device has been updated. It will execute "Safely Remove" command
+    /// for the USB device.
+    /// </summary>
+    public class SafelyRemoveGps : TransformerBase, Extensions.ISpecial
     {
         /// <summary>
         /// Gets the title of the transformer to display to the user.
@@ -33,13 +37,23 @@ namespace GeoTransformer.Transformers
 
         private string _driveRoot;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SafelyRemoveGps"/> class.
+        /// </summary>
+        /// <param name="driveRoot">The path to the drive root.</param>
         public SafelyRemoveGps(string driveRoot)
         {
             if (string.IsNullOrWhiteSpace(driveRoot))
                 throw new ArgumentNullException("driveRoot");
+
             this._driveRoot = driveRoot;
         }
 
+        /// <summary>
+        /// Ejects the specified USB device.
+        /// </summary>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
         public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             using (var vd = new VolumeDeviceClass())

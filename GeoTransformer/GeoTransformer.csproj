@@ -88,21 +88,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ReleaseNotes.cs" />
-    <Compile Include="Transformers\SaveFiles.cs" />
-    <Compile Include="Transformers\SafelyRemoveGps.cs" />
     <Compile Include="TransformProgress.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TransformProgress.Designer.cs">
       <DependentUpon>TransformProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="UsbEject\Device.cs" />
-    <Compile Include="UsbEject\DeviceCapabilities.cs" />
-    <Compile Include="UsbEject\DeviceClass.cs" />
-    <Compile Include="UsbEject\DiskDeviceClass.cs" />
-    <Compile Include="UsbEject\Native.cs" />
-    <Compile Include="UsbEject\Volume.cs" />
-    <Compile Include="UsbEject\VolumeDeviceClass.cs" />
     <Compile Include="WelcomeScreen\WelcomeScreen.cs">
       <SubType>Form</SubType>
     </Compile>
