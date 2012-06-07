@@ -49,7 +49,9 @@ namespace GeoTransformer.Transformers.RefreshFromLiveApi
 automatically download information about images that
 are attached to the geocaches.
 
-The data loaded from Live API is cached for 2 weeks.");
+The data loaded from Live API is cached for 2 weeks.
+
+This function is also available for Basic Members.");
 
             this._configurationControl.checkBoxEnabled.Checked = currentConfiguration == null || (currentConfiguration.Length > 0 && currentConfiguration[0] == 1);
             return this._configurationControl;
@@ -203,12 +205,6 @@ The data loaded from Live API is cached for 2 weeks.");
                     {
                         using (var service = GeocachingService.LiveClient.CreateClientProxy())
                         {
-                            //if (service.IsBasicMember().GetValueOrDefault(true))
-                            //{
-                            //    this.ReportStatus(StatusSeverity.Warning, "You are not premium member on geocaching.com and cannot download full data using the API.");
-                            //}
-                            //else
-                            //{
                             int i = 0;
                             int errors = 0;
                             this.ReportStatus("Downloading geocache information using Live API.");
@@ -257,7 +253,6 @@ The data loaded from Live API is cached for 2 weeks.");
 
                                 this.TerminateExecutionIfNeeded();
                             }
-                            //}
                         }
                     }
                     catch (Exception ex)
