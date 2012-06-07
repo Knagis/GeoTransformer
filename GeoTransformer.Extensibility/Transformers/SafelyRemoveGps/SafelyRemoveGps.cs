@@ -56,6 +56,12 @@ namespace GeoTransformer.Transformers.SafelyRemoveGps
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
         public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
+#if DEBUG
+            var res = System.Windows.Forms.MessageBox.Show("Do you want to eject " + this._driveRoot + "?", "Safely remove", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question);
+            if (res != System.Windows.Forms.DialogResult.Yes)
+                return;
+#endif
+
             using (var vd = new VolumeDeviceClass())
             {
                 var dr = this._driveRoot.Replace("\\", "");
