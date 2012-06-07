@@ -51,7 +51,11 @@ are attached to the geocaches.
 
 The data loaded from Live API is cached for 2 weeks.
 
-This function is also available for Basic Members.");
+This function is also available for Basic Members. 
+
+Unfortunately this method cannot separate images added
+to logs from the listing images and all images are
+treated as added directly to the listing.");
 
             this._configurationControl.checkBoxEnabled.Checked = currentConfiguration == null || (currentConfiguration.Length > 0 && currentConfiguration[0] == 1);
             return this._configurationControl;
