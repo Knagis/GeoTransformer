@@ -191,6 +191,7 @@ namespace GeoTransformer
                 {
                     task.StatusUpdate += handler;
                     task.Process(data, this._options);
+                    this._workerShouldCancel = false;
                     this.ReportProgress(new StatusMessage() { TaskIndex = i, Complete = true, Message = clearMessage ? "" : null });
                 }
                 catch (TransformerException ex)
