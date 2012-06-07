@@ -58,9 +58,13 @@ points and images.
 The data loaded from Live API is cached for 1 week 
 since the most important data will be updated from 
 the data source (such as GPX file or pocket query)
-directly.");
+directly.
 
-            this._configurationControl.checkBoxEnabled.Checked = currentConfiguration == null || (currentConfiguration.Length > 0 && currentConfiguration[0] == 1);
+The use of this option requires Premium Membership
+from geocaching.com and is limited to 6000 geocaches
+per day.");
+
+            this._configurationControl.checkBoxEnabled.Checked = currentConfiguration != null && currentConfiguration.Length > 0 && currentConfiguration[0] == 1;
             return this._configurationControl;
         }
 
@@ -190,6 +194,7 @@ directly.");
             using (var db = new CachedDataSchema(System.IO.Path.Combine(this.LocalStoragePath, "cache.db")))
             {
                 bool useLocalStorage = (options & TransformerOptions.UseLocalStorage) == TransformerOptions.UseLocalStorage;
+                bool downloadFailed = false;
 
                 var waypointsToDownload = new Dictionary<string, Tuple<Gpx.GpxDocument, Gpx.GpxWaypoint>>(StringComparer.OrdinalIgnoreCase);
                 var waypointsToUpdateIfDownloadFails = new Dictionary<string, Tuple<Gpx.GpxDocument, Gpx.GpxWaypoint, DateTime, byte[]>>(StringComparer.OrdinalIgnoreCase);
@@ -279,7 +284,7 @@ directly.");
                                     this.ReportProgress(i, waypointsToDownload.Count);
 
                                     //TODO: remove once the transformer progress shows progress indicator
-                                    this.ReportStatus("Progress: {0}%", i * 100 / waypointsToDownload.Count);
+                                    this.ReportStatus("Progress: {0}% (press cancel to skip download)", i * 100 / waypointsToDownload.Count);
 
                                     this.TerminateExecutionIfNeeded();
                                 }
@@ -289,6 +294,7 @@ directly.");
                     catch (Exception ex)
                     {
                         this.ReportStatus(StatusSeverity.Warning, "Unable to download geocaches: " + ex.Message);
+                        downloadFailed = true;
                     }
                 }
 
@@ -306,12 +312,13 @@ directly.");
                     }
                 }
 
-                if (!useLocalStorage)
+                if (!useLocalStorage && !downloadFailed)
                 {
                     // remove all cached data that is older than 1 month
-                    // 1 month is used so that the older copies can still be used when needed
+                    // 1 month is used so that the older copies can still be used when needed (e.g., download fails
+                    // or network is not available).
                     var delQ = db.Geocaches.Delete();
-                    delQ.Where(o => o.RetrievedOn, Data.WhereOperator.Smaller, DateTime.Now.AddMonths(1));
+                    delQ.Where(o => o.RetrievedOn, Data.WhereOperator.Smaller, DateTime.Now.AddMonths(-1));
                     delQ.Execute();
                 }
             }
