@@ -14,7 +14,7 @@ namespace GeoTransformer
     {
         public static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
-            { Version.Parse("4.2.0.0"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
+            { Version.Parse("4.2.0.1"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
                                         "Added an option to load geocache images from Live API." + Environment.NewLine +
                                         "Added an option to load all advanced data (such as favorite points and images) from Live API)." + Environment.NewLine +
                                         "Fixed some bugs related to removing edited data." + Environment.NewLine +
