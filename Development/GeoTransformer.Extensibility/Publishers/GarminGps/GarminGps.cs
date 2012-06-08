@@ -32,7 +32,11 @@ namespace GeoTransformer.Publishers.GarminGps
 
             cancel = false;
             var pathRoot = System.IO.Path.GetPathRoot(path);
-            return new List<Extensions.ITransformer> 
+#if DEBUG
+            if (target.Key == new Guid("20F1C26E-7C4E-41D5-8214-93C0D22A6026"))
+                pathRoot = path;
+#endif
+            var transformers = new List<Extensions.ITransformer> 
             {
                 new Transformers.SaveFiles.SaveFiles(path, path),
                 new Transformers.SaveFiles.SaveImages(new PathGenerator(pathRoot).CreateImagePath)
@@ -42,8 +46,14 @@ namespace GeoTransformer.Publishers.GarminGps
                         EncodeEverything = true,
                         PublishLogImages = true
                     },
-                new Transformers.SafelyRemoveGps.SafelyRemoveGps(System.IO.Directory.GetDirectoryRoot(path))
             };
+#if DEBUG
+            if (target.Key != new Guid("20F1C26E-7C4E-41D5-8214-93C0D22A6026"))
+                transformers.Add(new Transformers.SafelyRemoveGps.SafelyRemoveGps(System.IO.Directory.GetDirectoryRoot(path)));
+#else
+            transformers.Add(new Transformers.SafelyRemoveGps.SafelyRemoveGps(System.IO.Directory.GetDirectoryRoot(path)));
+#endif
+            return transformers;
         }
 
         /// <summary>
@@ -84,6 +94,11 @@ namespace GeoTransformer.Publishers.GarminGps
         public IEnumerable<PublisherTarget> Initialize()
         {
             var result = new List<PublisherTarget>();
+
+#if DEBUG
+            result.Add(new PublisherTarget(this, "Debug Garmin to Folder", null, new Guid("20F1C26E-7C4E-41D5-8214-93C0D22A6026"), System.IO.Path.Combine(Environment.CurrentDirectory, "DebugGarminPublish")));
+#endif
+
             foreach (var drive in System.IO.DriveInfo.GetDrives())
             {
                 try
