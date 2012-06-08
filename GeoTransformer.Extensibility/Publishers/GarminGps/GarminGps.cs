@@ -31,9 +31,17 @@ namespace GeoTransformer.Publishers.GarminGps
             string path = target.Tag as string;
 
             cancel = false;
+            var pathRoot = System.IO.Path.GetPathRoot(path);
             return new List<Extensions.ITransformer> 
             {
                 new Transformers.SaveFiles.SaveFiles(path, path),
+                new Transformers.SaveFiles.SaveImages(new PathGenerator(pathRoot).CreateImagePath)
+                    {
+                        RemoveObsoleteImages = true,
+                        ImageRootPath = System.IO.Path.Combine(pathRoot, "Garmin", "GeocachePhotos"),
+                        EncodeEverything = true,
+                        PublishLogImages = true
+                    },
                 new Transformers.SafelyRemoveGps.SafelyRemoveGps(System.IO.Directory.GetDirectoryRoot(path))
             };
         }
