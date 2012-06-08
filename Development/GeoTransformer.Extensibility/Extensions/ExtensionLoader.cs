@@ -88,6 +88,25 @@ namespace GeoTransformer.Extensions
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets the local storage path for a given extension. If the path does not exist, creates it.
+        /// </summary>
+        /// <param name="extension">The extension type that requires local storage.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">when <paramref name="extension"/> is <c>null</c></exception>
+        /// <remarks><see cref="ILocalStorage"/> interface should be used when possible. This method is created to
+        /// allow special extensions (marked with <see cref="ISpecial"/>) to use local storage since for them
+        /// the interface property is not initialized.</remarks>
+        public static string GetLocalStoragePath(Type extension)
+        {
+            if (extension == null)
+                throw new ArgumentNullException("extension");
+
+            var path = System.IO.Path.Combine(new System.IO.FileInfo(System.Windows.Forms.Application.ExecutablePath).DirectoryName, "ExtensionData", extension.Namespace);
+            System.IO.Directory.CreateDirectory(path);
+            return path;
+        }
+
         #endregion
 
         #region [ Application service ]
@@ -148,11 +167,7 @@ namespace GeoTransformer.Extensions
 
                     var localStorage = instance as ILocalStorage;
                     if (localStorage != null)
-                    {
-                        var path = System.IO.Path.Combine(new System.IO.FileInfo(System.Windows.Forms.Application.ExecutablePath).DirectoryName, "ExtensionData", t.Namespace);
-                        System.IO.Directory.CreateDirectory(path);
-                        localStorage.LocalStoragePath = path;
-                    }
+                        localStorage.LocalStoragePath = GetLocalStoragePath(t);
 
                     result.Add(instance);
                 }

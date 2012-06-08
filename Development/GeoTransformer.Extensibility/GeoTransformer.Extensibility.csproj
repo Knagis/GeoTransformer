@@ -186,6 +186,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Publishers\GarminGps\GarminGps.cs" />
+    <Compile Include="Publishers\GarminGps\PathGenerator.cs" />
     <Compile Include="Publishers\MagellanGps\MagellanGps.cs" />
     <Compile Include="Publishers\PublisherTarget.cs" />
     <Compile Include="Publishers\PublisherTargetsChangedEventArgs.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Volume.cs" />
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\VolumeDeviceClass.cs" />
     <Compile Include="Transformers\SaveFiles\SaveFiles.cs" />
+    <Compile Include="Transformers\SaveFiles\SaveImages.cs" />
     <Compile Include="Transformers\StatusMessageEventArgs.cs" />
     <Compile Include="Transformers\StatusSeverity.cs" />
     <Compile Include="Transformers\TransformerOptions.cs" />
