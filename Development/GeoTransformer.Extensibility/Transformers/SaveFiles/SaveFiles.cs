@@ -48,6 +48,11 @@ namespace GeoTransformer.Transformers.SaveFiles
         public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             this._usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            System.IO.Directory.CreateDirectory(this._cacheDirectory);
+            if (!string.Equals(this._cacheDirectory, this._waypointDirectory, StringComparison.OrdinalIgnoreCase))
+                System.IO.Directory.CreateDirectory(this._waypointDirectory);
+
             base.Process(documents, options);
         }
 
