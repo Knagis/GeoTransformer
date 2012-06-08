@@ -102,6 +102,11 @@ namespace GeoTransformer.Transformers.SaveFiles
         public string ImageRootPath { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum size for published images. Anything larger than this will be resized to fit the rectangle.
+        /// </summary>
+        public System.Drawing.Size? MaximumSize { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SaveImages"/> class.
         /// </summary>
         /// <param name="generatePath">The delegate that is used to generate full path where to save each image. 
@@ -194,7 +199,8 @@ namespace GeoTransformer.Transformers.SaveFiles
             if (!this.AcceptedFormats.Contains(image.RawFormat))
                 return true;
 
-            // here would checks for size etc. added
+            if (this.MaximumSize.HasValue && (image.Width > this.MaximumSize.Value.Width || image.Height > this.MaximumSize.Value.Height))
+                return true;
 
             return false;
         }
@@ -205,6 +211,13 @@ namespace GeoTransformer.Transformers.SaveFiles
         /// </summary>
         private bool ReconvertNeeded(System.Drawing.Image original, System.Drawing.Image converted)
         {
+            if (converted.Width < original.Width || converted.Height < original.Height)
+            {
+                // the converted image has been resized but it is smaller than the current maximum (-1 to compensate for any rounding issues)
+                if (!this.MaximumSize.HasValue || (converted.Width < this.MaximumSize.Value.Width - 1 && converted.Height < this.MaximumSize.Value.Height - 1))
+                    return true;
+            }
+
             return false;
         }
 
@@ -213,7 +226,27 @@ namespace GeoTransformer.Transformers.SaveFiles
         /// </summary>
         private void ConvertImage(System.Drawing.Image image, string targetPath)
         {
-            using (var imageCopy = new System.Drawing.Bitmap(image.Width, image.Height, image.PixelFormat))
+            var maxSize = this.MaximumSize ?? new System.Drawing.Size(image.Width, image.Height);
+
+            var x = (double)maxSize.Width / (double)image.Width;
+            var y = (double)maxSize.Height / (double)image.Height;
+
+            var ratio = x > y ? y : x;
+            int xn, yn;
+            if (ratio < 1)
+            {
+                xn = (int)(image.Width * ratio);
+                yn = (int)(image.Height * ratio);
+                if (xn == 0) xn = 1;
+                if (yn == 0) yn = 1;
+            }
+            else
+            {
+                xn = image.Width;
+                yn = image.Height;
+            }
+
+            using (var imageCopy = new System.Drawing.Bitmap(xn, yn, image.PixelFormat))
             using (var graphics = System.Drawing.Graphics.FromImage(imageCopy))
             {
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -221,8 +254,8 @@ namespace GeoTransformer.Transformers.SaveFiles
                 graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                 graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
                 graphics.DrawImage(image,
-                    new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
                     new System.Drawing.Rectangle(0, 0, imageCopy.Width, imageCopy.Height),
+                    new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
                     System.Drawing.GraphicsUnit.Pixel);
                 graphics.Flush();
 
@@ -230,7 +263,10 @@ namespace GeoTransformer.Transformers.SaveFiles
                 if (this.DefaultEncoder.FormatID == ImageFormat.Jpeg.Guid)
                 {
                     encParams = new EncoderParameters(1);
-                    encParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+
+                    // for thumbnail sized images use higher quality.
+                    long quality = (imageCopy.Width > 200 && imageCopy.Height > 200) ? 95 : 90;
+                    encParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
                 }
                 else
                 {

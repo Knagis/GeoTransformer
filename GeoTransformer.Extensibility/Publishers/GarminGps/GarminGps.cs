@@ -44,7 +44,8 @@ namespace GeoTransformer.Publishers.GarminGps
                         RemoveObsoleteImages = true,
                         ImageRootPath = System.IO.Path.Combine(pathRoot, "Garmin", "GeocachePhotos"),
                         EncodeEverything = true,
-                        PublishLogImages = true
+                        PublishLogImages = true,
+                        MaximumSize = new Size(600, 600)
                     },
             };
 #if DEBUG
