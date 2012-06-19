@@ -23,7 +23,7 @@ namespace GeoTransformer
             { Version.Parse("4.2.0.2"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
                                         "Added ability to publish images to Garmin GPS devices (configurable)." + Environment.NewLine +
                                         "Added an option to load geocache images from Live API (works for basic members)." + Environment.NewLine +
-                                        "Added an option to load all advanced data (such as favorite points and images) from Live API)." + Environment.NewLine +
+                                        "Added an option to load all advanced data (such as favorite points and images) from Live API." + Environment.NewLine +
                                         "Fixed some bugs related to removing edited data." + Environment.NewLine +
                                         "Added ability to import XML files with invalid characters in them." + Environment.NewLine +
                                         "Edited geocaches that are not currently loaded are refreshed every week." },
