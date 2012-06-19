@@ -176,7 +176,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                 while (result.Status.StatusCode == 0)
                 {
                     foreach (var gc in result.Geocaches)
-                        gpx.Waypoints.Add(new Gpx.GpxWaypoint(gc));
+                        gpx.Waypoints.Add(new Gpx.GpxWaypoint(gc) { LastRefresh = DateTime.Now });
 
                     loaded += result.Geocaches.Length;
                     this.ReportProgress(loaded, q.MaximumCaches);

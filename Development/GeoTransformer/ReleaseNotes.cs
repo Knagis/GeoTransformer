@@ -25,7 +25,8 @@ namespace GeoTransformer
                                         "Added an option to load geocache images from Live API (works for basic members)." + Environment.NewLine +
                                         "Added an option to load all advanced data (such as favorite points and images) from Live API)." + Environment.NewLine +
                                         "Fixed some bugs related to removing edited data." + Environment.NewLine +
-                                        "Added ability to import XML files with invalid characters in them." },
+                                        "Added ability to import XML files with invalid characters in them." + Environment.NewLine +
+                                        "Edited geocaches that are not currently loaded are refreshed every week." },
             { Version.Parse("4.1.0.0"), "Added an option to put geocache attributes in a log entry so it can be read on GPS." + Environment.NewLine +
                                         "Added an option to select which caches should be ignored when publishing." + Environment.NewLine +
                                         "Added support for loading GPX 1.1 files." + Environment.NewLine + 
