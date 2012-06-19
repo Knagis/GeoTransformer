@@ -88,7 +88,9 @@ namespace GeoTransformer.Transformers.EditorExtensions
                             gpx = null;
                     }
 
-                    if (gpx == null && tempResult.Key.StartsWith("GC", StringComparison.OrdinalIgnoreCase)
+                    // refresh the cached copy if it is older than 7 days
+                    if ((gpx == null || gpx.LastRefresh.GetValueOrDefault() < DateTime.Now.AddDays(-7))
+                        && tempResult.Key.StartsWith("GC", StringComparison.OrdinalIgnoreCase)
                         && (options & TransformerOptions.UseLocalStorage) == 0)
                     {
                         this.TerminateExecutionIfNeeded();
@@ -102,6 +104,7 @@ namespace GeoTransformer.Transformers.EditorExtensions
                         if (online != null)
                         {
                             gpx = new Gpx.GpxWaypoint(online);
+                            gpx.LastRefresh = DateTime.Now;
 
                             // as the CachedCopy should have been in the database already and loading from the Live API
                             // is an exception, save it right now.
