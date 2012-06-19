@@ -75,7 +75,6 @@ namespace GeoTransformer.Viewers.CacheEditor
                 this.BindElement(null);
             }
 
-            Extensions.ExtensionLoader.ApplicationService.RefreshCacheList();
             Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element == null ? null : this._element.Name);
         }
 

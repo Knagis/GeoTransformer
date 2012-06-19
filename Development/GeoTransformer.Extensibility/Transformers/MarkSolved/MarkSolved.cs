@@ -102,10 +102,11 @@ namespace GeoTransformer.Transformers.MarkSolved
 
             var configElement = this._boundWaypoint.FindExtensionElement(typeof(MarkSolved), true);
 
-            if (string.Equals(configElement.Value, this._editorControl.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+            bool v = !string.IsNullOrEmpty(configElement.Value) && bool.Parse(configElement.Value);
+            if (v == this._editorControl.Value)
                 return;
                 
-            configElement.Value = this._editorControl.Value.ToString();
+            configElement.Value = this._editorControl.Value ? Boolean.TrueString : null;
             UpdateWaypoint(this._boundWaypoint, this._editorControl.Value);
         }
 

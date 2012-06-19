@@ -54,7 +54,8 @@ namespace GeoTransformer.Viewers.TableView
             return data.SelectMany(o => o.Waypoints)
                 .Where(o => o.Geocache.IsDefined()
                 && (string.Equals(bool.TrueString, o.FindExtensionAttributeValue("EditorOnly"), StringComparison.OrdinalIgnoreCase)
-                   || o.ExtensionElements.Any(e => e.Name.Namespace == XmlExtensions.GeoTransformerSchema)));
+                   || o.ExtensionElements.Any(e => e.Name.Namespace == XmlExtensions.GeoTransformerSchema 
+                                                    && e.ContainsSignificantInformation())));
         }
     }
 }
