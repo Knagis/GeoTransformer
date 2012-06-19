@@ -144,7 +144,13 @@ namespace GeoTransformer.Data
                     if (newVersion < column.Version)
                         newVersion = column.Version;
 
-                    if (string.Equals(column.Name, "RowId", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(column.Name, "\"oid\"", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "oid", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "\"_RowId_\"", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "_RowId_", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "RowId", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "\"RowId\"", StringComparison.OrdinalIgnoreCase)
+                        )
                         continue;
 
                     if (!first) sb.Append(", ");
@@ -271,10 +277,10 @@ namespace GeoTransformer.Data
             this._name = "\"" + name + "\"";
             this._version = version;
 
-            this.AddColumn<long>("RowId", 1);
+            this.AddColumn<long>("oid", 1);
         }
 
-        public DatabaseColumn<long> RowId { get { return this.GetColumn<long>("RowId"); } }
+        public DatabaseColumn<long> RowId { get { return this.GetColumn<long>("oid"); } }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
