@@ -10,12 +10,18 @@ using System.Text;
 
 namespace GeoTransformer
 {
-    static class ReleaseNotes
+    /// <summary>
+    /// Class contains all release notes since version 2.3 and method to display them to the user.
+    /// </summary>
+    internal static class ReleaseNotes
     {
-        public static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
+        /// <summary>
+        /// Dictionary containing all release notes for each version.
+        /// </summary>
+        private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
-            { Version.Parse("4.2.0.1"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
-                                        "Added ability to publish images to Garmin GPS devices." + Environment.NewLine +
+            { Version.Parse("4.2.0.2"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
+                                        "Added ability to publish images to Garmin GPS devices (configurable)." + Environment.NewLine +
                                         "Added an option to load geocache images from Live API (works for basic members)." + Environment.NewLine +
                                         "Added an option to load all advanced data (such as favorite points and images) from Live API)." + Environment.NewLine +
                                         "Fixed some bugs related to removing edited data." + Environment.NewLine +
@@ -50,6 +56,9 @@ namespace GeoTransformer
                                         "Deletion of rows is much more straight-forward." }
         };
 
+        /// <summary>
+        /// Updates the database by storing the last version for which the release notes were shown to the user.
+        /// </summary>
         private static void UpdateLastVersionShown()
         {
             var q = Program.Database.Settings.Update();
@@ -64,6 +73,9 @@ namespace GeoTransformer
             }
         }
 
+        /// <summary>
+        /// Checks if there are any release notes that need to be shown to the user and displays them.
+        /// </summary>
         public static void ShowReleaseNotes()
         {
             var q = Program.Database.Settings.Select();

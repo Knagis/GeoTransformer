@@ -13,7 +13,7 @@ namespace GeoTransformer.Publishers.GarminGps
     /// <summary>
     /// An extension for publishing GPX files directly to Garmin GPS devices.
     /// </summary>
-    public class GarminGps : Extensions.IPublisher
+    public class GarminGps : Extensions.IPublisher, Extensions.IConfigurable
     {
         IList<PublisherTarget> _currentTargets;
 
@@ -41,11 +41,11 @@ namespace GeoTransformer.Publishers.GarminGps
                 new Transformers.SaveFiles.SaveFiles(path, path),
                 new Transformers.SaveFiles.SaveImages(new PathGenerator(pathRoot).CreateImagePath)
                     {
-                        RemoveObsoleteImages = true,
+                        RemoveObsoleteImages = this._configurationControl.RemoveExistingImages,
                         ImageRootPath = System.IO.Path.Combine(pathRoot, "Garmin", "GeocachePhotos"),
                         EncodeEverything = true,
-                        PublishLogImages = true,
-                        MaximumSize = new Size(600, 600)
+                        PublishLogImages = this._configurationControl.PublishLogImages,
+                        MaximumSize = this._configurationControl.PublishImageSize
                     },
             };
 #if DEBUG
@@ -175,6 +175,51 @@ namespace GeoTransformer.Publishers.GarminGps
             if (this._currentTargets == null)
                 this._currentTargets = result;
             return result;
+        }
+
+        private Configuration _configurationControl;
+
+        /// <summary>
+        /// Initializes the extension with the specified current configuration (can be <c>null</c> if the extension is initialized for the very first time) and
+        /// returns the configuration UI control (can return <c>null</c> if the user interface is not needed).
+        /// </summary>
+        /// <param name="currentConfiguration">The current configuration.</param>
+        /// <returns>
+        /// The configuration UI control.
+        /// </returns>
+        public System.Windows.Forms.Control Initialize(byte[] currentConfiguration)
+        {
+            return this._configurationControl = new Configuration(currentConfiguration);
+        }
+
+        /// <summary>
+        /// Retrieves the configuration from the extension's configuration UI control.
+        /// </summary>
+        /// <returns>
+        /// The serialized configuration data.
+        /// </returns>
+        public byte[] SerializeConfiguration()
+        {
+            return this._configurationControl.Serialize();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the this extension should be executed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this extension is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEnabled
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Gets the category of the extension.
+        /// </summary>
+        public Extensions.Category Category
+        {
+            get { return new Extensions.Category(3000, "Publish to Garmin GPS"); }
         }
     }
 }
