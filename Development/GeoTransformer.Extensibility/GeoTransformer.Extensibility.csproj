@@ -185,6 +185,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Publishers\GarminGps\Configuration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Publishers\GarminGps\Configuration.Designer.cs">
+      <DependentUpon>Configuration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Publishers\GarminGps\GarminGps.cs" />
     <Compile Include="Publishers\GarminGps\PathGenerator.cs" />
     <Compile Include="Publishers\MagellanGps\MagellanGps.cs" />
@@ -443,6 +449,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Publishers\GarminGps\Configuration.resx">
+      <DependentUpon>Configuration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Transformers\AdditionalHints\EditorControl.resx">
       <DependentUpon>EditorControl.cs</DependentUpon>
