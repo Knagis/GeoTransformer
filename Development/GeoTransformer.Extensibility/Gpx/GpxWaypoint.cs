@@ -62,7 +62,7 @@ namespace GeoTransformer.Gpx
             { XmlExtensions.GpxSchema_1_1 + "ageofdgpsdata", (o, e) => o.DgpsDataAge = XmlConvert.ToDecimal(e.Value) },
             { XmlExtensions.GpxSchema_1_0 + "dgpsid", (o, e) => o.DgpsDataAge = XmlConvert.ToUInt16(e.Value) },
             { XmlExtensions.GpxSchema_1_1 + "dgpsid", (o, e) => o.DgpsDataAge = XmlConvert.ToUInt16(e.Value) },
-            { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxWaypoint>(e, null, null) },
+            { XmlExtensions.GpxSchema_1_1 + "extensions", (o, e) => o.Initialize<GpxWaypoint>(e, null, _elementInitializers) },
 
             { XmlExtensions.GeocacheSchema_1_0_0 + "cache", (o, e) => o.Geocache = new Geocache(e) },
             { XmlExtensions.GeocacheSchema_1_0_1 + "cache", (o, e) => o.Geocache = new Geocache(e) },
@@ -343,8 +343,8 @@ namespace GeoTransformer.Gpx
                 if (options.GpxVersion == GpxVersion.Gpx_1_0)
                 {
                     el.Add(this.Geocache.Serialize(options));
-                    if (this.CreationTime.HasValue)
-                        el.Add(new XElement(XmlExtensions.GeoTransformerSchema + "lastRefresh", this.CreationTime.Value));
+                    if (this.LastRefresh.HasValue)
+                        el.Add(new XElement(XmlExtensions.GeoTransformerSchema + "lastRefresh", this.LastRefresh.Value));
 
                     if (options.EnableUnsupportedExtensions)
                         foreach (var ext in this.ExtensionAttributes)
@@ -361,9 +361,9 @@ namespace GeoTransformer.Gpx
 
                     var extel = new XElement(options.GpxNamespace + "extensions");
 
-                    el.Add(this.Geocache.Serialize(options));
-                    if (this.CreationTime.HasValue)
-                        el.Add(new XElement(XmlExtensions.GeoTransformerSchema + "lastRefresh", this.CreationTime.Value));
+                    extel.Add(this.Geocache.Serialize(options));
+                    if (this.LastRefresh.HasValue)
+                        extel.Add(new XElement(XmlExtensions.GeoTransformerSchema + "lastRefresh", this.LastRefresh.Value));
 
                     foreach (var elem in this.ExtensionElements)
                         extel.Add(new XElement(elem));
