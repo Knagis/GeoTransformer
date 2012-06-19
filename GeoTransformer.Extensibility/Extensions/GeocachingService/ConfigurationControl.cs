@@ -112,8 +112,13 @@ namespace GeoTransformer.Extensions.GeocachingService
             this.pictureBoxAvatar.ImageLocation = null;
         }
 
+        /// <summary>
+        /// Opens the modal form that displays the OAuth page for Live API.
+        /// </summary>
         private void OpenAuthenticationForm()
         {
+            this.UserProfile = null;
+
             var dlg = new AuthenticationForm();
             var result = dlg.ShowDialog();
             if (result != DialogResult.OK || string.IsNullOrEmpty(dlg.AccessToken))
