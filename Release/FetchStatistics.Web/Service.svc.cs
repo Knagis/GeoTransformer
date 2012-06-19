@@ -47,11 +47,13 @@ namespace FetchStatistics.Web
                 q.OrderBy(o => o.LastUpdated);
                 q.Select(o => o.Id);
 
+                var randomizer = new Random();
+
                 // the code tries to divide the work even if multiple users request the work at the same time
                 return q.Execute()
                             .AsEnumerable()
                             .Select(o => Guid.Parse(o.Value(t => t.Id)))
-                            .OrderBy(o => Guid.NewGuid()) // randomize the 30 oldest entries
+                            .OrderBy(o => randomizer.Next()) // randomize the 30 oldest entries
                             .Take(10) // return 10 of them
                             .ToArray();
             }
@@ -64,7 +66,32 @@ namespace FetchStatistics.Web
                 return;
 
             if (data.CacheFinds < 400)
+            {
+                using (var schema = InitializeConnection())
+                {
+                    var q = schema.Statistics.Select();
+                    q.Select(o => o.StatisticsXml);
+                    q.Select(o => o.LastUpdated);
+                    q.Where(o => o.Id, data.UserId.ToString());
+                    var res = q.Execute();
+
+                    // if the user is not present in the database already, do not add him
+                    if (!res.Read())
+                        return;
+
+                    // do not remove the data from database if it was OK during the last month
+                    // this will prevent a bad user from easily deleting a user.
+                    var upd = res.Value(o => o.LastUpdated);
+                    if (upd == null || upd.Value > DateTime.Now.AddMonths(-1))
+                        return;
+
+                    var delq = schema.Statistics.Delete();
+                    delq.Where(o => o.Id, data.UserId.ToString());
+                    delq.Execute();
+                }
+
                 return;
+            }
 
             if (string.IsNullOrWhiteSpace(data.UserName))
                 return;

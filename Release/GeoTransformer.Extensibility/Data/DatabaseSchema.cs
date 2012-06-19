@@ -37,6 +37,17 @@ namespace GeoTransformer.Data
             return this._database;
         }
 
+        /// <summary>
+        /// Gets the value indicating if string columns will be created as "collate nocase".
+        /// </summary>
+        /// <remarks>
+        /// More details on the collate option: http://www.sqlite.org/datatype3.html#collation.
+        /// </remarks>
+        protected virtual bool CreateStringColumnsCaseInsensitive
+        {
+            get { return false; }
+        }
+
         #region IDatabaseSchema Members
 
         private Dictionary<Type, IDatabaseTable> _tables = new Dictionary<Type, IDatabaseTable>();
@@ -133,7 +144,13 @@ namespace GeoTransformer.Data
                     if (newVersion < column.Version)
                         newVersion = column.Version;
 
-                    if (string.Equals(column.Name, "RowId", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(column.Name, "\"oid\"", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "oid", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "\"_RowId_\"", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "_RowId_", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "RowId", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(column.Name, "\"RowId\"", StringComparison.OrdinalIgnoreCase)
+                        )
                         continue;
 
                     if (!first) sb.Append(", ");
@@ -142,6 +159,8 @@ namespace GeoTransformer.Data
                     sb.Append(column.Name);
                     sb.Append(" ");
                     sb.Append(column.DataTypeName);
+                    if (column.DataType == System.Data.SQLite.TypeAffinity.Text && this.CreateStringColumnsCaseInsensitive)
+                        sb.Append(" collate nocase");
                 }
                 sb.Append(")");
                 this._database.ExecuteNonQuery(sb.ToString());
@@ -179,7 +198,10 @@ namespace GeoTransformer.Data
         }
         private long EnsureSchema(long currentVersion, IDatabaseColumn column)
         {
-            this._database.ExecuteNonQuery("alter table " + column.Table.Name + " add column " + column.Name + " " + column.DataTypeName);
+            if (column.DataType == System.Data.SQLite.TypeAffinity.Text && this.CreateStringColumnsCaseInsensitive)
+                this._database.ExecuteNonQuery("alter table " + column.Table.Name + " add column " + column.Name + " " + column.DataTypeName + " collate nocase");
+            else
+                this._database.ExecuteNonQuery("alter table " + column.Table.Name + " add column " + column.Name + " " + column.DataTypeName);
             return column.Version;
         }
         private long EnsureSchema(long currentVersion, IDatabaseIndex index)
@@ -201,6 +223,8 @@ namespace GeoTransformer.Data
                 if (!first) sb.Append(", ");
                 first = false;
                 sb.Append(col);
+                if (col.DataType == System.Data.SQLite.TypeAffinity.Text && this.CreateStringColumnsCaseInsensitive)
+                    sb.Append(" collate nocase");
             }
             sb.Append(");");
             this._database.ExecuteNonQuery(sb.ToString());
@@ -253,10 +277,10 @@ namespace GeoTransformer.Data
             this._name = "\"" + name + "\"";
             this._version = version;
 
-            this.AddColumn<long>("RowId", 1);
+            this.AddColumn<long>("oid", 1);
         }
 
-        public DatabaseColumn<long> RowId { get { return this.GetColumn<long>("RowId"); } }
+        public DatabaseColumn<long> RowId { get { return this.GetColumn<long>("oid"); } }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

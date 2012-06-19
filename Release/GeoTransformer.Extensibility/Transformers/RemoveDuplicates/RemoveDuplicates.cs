@@ -33,7 +33,7 @@ namespace GeoTransformer.Transformers.RemoveDuplicates
         /// </summary>
         public override ExecutionOrder ExecutionOrder
         {
-            get { return Transformers.ExecutionOrder.PreProcess; }
+            get { return Transformers.ExecutionOrder.PreProcess - 100; }
         }
 
         /// <summary>
@@ -82,7 +82,9 @@ namespace GeoTransformer.Transformers.RemoveDuplicates
                     var candidateTime = ReadGpxTime(doc, wpt);
 
                     if (candidateTime < currentTime)
+                    {
                         doc.Waypoints.RemoveAt(i);
+                    }
                     else
                     {
                         current.Item1.Waypoints.Remove(current.Item2);
@@ -173,7 +175,7 @@ codes) leaves only the newest copy.");
         /// <summary>
         /// Gets the category of the extension.
         /// </summary>
-        Category IHasCategory.Category { get { return Category.Transformers; } }
+        Category IHasCategory.Category { get { return Category.GeocacheSources; } }
 
     }
 }

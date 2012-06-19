@@ -393,8 +393,7 @@
             this.toolStripExport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripExport.Name = "toolStripExport";
             this.toolStripExport.Size = new System.Drawing.Size(83, 28);
-            this.toolStripExport.Text = "Publish";
-            this.toolStripExport.DropDownOpening += new System.EventHandler(this.toolStripExport_DropDownOpening);
+            this.toolStripExport.Text = "Export / Publish";
             // 
             // toolStripDropDownHelp
             // 

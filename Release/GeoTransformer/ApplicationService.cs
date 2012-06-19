@@ -51,10 +51,13 @@ namespace GeoTransformer
         /// <param name="selectForEditing">If set to <c>true</c> then an empty placeholder cache will be created for the editor.</param>
         public void SelectWaypoint(string name, bool selectForEditing)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                return;
-
             this._form.listViewers.ChangeSelectedWaypoint(name);
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                this._form.cacheViewers.DisplayWaypoints(new System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint>(new Gpx.GpxWaypoint[0]));
+                return;
+            }
 
             var data = this._form.listViewers.LoadedGpxFiles;
             if (data == null)
@@ -95,7 +98,10 @@ namespace GeoTransformer
                 this._PlaceholderCacheTarget.Waypoints.Add(waypoint);
             }
 
-            this._form.cacheViewers.DisplayWaypoints(new System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint>(new Gpx.GpxWaypoint[] { waypoint }));
+            if (waypoint == null)
+                this._form.cacheViewers.DisplayWaypoints(new System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint>(new Gpx.GpxWaypoint[0]));
+            else
+                this._form.cacheViewers.DisplayWaypoints(new System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint>(new Gpx.GpxWaypoint[] { waypoint }));
         }
 
         /// <summary>

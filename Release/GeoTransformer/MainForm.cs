@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -92,21 +92,128 @@ namespace GeoTransformer
 
         #region [ Transforming and publishing ]
 
-        private void TransformToFolder(string targetCacheDirectory, string targetWaypointDirectory, bool isUsbDevice)
+        private IList<IPublisher> _publisherExtensions = new List<IPublisher>();
+
+        /// <summary>
+        /// Synchronization for the <see cref="NotifyPublishers"/> method. Used so that when many device related messages
+        /// arrive, the notifications are not raised simultaneously.
+        /// </summary>
+        private System.Threading.AutoResetEvent _publisherNotificationRequired = new System.Threading.AutoResetEvent(false);
+
+        /// <summary>
+        /// Notifies the publishers that devices have been changed.
+        /// </summary>
+        private void NotifyPublishers()
         {
-            this.SaveData();
+            while (_publisherNotificationRequired.WaitOne())
+            {
+                // sleep for 150ms and then reset the synchronization event so that all device events that happened within
+                // these 150ms are handled by a single iteration to publishers.
+                System.Threading.Thread.Sleep(150);
+                this._publisherNotificationRequired.Reset();
 
-            if (targetCacheDirectory != null && !System.IO.Directory.Exists(targetCacheDirectory)) System.IO.Directory.CreateDirectory(targetCacheDirectory);
-            if (targetWaypointDirectory != null && !System.IO.Directory.Exists(targetWaypointDirectory)) System.IO.Directory.CreateDirectory(targetWaypointDirectory);
+                foreach (var p in this._publisherExtensions)
+                    p.NotifyDevicesChanged();
+            }
+        }
 
-            var transformers = ExtensionLoader.RetrieveExtensions<Extensions.ITransformer>().ToList();
-            transformers.Add(new Transformers.SaveFiles(targetCacheDirectory, targetWaypointDirectory));
+        private void PublisherClick(object sender, EventArgs args)
+        {
+            var item = sender as ToolStripMenuItem;
+            if (item == null || item.DropDownItems.Count > 0)
+                return;
 
-            if (isUsbDevice)
-                transformers.Add(new Transformers.SafelyRemoveGps(new System.IO.FileInfo(targetCacheDirectory).Directory.Root.FullName));
+            var target = item.Tag as Publishers.PublisherTarget;
+            if (target == null)
+                return;
 
-            using (var frm = new TransformProgress(transformers, Transformers.TransformerOptions.None))
-                frm.ShowDialog(this);
+            bool cancel;
+
+            IEnumerable<Extensions.ITransformer> additionalTransformers = null;
+            try
+            {
+                additionalTransformers = target.Publisher.GetSpecialTransformers(target, out cancel);
+                if (cancel)
+                    return;
+
+                var transformers = ExtensionLoader.RetrieveExtensions<Extensions.ITransformer>().ToList();
+                if (additionalTransformers != null)
+                    transformers.AddRange(additionalTransformers);
+
+                using (var frm = new TransformProgress(transformers, Transformers.TransformerOptions.None))
+                    frm.ShowDialog(this);
+            }
+            finally
+            {
+                if (additionalTransformers != null)
+                    foreach (var at in additionalTransformers)
+                    {
+                        var disp = at as IDisposable;
+                        if (disp != null)
+                            disp.Dispose();
+                    }
+            }
+        }
+
+        private void UpdatePublisherTargets(Extensions.IPublisher publisher, IEnumerable<Publishers.PublisherTarget> targets)
+        {
+            for (int i = this.toolStripExport.DropDownItems.Count - 1; i >= 0; i--)
+            {
+                var btn = this.toolStripExport.DropDownItems[i];
+                var target = btn.Tag as Publishers.PublisherTarget;
+                if (target != null && target.Publisher == publisher)
+                    this.Invoke(() => this.toolStripExport.DropDownItems.RemoveAt(i));
+            }
+
+            var existing = this.toolStripExport.DropDownItems.Cast<ToolStripItem>().Select(o => o.Text).ToList();
+            int added = 0;
+            int index = 0;
+            foreach (var t in targets.OrderBy(o => o.Text))
+            {
+                var btn = new ToolStripMenuItem(t.Text);
+                btn.Tag = t;
+                btn.Image = t.Icon;
+                btn.Click += this.PublisherClick;
+
+                if (t.Children.Count > 0)
+                    this.InitializePublisherChildItems(btn, t);
+
+                index = existing.FindIndex(index, o => string.CompareOrdinal(o, t.Text) > 0);
+                if (index == -1) index = existing.Count;
+                this.Invoke(() => this.toolStripExport.DropDownItems.Insert(index + added, btn));
+                added++;
+            }
+        }
+
+        private void InitializePublisherChildItems(ToolStripMenuItem parent, Publishers.PublisherTarget target)
+        {
+            foreach (var c in target.Children)
+            {
+                var cbtn = new ToolStripMenuItem(c.Text);
+                cbtn.Tag = c;
+                cbtn.Image = c.Icon;
+                cbtn.Click += this.PublisherClick;
+                parent.DropDownItems.Add(cbtn);
+
+                if (target.Children.Count > 0)
+                    this.InitializePublisherChildItems(cbtn, c);
+            }
+        }
+
+        private void InitializePublishers()
+        {
+            this._publisherNotificationRequired.Reset();
+
+            foreach (var publisher in Extensions.ExtensionLoader.RetrieveExtensions<Extensions.IPublisher>())
+            {
+                publisher.TargetsChanged += (a, b) => this.UpdatePublisherTargets((IPublisher)a, b.Targets);
+                this.UpdatePublisherTargets(publisher, publisher.Initialize());
+                this._publisherExtensions.Add(publisher);
+            }
+
+            var thread = new System.Threading.Thread(this.NotifyPublishers);
+            thread.Name = "MainForm.NotifyPublishers";
+            thread.Start();
         }
 
         #endregion
@@ -182,6 +289,7 @@ namespace GeoTransformer
 
             this.LoadSettings();
             this.InitializeExtensionConfiguration();
+            new System.Threading.Thread(this.InitializePublishers).Start();
 
             this.labelVersion2.Text = "Application version: " + Application.ProductVersion;
 
@@ -198,6 +306,26 @@ namespace GeoTransformer
 
                 this.tabControl.Controls.Add(tp);
             }
+        }
+
+        /// <summary>
+        /// Processes the Windows message.
+        /// </summary>
+        /// <param name="m">The Windows <see cref="T:System.Windows.Forms.Message"/> to process.</param>
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x0219 /*WM_DEVICECHANGE*/)
+            {
+                var wp = m.WParam.ToInt32();
+                if (wp == 0x0007 /*DBT_DEVNODES_CHANGED - raised by "Portable devices" in My Computer*/
+                    || wp == 0x8000 /*DBT_DEVICEARRIVAL*/
+                    || wp == 0x8004 /*DBT_DEVICEREMOVECOMPLETE*/)
+                {
+                    this._publisherNotificationRequired.Set();
+                }
+            }
+
+            base.WndProc(ref m);
         }
 
         private void CustomTabPageEntered(object sender, EventArgs e)
@@ -279,77 +407,6 @@ namespace GeoTransformer
         #endregion
 
         #region [ Event handlers for buttons ]
-
-        private void toolStripExport_DropDownOpening(object sender, EventArgs e)
-        {
-            this.toolStripExport.DropDownItems.Clear();
-
-            this.toolStripExport.DropDownItems.Add("Browse...", Properties.Resources.Folder, (s, args) =>
-            {
-                this.folderBrowserDialog.SelectedPath = Program.Database.RecentPublishFolders.ReadPaths().FirstOrDefault() ?? Application.StartupPath;
-                var res = this.folderBrowserDialog.ShowDialog();
-                if (res != System.Windows.Forms.DialogResult.OK)
-                    return;
-
-                Program.Database.RecentPublishFolders.SaveRecentFolder(this.folderBrowserDialog.SelectedPath);
-                this.TransformToFolder(this.folderBrowserDialog.SelectedPath, null, false);
-            });
-
-            var paths = Program.Database.RecentPublishFolders.ReadPaths().ToList();
-            if (paths.Count > 0)
-            {
-                var menu = new ToolStripMenuItem("Recent folders");
-                foreach (var p in paths)
-                {
-                    var localP = p;
-                    menu.DropDownItems.Add(p, Properties.Resources.Folder, (s, args) => { Program.Database.RecentPublishFolders.SaveRecentFolder(localP); this.TransformToFolder(localP, null, false); });
-                }
-                this.toolStripExport.DropDownItems.Add(menu);
-            }
-
-            foreach (var drive in System.IO.DriveInfo.GetDrives())
-            {
-                if (drive.DriveType != System.IO.DriveType.Removable || !drive.IsReady)
-                    continue;
-
-                var img = Properties.Resources.Removable;
-                var label = drive.VolumeLabel;
-                if (System.IO.File.Exists(System.IO.Path.Combine(drive.RootDirectory.FullName, "autorun.inf")))
-                {
-                    var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(drive.RootDirectory.FullName, "autorun.inf"))
-                        .SkipWhile(o => !string.Equals(o.Trim(), "[autorun]", StringComparison.OrdinalIgnoreCase))
-                        .Skip(1)
-                        .TakeWhile(o => !o.Trim().StartsWith("[", StringComparison.Ordinal));
-
-                    var imgFile = lines.Where(o => o.StartsWith("icon", StringComparison.OrdinalIgnoreCase))
-                                       .Select(o => System.IO.Path.Combine(drive.RootDirectory.FullName, o.Substring(o.IndexOf("=") + 1)))
-                                       .FirstOrDefault();
-                    if (imgFile != null && imgFile.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
-                    {
-                        using (var icon = new Icon(imgFile, 24, 24))
-                            img = icon.ToBitmap();
-                    }
-                    label = lines.Where(o => o.StartsWith("label", StringComparison.OrdinalIgnoreCase))
-                                  .Select(o => o.Substring(o.IndexOf("=") + 1))
-                                  .FirstOrDefault() ?? label;
-                }
-
-                if (drive.VolumeLabel.StartsWith("Garmin", StringComparison.OrdinalIgnoreCase) || label.StartsWith("Garmin", StringComparison.OrdinalIgnoreCase))
-                {
-                    var dir = System.IO.Path.Combine(drive.RootDirectory.FullName, "Garmin", "GPX");
-                    this.toolStripExport.DropDownItems.Add(label + " (" + drive.RootDirectory.FullName + ")", img, (s, args) => { this.TransformToFolder(dir, null, true); });
-                    continue;
-                }
-                if (drive.VolumeLabel.StartsWith("MAGELLAN", StringComparison.OrdinalIgnoreCase) || label.StartsWith("MAGELLAN", StringComparison.OrdinalIgnoreCase))
-                {
-                    var dir = System.IO.Path.Combine(drive.RootDirectory.FullName, "Geocaches");
-                    var wptdir = System.IO.Path.Combine(drive.RootDirectory.FullName, "Waypoints");
-                    this.toolStripExport.DropDownItems.Add(label + " (" + drive.RootDirectory.FullName + ")", img, (s, args) => { this.TransformToFolder(dir, wptdir, true); });
-                    continue;
-                }
-            }
-
-        }
 
         private void toolStripSave_Click(object sender, EventArgs e)
         {

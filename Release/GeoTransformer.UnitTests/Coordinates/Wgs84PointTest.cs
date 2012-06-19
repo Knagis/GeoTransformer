@@ -107,6 +107,9 @@ namespace GeoTransformer.UnitTests.Coordinates
                 { "N 01° 01.001 E 001° 01.001", 1.01668M, 1.01668M },
                 { "S 01° 01.001 W 001° 01.001", -1.01668M, -1.01668M },
 
+                // test if the comma is correctly ignored in the middle
+                { "N56 41.180, E23 47.904", 56.68633M, 23.7984M },
+
             };
 
             for (int i = 0; i < data.GetLength(0); i++)

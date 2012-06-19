@@ -37,7 +37,8 @@ namespace GeoTransformer.Viewers.BingMaps
         private bool _firstRequest = true;
         private bool _iconsCreated;
         private bool _setBoundsCalled;
-        private Dictionary<string, Gpx.GpxWaypoint> _pushpinCache = new Dictionary<string, Gpx.GpxWaypoint>();
+        private Dictionary<string, Gpx.GpxWaypoint> _pushpinCache = new Dictionary<string, Gpx.GpxWaypoint>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, int> _pushpinScriptHashes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Creates the control that will display the caches in the main form. The method is called only once and after that the control is reused.
@@ -146,6 +147,7 @@ namespace GeoTransformer.Viewers.BingMaps
         public void DisplayCaches(IList<Gpx.GpxDocument> data, System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> selected)
         {
             this._pushpinCache.Clear();
+            this._pushpinScriptHashes.Clear();
 
             if (this._firstRequest)
             {
@@ -155,7 +157,7 @@ namespace GeoTransformer.Viewers.BingMaps
             }
             else
             {
-                this._browser.Invoke(() => this.CreateMapUpdateScript(data));
+                this.CreateMapUpdateScript(data);
             }
 
             this._browser.ObjectForScripting = this;
@@ -177,46 +179,36 @@ namespace GeoTransformer.Viewers.BingMaps
 
         private string CreateMapPage(IEnumerable<Gpx.GpxDocument> data)
         {
-            var iconRoot = this.CreateCacheIconUri(null);
-
             var sb = new StringBuilder();
-            sb.Append(@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"">
-<html xmlns=""http://www.w3.org/1999/xhtml"">
-<head >
-    <script src=""http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"" type=""text/javascript""></script>
-    <meta http-equiv=""Content-type"" content=""text/html;charset=UTF-8"" /> 
-    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" /> 
-    <script type=""text/javascript"">
-        var map;
-        var pushpin;
-        var iconRoot = '");
-            sb.Append(iconRoot.ToString());
-            sb.Append(@"/';
-        function createPP(lat, lon, code, icon, desc) {
-            pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(lat, lon), { icon: iconRoot + icon, width: 16, height: 16, typeName: 'pin', id: code });
-            Microsoft.Maps.Events.addHandler(pushpin, 'click', function() { window.external.PushpinOnClick(code) });
-            map.entities.push(pushpin);
-            var ppel = document.getElementById(code);
-            if (ppel != null) ppel.title = desc;
-        }
-        function createMap() {");
+            sb.Append(@"iconRoot = '");
+            sb.Append(this.CreateCacheIconUri(null).ToString());
+            sb.Append(@"/';");
             this.CreateMapScript(sb, data);
-            sb.AppendLine(@"
-            //var tileSource = new Microsoft.Maps.TileSource({ 
-            //    uriConstructor: function(tile) { return 'http://tile.openstreetmap.org/' + tile.levelOfDetail + '/' + tile.x + '/' + tile.y + '.png'; }
-            //});
-            //var tileLayer = new Microsoft.Maps.TileLayer({ mercator: tileSource, opacity: 1 });
-            //map.entities.push(tileLayer);
+
+            var html = Resources.MapTemplate;
+            html = html.Replace("/*SCRIPT_GOES_HERE*/", sb.ToString());
+            return html;
         }
-    </script>
-    <style type=""text/css"">
-        body, html { overflow: hidden }
-        .pin { cursor: pointer; }
-    </style>
-</head>
-<body onload=""createMap();""></body>
-</html>");
-            return sb.ToString();
+
+        /// <summary>
+        /// Executes the given JavaScript code on the embedded browser. Performs invoke on the UI thread if needed.
+        /// </summary>
+        /// <param name="script">The JavaScript code to execute.</param>
+        private void ExecuteScript(string script)
+        {
+            if (string.IsNullOrWhiteSpace(script))
+                return;
+
+            if (this._browser.InvokeRequired)
+            {
+                this._browser.Invoke(() => this.ExecuteScript(script));
+                return;
+            }
+
+            var element = this._browser.Document.CreateElement("script");
+            element.SetAttribute("type", "text/javascript");
+            element.SetAttribute("text", script);
+            this._browser.Document.Body.InsertAdjacentElement(System.Windows.Forms.HtmlElementInsertionOrientation.BeforeEnd, element);
         }
 
         private void CreateMapUpdateScript(IEnumerable<Gpx.GpxDocument> data)
@@ -226,10 +218,7 @@ namespace GeoTransformer.Viewers.BingMaps
 
             this.CreatePushpins(sb, data.SelectMany(o => o.Waypoints));
 
-            var script = this._browser.Document.CreateElement("script");
-            script.SetAttribute("type", "text/javascript");
-            script.SetAttribute("text", sb.ToString());
-            this._browser.Document.Body.InsertAdjacentElement(System.Windows.Forms.HtmlElementInsertionOrientation.BeforeEnd, script);
+            this.ExecuteScript(sb.ToString());
         }
 
         private void CreateMapScript(StringBuilder sb, IEnumerable<Gpx.GpxDocument> data)
@@ -252,6 +241,10 @@ namespace GeoTransformer.Viewers.BingMaps
                 if (!wpt.Geocache.IsDefined())
                     continue;
 
+                // monitor all waypoint even those that currently are not displayed
+                wpt.PropertyChanged -= this.UpdatePushpin;
+                wpt.PropertyChanged += this.UpdatePushpin;
+
                 var editorOnly = string.Equals(wpt.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase);
                 Transformers.ManualPublish.ManualPublishMode publishMode;
                 Enum.TryParse(wpt.FindExtensionElement(typeof(Transformers.ManualPublish.ManualPublish)).GetValue(), out publishMode);
@@ -271,7 +264,7 @@ namespace GeoTransformer.Viewers.BingMaps
             }
         }
 
-        private void CreatePushpin(StringBuilder sb, Gpx.GpxWaypoint waypoint, ref decimal minLat, ref decimal minLon, ref decimal maxLat, ref decimal maxLon)
+        private void CreatePushpin(StringBuilder sb, Gpx.GpxWaypoint waypoint, ref decimal minLat, ref decimal minLon, ref decimal maxLat, ref decimal maxLon, string methodName = "createPP", bool avoidDuplicates = false)
         {
             var lat = waypoint.Coordinates.Latitude;
             var lon = waypoint.Coordinates.Longitude;
@@ -291,11 +284,52 @@ namespace GeoTransformer.Viewers.BingMaps
 
             var desc = waypoint.Description;
 
-            sb.AppendLine("createPP(" + lat.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", "
+            string args = "(" + lat.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", "
                                       + lon.ToString(System.Globalization.CultureInfo.InvariantCulture) + ", '" 
                                       + name.Replace("'", @"\'") + "', '" 
                                       + icon.Segments[icon.Segments.Length - 1] + "', '" 
-                                      + desc.Replace("'", @"\'") + "')");
+                                      + desc.Replace("'", @"\'") + "')";
+
+            var hash = args.GetHashCode();
+
+            // this avoids sending multiple updatePP() calls to the browser if nothing has changed.
+            if (avoidDuplicates && _pushpinScriptHashes.ContainsKey(name) && _pushpinScriptHashes[name] == hash)
+                return;
+
+            _pushpinScriptHashes[name] = hash;
+
+            sb.Append(methodName);
+            sb.AppendLine(args);
+        }
+
+        private void UpdatePushpin(object sender, Gpx.ObservableElementChangedEventArgs e)
+        {
+            var sb = new StringBuilder();
+            var waypoint = (Gpx.GpxWaypoint)sender;
+            bool exists = this._pushpinCache.ContainsKey(waypoint.Name);
+
+            // determine if the waypoint should be shown at all
+            var editorOnly = string.Equals(waypoint.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+            Transformers.ManualPublish.ManualPublishMode publishMode;
+            Enum.TryParse(waypoint.FindExtensionElement(typeof(Transformers.ManualPublish.ManualPublish)).GetValue(), out publishMode);
+            if (!waypoint.Geocache.IsDefined() 
+                || publishMode == Transformers.ManualPublish.ManualPublishMode.AlwaysSkip
+                || (editorOnly && publishMode != Transformers.ManualPublish.ManualPublishMode.AlwaysPublish))
+            {
+                if (exists)
+                {
+                    this._pushpinCache.Remove(waypoint.Name);
+                    this._pushpinScriptHashes.Remove(waypoint.Name);
+                    this.ExecuteScript("removePP('" + waypoint.Name.Replace("'", @"\'") + "')");
+                }
+                return;
+            }
+
+            decimal temp = 0;
+            this.CreatePushpin(sb, waypoint, ref temp, ref temp, ref temp, ref temp, 
+                exists ? "updatePP" : "createPP", true);
+
+            this.ExecuteScript(sb.ToString());
         }
 
         /// <summary>

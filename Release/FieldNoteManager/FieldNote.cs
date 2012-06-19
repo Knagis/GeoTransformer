@@ -15,15 +15,7 @@ namespace FieldNoteManager
     /// </summary>
     internal class FieldNote
     {
-        public enum FieldNoteStatus
-        {
-            OK,
-            DoesNotExist,
-            AlreadyLogged,
-            Duplicate,
-        }
-
-        public FieldNoteStatus Status { get; set; }
+        public string ErrorMessage { get; set; }
 
         public DateTime LogTime { get; set; }
 

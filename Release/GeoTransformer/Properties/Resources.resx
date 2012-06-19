@@ -133,9 +133,6 @@
   <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\delete-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\Folder-Blank-11-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="PocketQuery" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\folder-download-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -159,9 +156,6 @@
   </data>
   <data name="Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\Settings-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Removable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\usb-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Latvia" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\Latvia-icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

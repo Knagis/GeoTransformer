@@ -64,7 +64,6 @@ namespace GeoTransformer.Viewers.CacheEditor
                 if (extelems[i].Name.Namespace == XmlExtensions.GeoTransformerSchema)
                     extelems.RemoveAt(i);
 
-
             if (string.Equals(this._element.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
             {
                 // find the document that contains the waypoint and remove the waypoint from it
@@ -76,8 +75,7 @@ namespace GeoTransformer.Viewers.CacheEditor
                 this.BindElement(null);
             }
 
-            Extensions.ExtensionLoader.ApplicationService.RefreshCacheList();
-            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element.Name);
+            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element == null ? null : this._element.Name);
         }
 
         private void toolStripButtonEditAnother_Click(object sender, EventArgs e)

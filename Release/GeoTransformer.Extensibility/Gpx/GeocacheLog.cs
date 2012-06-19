@@ -19,7 +19,7 @@ namespace GeoTransformer.Gpx
     {
         private static Dictionary<XName, Action<GeocacheLog, XAttribute>> _attributeInitializers = new Dictionary<XName, Action<GeocacheLog, XAttribute>>
         {
-            { "id", (o, a) => o.Id = XmlConvert.ToInt32(a.Value) },
+            { "id", (o, a) => o.Id = XmlConvert.ToInt64(a.Value) },
         };
 
         private static Dictionary<XName, Action<GeocacheLog, XElement>> _elementInitializers = new Dictionary<XName, Action<GeocacheLog, XElement>>
@@ -130,9 +130,9 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Gets or sets the ID of the geocache log (visit).
         /// </summary>
-        public int? Id
+        public long? Id
         {
-            get { return this.GetValue<int?>("Id"); }
+            get { return this.GetValue<long?>("Id"); }
             set { this.SetValue("Id", value); }
         }
 

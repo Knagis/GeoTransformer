@@ -170,5 +170,21 @@ namespace GeoTransformer.UnitTests.Gpx
             // reference the value after the memory size is read as otherwise the variable is disposed too soon
             doc.First();
         }
+
+        /// <summary>
+        /// Tests the <see cref="GeoTransformer.Gpx.Loader.Merge"/> method.
+        /// </summary>
+        [TestMethod]
+        public void TestMerge()
+        {
+            var wpt1 = new GeoTransformer.Gpx.GpxWaypoint();
+            var wpt2 = new GeoTransformer.Gpx.GpxWaypoint();
+
+            wpt2.Geocache.Images.Add(new GeoTransformer.Gpx.GeocacheImage() { Title = "Test", Address = new Uri("http://tempuri.org/") });
+
+            GeoTransformer.Gpx.Loader.Merge(wpt1, wpt2);
+
+            Assert.AreEqual(wpt2.Geocache.Images.Count, wpt1.Geocache.Images.Count);
+        }
     }
 }

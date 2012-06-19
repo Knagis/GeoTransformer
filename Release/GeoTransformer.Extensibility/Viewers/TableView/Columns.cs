@@ -235,6 +235,11 @@ namespace GeoTransformer.Viewers.TableView
                 Text = "Terrain",
                 AspectGetter = w => ((GpxWaypoint)w).Geocache.Terrain
             });
+            olv.AllColumns.Add(new BrightIdeasSoftware.OLVColumn()
+            {
+                Text = "Favorite points",
+                AspectGetter = w => ((GpxWaypoint)w).Geocache.FavoritePoints
+            });
         }
     }
 }
