@@ -106,7 +106,7 @@ namespace GeoTransformer.Transformers.MarkSolved
             if (v == this._editorControl.Value)
                 return;
                 
-            configElement.Value = this._editorControl.Value ? Boolean.TrueString : null;
+            configElement.Value = this._editorControl.Value ? Boolean.TrueString : string.Empty;
             UpdateWaypoint(this._boundWaypoint, this._editorControl.Value);
         }
 
