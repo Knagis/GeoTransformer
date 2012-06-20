@@ -54,7 +54,7 @@ namespace GeoTransformer.Transformers.EditorExtensions
                             iq = table.Insert();
                             iq.Value(o => o.CacheCode, name);
                             var copy = new XElement(XmlExtensions.GeoTransformerSchema + "CachedCopy");
-                            copy.Add(wpt.OriginalValues.Serialize(Gpx.GpxSerializationOptions.Default));
+                            copy.Add(wpt.OriginalValues.Serialize(Gpx.GpxSerializationOptions.Roundtrip));
                             iq.Value(o => o.Data, copy.ToString());
                             iq.Execute();
                         }
