@@ -84,5 +84,19 @@ namespace GeoTransformer.Publishers.GarminGps
                 return ms.ToArray();
             }
         }
+
+        /// <summary>
+        /// Handles the CheckedChanged event of the checkBoxEnableImages control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void checkBoxEnableImages_CheckedChanged(object sender, EventArgs e)
+        {
+            this.chkPublishLogImages.Enabled =
+            this.chkRemoveOtherImages.Enabled =
+            this.labelMaximumSize.Enabled =
+            this.txtMaximumSize.Enabled =
+                this.checkBoxEnableImages.Checked;
+        }
     }
 }

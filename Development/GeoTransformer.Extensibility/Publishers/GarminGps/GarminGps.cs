@@ -32,28 +32,38 @@ namespace GeoTransformer.Publishers.GarminGps
 
             cancel = false;
             var pathRoot = System.IO.Path.GetPathRoot(path);
+
 #if DEBUG
             if (target.Key == new Guid("20F1C26E-7C4E-41D5-8214-93C0D22A6026"))
                 pathRoot = path;
 #endif
+
             var transformers = new List<Extensions.ITransformer> 
             {
                 new Transformers.SaveFiles.SaveFiles(path, path),
-                new Transformers.SaveFiles.SaveImages(new PathGenerator(pathRoot).CreateImagePath)
-                    {
-                        RemoveObsoleteImages = this._configurationControl.RemoveExistingImages,
-                        ImageRootPath = System.IO.Path.Combine(pathRoot, "Garmin", "GeocachePhotos"),
-                        EncodeEverything = true,
-                        PublishLogImages = this._configurationControl.PublishLogImages,
-                        MaximumSize = this._configurationControl.PublishImageSize
-                    },
             };
+
+            if (this._configurationControl.PublishImages)
+            {
+                transformers.Add(
+                    new Transformers.SaveFiles.SaveImages(new PathGenerator(pathRoot).CreateImagePath)
+                        {
+                            RemoveObsoleteImages = this._configurationControl.RemoveExistingImages,
+                            ImageRootPath = System.IO.Path.Combine(pathRoot, "Garmin", "GeocachePhotos"),
+                            EncodeEverything = true,
+                            PublishLogImages = this._configurationControl.PublishLogImages,
+                            MaximumSize = this._configurationControl.PublishImageSize
+                        }
+                    );
+            }
+
 #if DEBUG
             if (target.Key != new Guid("20F1C26E-7C4E-41D5-8214-93C0D22A6026"))
                 transformers.Add(new Transformers.SafelyRemoveGps.SafelyRemoveGps(System.IO.Directory.GetDirectoryRoot(path)));
 #else
             transformers.Add(new Transformers.SafelyRemoveGps.SafelyRemoveGps(System.IO.Directory.GetDirectoryRoot(path)));
 #endif
+
             return transformers;
         }
 

@@ -70,6 +70,7 @@
             this.checkBoxEnableImages.Text = "Enable automatic image publishing";
             this.singletonTooltip.SetToolTip(this.checkBoxEnableImages, resources.GetString("checkBoxEnableImages.ToolTip"));
             this.checkBoxEnableImages.UseVisualStyleBackColor = true;
+            this.checkBoxEnableImages.CheckedChanged += new System.EventHandler(this.checkBoxEnableImages_CheckedChanged);
             // 
             // labelMaximumSize
             // 
