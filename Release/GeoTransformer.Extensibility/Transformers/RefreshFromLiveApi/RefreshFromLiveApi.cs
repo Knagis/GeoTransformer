@@ -144,10 +144,20 @@ per day.");
             // source is always loaded from Live API so it will always have LastRefresh set.
             if (ReadGpxTime(document, target) < source.LastRefresh)
             {
-                // the target is older version that source so it will be completely replaced
+                // the target is older version than source so it will be completely replaced
                 var index = document.Waypoints.IndexOf(target);
                 if (index == -1)
                     throw new InvalidOperationException("The waypoint is not present in the document.");
+
+                // copy all extensions to the source element since that includes edited values etc.
+                foreach (var a in target.ExtensionAttributes)
+                    source.ExtensionAttributes.Add(a);
+                foreach (var e in target.ExtensionElements)
+                    source.ExtensionElements.Add(e);
+                foreach (var a in target.Geocache.ExtensionAttributes)
+                    source.Geocache.ExtensionAttributes.Add(a);
+                foreach (var e in target.Geocache.ExtensionElements)
+                    source.Geocache.ExtensionElements.Add(e);
 
                 document.Waypoints.RemoveAt(index);
                 document.Waypoints.Insert(index, source);
