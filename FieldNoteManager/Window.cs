@@ -187,6 +187,15 @@ namespace FieldNoteManager
                             req.WptLogTypeId = logType.WptLogTypeId;
 
                             var result = service.CreateFieldNoteAndPublish(req);
+                            
+                            // 140 - too many method calls per minute
+                            while (result.Status.StatusCode == 140)
+                            {
+                                this.toolStripStatusLabel.Text = "Too many logs per minute. Waiting...";
+                                System.Threading.Thread.Sleep(10000);
+                                result = service.CreateFieldNoteAndPublish(req);
+                            }
+
                             if (result.Status.StatusCode != 0)
                                 n.Result = "Error: " + result.Status.StatusMessage;
                             else
