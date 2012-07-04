@@ -62,9 +62,11 @@ namespace GeoTransformer.Transformers.Translator
             }
 
             //{"access_token":"http%3a%2f%2fschemas.xmlsoap.org%2fws%2f2005%2f05%2fidentity%2fclaims%2fnameidentifier=GeoTransformer&http%3a%2f%2fschemas.microsoft.com%2faccesscontrolservice%2f2010%2f07%2fclaims%2fidentityprovider=https%3a%2f%2fdatamarket.accesscontrol.windows.net%2f&Audience=http%3a%2f%2fapi.microsofttranslator.com&ExpiresOn=1320872565&Issuer=https%3a%2f%2fdatamarket.accesscontrol.windows.net%2f&HMACSHA256=K2fAgbGeAANi%2fKGFcx4FJEWKNuyBXJl5Lzv%2f4hsyCYg%3d","token_type":"http://schemas.xmlsoap.org/ws/2009/11/swt-token-profile-1.0","expires_in":"600","scope":"http://api.microsofttranslator.com"}
-            var parts = result.Split(new char [] { '"' }, StringSplitOptions.RemoveEmptyEntries);
+            var match = new System.Text.RegularExpressions.Regex("\"access_token\":\"(.*?)\"").Match(result);
+            if (!match.Success)
+                throw new InvalidOperationException("Unable to retrieve the access token from the Azure server.");
 
-            return parts[3];
+            return match.Groups[1].Value;
         }
 
 
@@ -234,6 +236,9 @@ namespace GeoTransformer.Transformers.Translator
                     var x = subset.First(o => o.Hash == r.Value(ro => ro.HashCode));
                     if (x.SourceLanguage == r.Value(ro => ro.SourceLanguage))
                         x.Translation = r.Value(o => o.Translation);
+
+                    if (string.IsNullOrWhiteSpace(x.Translation))
+                        x.Translation = null;
                 }
             }
 
@@ -275,6 +280,9 @@ namespace GeoTransformer.Transformers.Translator
                             subset[i].TranslationError = true;
                             continue;
                         }
+
+                        if (string.IsNullOrWhiteSpace(results[i].TranslatedText))
+                            continue;
 
                         subset[i].Translation = results[i].TranslatedText;
                         var uq = cache.Translations.Replace();
@@ -371,7 +379,7 @@ namespace GeoTransformer.Transformers.Translator
                     this.ReportStatus(((double)i / data.Count).ToString("P2") + " of values updated");
 
                 var d = data[i];
-                if (!string.Equals(d.Translation, d.Text, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(d.Translation) && !string.Equals(d.Translation, d.Text, StringComparison.OrdinalIgnoreCase))
                     d.UpdateValue(d.Translation + (d.IsHtml ? "<hr/>" : Environment.NewLine + "-------------" + Environment.NewLine) + d.Text);
             }
 

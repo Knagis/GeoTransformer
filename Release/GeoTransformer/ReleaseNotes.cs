@@ -20,6 +20,7 @@ namespace GeoTransformer
         /// </summary>
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
+            { Version.Parse("4.2.1.0"), "Fixed Bing Translator extension according to the Bing service changes." } ,
             { Version.Parse("4.2.0.2"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
                                         "Added ability to publish images to Garmin GPS devices (configurable)." + Environment.NewLine +
                                         "Added an option to load geocache images from Live API (works for basic members)." + Environment.NewLine +
