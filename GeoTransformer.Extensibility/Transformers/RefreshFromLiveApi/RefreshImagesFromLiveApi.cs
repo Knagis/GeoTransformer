@@ -211,7 +211,7 @@ treated as added directly to the listing.");
                         {
                             int i = 0;
                             int errors = 0;
-                            this.ReportStatus("Downloading geocache information using Live API.");
+                            this.ExecutionContext.ReportStatus("Downloading geocache information using Live API.");
                             while (waypointsToDownload.Count > 0)
                             {
                                 var wpt = waypointsToDownload.Dequeue();
@@ -230,7 +230,7 @@ treated as added directly to the listing.");
                                         continue;
                                     }
 
-                                    this.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + downloaded.Status.StatusMessage);
+                                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + downloaded.Status.StatusMessage);
                                     errors++;
                                     if (errors > 20)
                                     {
@@ -250,19 +250,28 @@ treated as added directly to the listing.");
                                 insQ.Value(o => o.RetrievedOn, DateTime.Now);
                                 insQ.Execute();
 
-                                this.ReportProgress(i, i + waypointsToDownload.Count);
+                                this.ExecutionContext.ReportProgress(i, i + waypointsToDownload.Count, true);
 
-                                //TODO: remove once the transformer progress shows progress indicator
-                                this.ReportStatus("Progress: {0}% (press cancel to skip download)", i * 100 / (i + waypointsToDownload.Count));
-
-                                this.TerminateExecutionIfNeeded();
+                                this.ExecutionContext.ThrowIfCancellationPending();
                             }
                         }
+                    }
+                    catch (Transformers.TransformerCancelledException ex)
+                    {
+                        if (!ex.CanContinue)
+                            throw;
+
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Skipping geocache download.");
+                        downloadFailed = true;
                     }
                     catch (Exception ex)
                     {
                         downloadFailed = true;
-                        this.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + ex.Message);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + ex.Message);
+                    }
+                    finally
+                    {
+                        this.ExecutionContext.ReportProgressFinished();
                     }
                 }
 

@@ -59,7 +59,7 @@ namespace GeoTransformer.Transformers.FileMerger
                     xmlWaypoints.Waypoints.Add(wpt);
             }
 
-            this.ReportStatus(documents.Count + " file" + (documents.Count % 10 == 1 && documents.Count != 11 ? "" : "s") + " merged.");
+            this.ExecutionContext.ReportStatus(documents.Count + " file" + (documents.Count % 10 == 1 && documents.Count != 11 ? "" : "s") + " merged.");
             documents.Clear();
 
             // just in case the loading of the files failed, let's not delete the old data still on the device.

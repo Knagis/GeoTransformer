@@ -134,6 +134,10 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                         wptCount += xml.Waypoints.Count(o => o.Geocache.IsDefined());
                     }
                 }
+                catch (Transformers.TransformerCancelledException)
+                {
+                    throw;
+                }
                 catch
                 {
                     notInCache++;
@@ -144,7 +148,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
             if (notInCache > 0)
             {
-                this.ReportStatus(StatusSeverity.Warning,
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning,
                     "Done. {2} from cache, {1} not in cache. {0} caches.",
                     wptCount,
                     notInCache,
@@ -152,23 +156,23 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
             }
             else
             {
-                this.ReportStatus("Done. {0} files loaded, {1} caches.", this._options.CheckedQueries.Count, wptCount);
+                this.ExecutionContext.ReportStatus("Done. {0} files loaded, {1} caches.", this._options.CheckedQueries.Count, wptCount);
             }
         }
 
         private void LoadFiles(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             if (!GeocachingService.LiveClient.IsEnabled)
-                this.ReportStatus(StatusSeverity.Error, "Live API must be enabled to download PQs.");
+                this.ExecutionContext.ReportStatus(StatusSeverity.Error, "Live API must be enabled to download PQs.");
 
             var downloadList = new List<DownloadInfo>(this._options.CheckedQueries.Count);
             using (var service = GeocachingService.LiveClient.CreateClientProxy())
             {
-                this.ReportStatus("Retrieving pocket query list.");
+                this.ExecutionContext.ReportStatus("Retrieving pocket query list.");
                 var pqList = service.GetPocketQueryList(service.AccessToken);
                 if (pqList.Status.StatusCode != 0)
                 {
-                    this.ReportStatus(StatusSeverity.Warning, "Using local copies because of unable to connect to Live API: " + pqList.Status.StatusMessage);
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Using local copies because of unable to connect to Live API: " + pqList.Status.StatusMessage);
 
                     // fall back to the cached copies.
                     this.LoadFilesFromCache(documents);
@@ -202,12 +206,12 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
                 foreach (var x in downloadList.Where(o => !o.NotAvailable && !o.CacheUpToDate))
                 {
-                    this.ReportStatus("Downloading: " + x.Title);
+                    this.ExecutionContext.ReportStatus("Downloading: " + x.Title);
                     var response = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
                     if (response.Status.StatusCode != 0)
                     {
                         x.NotAvailable = true;
-                        this.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
                     }
                     else
                     {
@@ -216,7 +220,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 }
             }
 
-            this.ReportStatus("Download complete, loading data.");
+            this.ExecutionContext.ReportStatus("Download complete, loading data.");
 
             int wptCount = 0;
             int notInCache = 0;
@@ -244,7 +248,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 catch
                 {
                     System.IO.File.Delete(file);
-                    this.ReportStatus(StatusSeverity.Warning, "The {1} copy for '{0}' could not be loaded.", x.Title, useCache ? "cached" : "downloaded");
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "The {1} copy for '{0}' could not be loaded.", x.Title, useCache ? "cached" : "downloaded");
                 }
 
                 if (!useCache)
@@ -267,7 +271,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 catch { }
             }
 
-            this.ReportStatus(notInCache > 0 ? StatusSeverity.Warning : StatusSeverity.Information,
+            this.ExecutionContext.ReportStatus(notInCache > 0 ? StatusSeverity.Warning : StatusSeverity.Information,
                 "Done. {1} downloaded, {2} from cache, {3} not available. {0} caches.",
                 wptCount,
                 downloadList.Count - fromCache - notInCache,

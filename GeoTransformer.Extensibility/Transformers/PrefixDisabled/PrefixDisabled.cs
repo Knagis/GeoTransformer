@@ -47,7 +47,7 @@ namespace GeoTransformer.Transformers.PrefixDisabled
         {
             this._count = 0;
             base.Process(document, options);
-            this.ReportStatus(this._count + " disabled cache" + ((this._count % 10 == 1 && this._count != 11) ? string.Empty : "s") + " prefixed.");
+            this.ExecutionContext.ReportStatus(this._count + " disabled cache" + ((this._count % 10 == 1 && this._count != 11) ? string.Empty : "s") + " prefixed.");
         }
 
         /// <summary>

@@ -101,11 +101,11 @@ namespace GeoTransformer.Transformers.ManualPublish
 
             if (this._removed > 0)
             {
-                this.ReportStatus("Removing additional waypoints");
+                this.ExecutionContext.ReportStatus("Removing additional waypoints");
                 this.RemoveAdditionalWaypoints(documents);
             }
 
-            this.ReportStatus("Forced publish: {0}. Forced skip: {1}.", this._published, this._removed);
+            this.ExecutionContext.ReportStatus("Forced publish: {0}. Forced skip: {1}.", this._published, this._removed);
 
             this._pendingWaypointRemove.Clear();
         }

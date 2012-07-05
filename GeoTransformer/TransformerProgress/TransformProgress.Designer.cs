@@ -28,53 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.listView = new System.Windows.Forms.ListView();
-            this.columnTask = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnDetails = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripClose = new System.Windows.Forms.ToolStripButton();
+            this.statusTable = new System.Windows.Forms.TableLayoutPanel();
+            this.panel = new System.Windows.Forms.Panel();
             this.toolStrip.SuspendLayout();
+            this.panel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // listView
-            // 
-            this.listView.BackColor = System.Drawing.SystemColors.Control;
-            this.listView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnTask,
-            this.columnDetails});
-            this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView.Enabled = false;
-            this.listView.FullRowSelect = true;
-            this.listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listView.Location = new System.Drawing.Point(0, 0);
-            this.listView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.listView.MultiSelect = false;
-            this.listView.Name = "listView";
-            this.listView.Scrollable = false;
-            this.listView.Size = new System.Drawing.Size(752, 304);
-            this.listView.SmallImageList = this.imageList;
-            this.listView.TabIndex = 0;
-            this.listView.UseCompatibleStateImageBehavior = false;
-            this.listView.View = System.Windows.Forms.View.Details;
-            // 
-            // columnTask
-            // 
-            this.columnTask.Text = "Task";
-            this.columnTask.Width = 231;
-            // 
-            // columnDetails
-            // 
-            this.columnDetails.Text = "Details";
-            this.columnDetails.Width = 478;
-            // 
-            // imageList
-            // 
-            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList.ImageSize = new System.Drawing.Size(24, 24);
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // toolStrip
             // 
@@ -84,10 +44,10 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripClose});
             this.toolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStrip.Location = new System.Drawing.Point(0, 304);
+            this.toolStrip.Location = new System.Drawing.Point(0, 527);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip.Size = new System.Drawing.Size(752, 31);
+            this.toolStrip.Size = new System.Drawing.Size(736, 31);
             this.toolStrip.TabIndex = 3;
             this.toolStrip.Text = "toolStrip";
             // 
@@ -101,27 +61,58 @@
             this.toolStripClose.Text = "Cancel";
             this.toolStripClose.Click += new System.EventHandler(this.toolStripClose_Click);
             // 
+            // statusTable
+            // 
+            this.statusTable.AutoSize = true;
+            this.statusTable.ColumnCount = 3;
+            this.statusTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.statusTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.statusTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.statusTable.Dock = System.Windows.Forms.DockStyle.Top;
+            this.statusTable.Location = new System.Drawing.Point(3, 3);
+            this.statusTable.Name = "statusTable";
+            this.statusTable.RowCount = 1;
+            this.statusTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.statusTable.Size = new System.Drawing.Size(730, 0);
+            this.statusTable.TabIndex = 5;
+            // 
+            // panel
+            // 
+            this.panel.AutoScroll = true;
+            this.panel.Controls.Add(this.statusTable);
+            this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel.Location = new System.Drawing.Point(0, 0);
+            this.panel.Margin = new System.Windows.Forms.Padding(0);
+            this.panel.Name = "panel";
+            this.panel.Padding = new System.Windows.Forms.Padding(3);
+            this.panel.Size = new System.Drawing.Size(736, 527);
+            this.panel.TabIndex = 5;
+            // 
             // TransformProgress
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(752, 335);
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(736, 558);
             this.ControlBox = false;
-            this.Controls.Add(this.listView);
+            this.Controls.Add(this.panel);
             this.Controls.Add(this.toolStrip);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.DoubleBuffered = true;
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name = "TransformProgress";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Transformation proces";
+            this.Text = "Transformation process";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TransformProgress_FormClosing);
+            this.VisibleChanged += new System.EventHandler(this.TransformProgress_VisibleChanged);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TransformProgress_KeyPress);
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
+            this.panel.ResumeLayout(false);
+            this.panel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,11 +120,9 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView;
-        private System.Windows.Forms.ImageList imageList;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripButton toolStripClose;
-        private System.Windows.Forms.ColumnHeader columnTask;
-        private System.Windows.Forms.ColumnHeader columnDetails;
+        private System.Windows.Forms.TableLayoutPanel statusTable;
+        private System.Windows.Forms.Panel panel;
     }
 }

@@ -59,7 +59,7 @@ namespace GeoTransformer.Transformers.RemoveDuplicates
                 {
                     processedWaypoints++;
                     if (processedWaypoints % 25 == 0)
-                        this.ReportProgress(processedWaypoints, totalWpts);
+                        this.ExecutionContext.ReportProgress(processedWaypoints, totalWpts);
 
                     var wpt = doc.Waypoints[i];
                     var name = wpt.Name;
@@ -93,7 +93,7 @@ namespace GeoTransformer.Transformers.RemoveDuplicates
                 }
             }
 
-            this.ReportStatus("Removed " + removedCaches + " duplicate cache" + (removedCaches % 10 == 1 && removedCaches != 11 ? string.Empty : "s")
+            this.ExecutionContext.ReportStatus("Removed " + removedCaches + " duplicate cache" + (removedCaches % 10 == 1 && removedCaches != 11 ? string.Empty : "s")
                 + " and " + removedWaypoints + " waypoint" + (removedWaypoints % 10 == 1 && removedWaypoints != 11 ? string.Empty : "s"));
         }
 
@@ -115,7 +115,7 @@ namespace GeoTransformer.Transformers.RemoveDuplicates
             if (!val.HasValue)
             {
                 if (!this._issuedWarnings.Contains(document.Metadata.OriginalFileName))
-                    this.ReportStatus(StatusSeverity.Warning, "GPX file '{0}' does not have a creation time defined so the removal might not produce correct results.", document.Metadata.OriginalFileName);
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "GPX file '{0}' does not have a creation time defined so the removal might not produce correct results.", document.Metadata.OriginalFileName);
                 else
                     this._issuedWarnings.Add(document.Metadata.OriginalFileName);
 

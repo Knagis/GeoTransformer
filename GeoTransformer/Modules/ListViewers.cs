@@ -209,9 +209,10 @@ namespace GeoTransformer.Modules
                         form = new TransformProgress(transformers, options); 
                         form.AllowAutomaticClose = !forceRefresh; 
                         form.FormClosed += (a, b) => wakeUp.Set(); 
-                        if (!forceRefresh) 
-                            form.WindowState = FormWindowState.Minimized; 
-                        form.Show(this.ParentForm); 
+                        if (!forceRefresh)
+                            form.StartExecution(this.ParentForm);
+                        else
+                            form.Show(this.ParentForm); 
                     });
 
                     wakeUp.Wait();

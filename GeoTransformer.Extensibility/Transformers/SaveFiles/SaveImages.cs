@@ -184,7 +184,7 @@ namespace GeoTransformer.Transformers.SaveFiles
 
             if (!System.IO.File.Exists(filePath))
             {
-                this.ReportStatus("Downloading image '{0}' for cache {1}.", image.Title, waypoint.Geocache.Name);
+                this.ExecutionContext.ReportStatus("Downloading image '{0}' for cache {1}.", image.Title, waypoint.Geocache.Name);
                 this._webClient.DownloadFile(image.Address, filePath);
             }
 
@@ -331,6 +331,8 @@ namespace GeoTransformer.Transformers.SaveFiles
 
             this._defaultExtension = DefaultEncoder.FilenameExtension.Split(';')[0].Substring(1);
 
+            bool userInterrupted = false;
+            int i = 0;
             try
             {
                 this._webClient = new System.Net.WebClient();
@@ -353,33 +355,39 @@ namespace GeoTransformer.Transformers.SaveFiles
                         }
                     }
 
-                int i = 0;
                 foreach (var img in images)
                 {
                     this.Process(img.Item1, img.Item2);
 
-                    this.TerminateExecutionIfNeeded();
+                    this.ExecutionContext.ThrowIfCancellationPending();
 
                     i++;
-                    this.ReportProgress(i, images.Count);
-
-                    //TODO: remove when transformerprogress will show progress
-                    this.ReportStatus("Progress: {0}%", i * 100 / images.Count);
+                    this.ExecutionContext.ReportProgress(i, images.Count, true);
                 }
+            }
+            catch (TransformerCancelledException ex)
+            {
+                if (!ex.CanContinue)
+                    throw;
+
+                userInterrupted = true;
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, ex.Message);
             }
             finally
             {
+                this.ExecutionContext.ReportProgressFinished();
+
                 if (this._webClient != null)
                     this._webClient.Dispose();
                 this._webClient = null;
             }
 
-            if (this.RemoveObsoleteImages)
+            if (this.RemoveObsoleteImages && !userInterrupted)
             {
                 if (string.IsNullOrEmpty(this.ImageRootPath))
                     throw new InvalidOperationException("ImageRootPath must be set when RemoveObsoleteImages is true.");
 
-                this.ReportStatus("Removing obsolete images.");
+                this.ExecutionContext.ReportStatus("Removing obsolete images.");
 
                 try
                 {
@@ -410,11 +418,11 @@ namespace GeoTransformer.Transformers.SaveFiles
                 }
                 catch (System.IO.IOException ex)
                 {
-                    this.ReportStatus(StatusSeverity.Warning, "Unable to clean old images: " + ex.Message);
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to clean old images: " + ex.Message);
                 }
             }
 
-            this.ReportStatus("Images published.");
+            this.ExecutionContext.ReportStatus("{0} images published.", i);
         }
 
         /// <summary>
@@ -438,7 +446,7 @@ namespace GeoTransformer.Transformers.SaveFiles
             }
             catch (Exception ex)
             {
-                this.ReportStatus(StatusSeverity.Warning, "Unable to publish an image '{1}' for cache {0}: {2}", waypoint.Name, image.Title, ex.Message);
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to publish an image '{1}' for cache {0}: {2}", waypoint.Name, image.Title, ex.Message);
             }
         }
     }

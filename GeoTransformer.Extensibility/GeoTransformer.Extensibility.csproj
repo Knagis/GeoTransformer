@@ -152,7 +152,6 @@
     <Compile Include="Extensions\ILocalStorage.cs" />
     <Compile Include="Extensions\ISaveData.cs" />
     <Compile Include="Extensions\ITransformer.cs" />
-    <Compile Include="Extensions\ITransformerWithPopup.cs" />
     <Compile Include="Gpx\GeocacheTrackable.cs" />
     <Compile Include="Gpx\GeocacheImage.cs" />
     <Compile Include="Gpx\GeocacheLogText.cs" />
@@ -210,6 +209,8 @@
     </Compile>
     <Compile Include="Transformers\EditorExtensions\SaveEditorExtensions.cs" />
     <Compile Include="Transformers\EditorExtensions\LoadEditorExtensions.cs" />
+    <Compile Include="Transformers\ExecutionContextExtensions.cs" />
+    <Compile Include="Transformers\IExecutionContext.cs" />
     <Compile Include="Transformers\LoadFromLiveApi\ConfigurationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -288,6 +289,7 @@
     <Compile Include="Transformers\SaveFiles\SaveImages.cs" />
     <Compile Include="Transformers\StatusMessageEventArgs.cs" />
     <Compile Include="Transformers\StatusSeverity.cs" />
+    <Compile Include="Transformers\TransformerCancelledException.cs" />
     <Compile Include="Transformers\TransformerOptions.cs" />
     <Compile Include="Transformers\UpdateCoordinates\EditorControl.cs">
       <SubType>UserControl</SubType>

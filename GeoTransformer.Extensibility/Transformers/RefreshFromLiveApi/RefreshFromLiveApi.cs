@@ -255,7 +255,7 @@ per day.");
                         }
                         catch (Exception ex)
                         {
-                            this.ReportStatus(StatusSeverity.Warning, ex.Message);
+                            this.ExecutionContext.ReportStatus(StatusSeverity.Warning, ex.Message);
                             waypointsToDownload[wpt.Name] = Tuple.Create(doc, wpt);
                         }
                     }
@@ -269,16 +269,17 @@ per day.");
                         {
                             if (service.IsBasicMember().GetValueOrDefault(true))
                             {
-                                this.ReportStatus(StatusSeverity.Warning, "You are not premium member on geocaching.com and cannot download full data using the API.");
+                                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "You are not premium member on geocaching.com and cannot download full data using the API.");
                             }
                             else
                             {
                                 int i = 0;
-                                this.ReportStatus("Downloading geocache information using Live API.");
+                                this.ExecutionContext.ReportStatus("Downloading geocache information using Live API.");
+                                this.ExecutionContext.ReportProgress(i, waypointsToDownload.Count);
                                 foreach (var result in service.GetGeocachesByCode(
                                             waypointsToDownload.Values.Select(o => o.Item2.Name),
                                             false,
-                                            err => this.ReportStatus(StatusSeverity.Error, err)))
+                                            err => this.ExecutionContext.ReportStatus(StatusSeverity.Error, err)))
                                 {
                                     i++;
                                     var wpt = waypointsToDownload[result.Code];
@@ -291,20 +292,29 @@ per day.");
                                     insQ.Value(o => o.RetrievedOn, DateTime.Now);
                                     insQ.Execute();
 
-                                    this.ReportProgress(i, waypointsToDownload.Count);
+                                    this.ExecutionContext.ReportProgress(i, waypointsToDownload.Count, true);
 
-                                    //TODO: remove once the transformer progress shows progress indicator
-                                    this.ReportStatus("Progress: {0}% (press cancel to skip download)", i * 100 / waypointsToDownload.Count);
-
-                                    this.TerminateExecutionIfNeeded();
+                                    this.ExecutionContext.ThrowIfCancellationPending();
                                 }
                             }
                         }
                     }
+                    catch (Transformers.TransformerCancelledException ex)
+                    {
+                        if (!ex.CanContinue)
+                            throw;
+
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Skipping geocache download.");
+                        downloadFailed = true;
+                    }
                     catch (Exception ex)
                     {
-                        this.ReportStatus(StatusSeverity.Warning, "Unable to download geocaches: " + ex.Message);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to download geocaches: " + ex.Message);
                         downloadFailed = true;
+                    }
+                    finally
+                    {
+                        this.ExecutionContext.ReportProgressFinished();
                     }
                 }
 
@@ -318,7 +328,7 @@ per day.");
                     }
                     catch (Exception ex)
                     {
-                        this.ReportStatus(StatusSeverity.Warning, ex.Message);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, ex.Message);
                     }
                 }
 
