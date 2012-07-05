@@ -62,9 +62,11 @@ namespace GeoTransformer.Transformers.Translator
             }
 
             //{"access_token":"http%3a%2f%2fschemas.xmlsoap.org%2fws%2f2005%2f05%2fidentity%2fclaims%2fnameidentifier=GeoTransformer&http%3a%2f%2fschemas.microsoft.com%2faccesscontrolservice%2f2010%2f07%2fclaims%2fidentityprovider=https%3a%2f%2fdatamarket.accesscontrol.windows.net%2f&Audience=http%3a%2f%2fapi.microsofttranslator.com&ExpiresOn=1320872565&Issuer=https%3a%2f%2fdatamarket.accesscontrol.windows.net%2f&HMACSHA256=K2fAgbGeAANi%2fKGFcx4FJEWKNuyBXJl5Lzv%2f4hsyCYg%3d","token_type":"http://schemas.xmlsoap.org/ws/2009/11/swt-token-profile-1.0","expires_in":"600","scope":"http://api.microsofttranslator.com"}
-            var parts = result.Split(new char [] { '"' }, StringSplitOptions.RemoveEmptyEntries);
+            var match = new System.Text.RegularExpressions.Regex("\"access_token\":\"(.*?)\"").Match(result);
+            if (!match.Success)
+                throw new InvalidOperationException("Unable to retrieve the access token from the Azure server.");
 
-            return parts[3];
+            return match.Groups[1].Value;
         }
 
 
@@ -161,8 +163,8 @@ namespace GeoTransformer.Transformers.Translator
             double c;
             while ((c = data.Count(o => !o.SourceLanguageCacheTested && o.SourceLanguage == null)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
 
                 var subset = data.Where(o => !o.SourceLanguageCacheTested && o.SourceLanguage == null).Take(50).ToList();
                 var query = cache.LanguageDetects.Select();
@@ -180,8 +182,8 @@ namespace GeoTransformer.Transformers.Translator
 
             while ((c = data.Count(o => o.SourceLanguage == null && !o.SourceLanguageError)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
 
                 var subset = data.Where(o => o.SourceLanguage == null && !o.SourceLanguageError).Take(5).ToList();
                 string[] results;
@@ -217,8 +219,8 @@ namespace GeoTransformer.Transformers.Translator
             double c;
             while ((c = data.Count(o => !o.SourceLanguageError && !o.TranslationCacheTested && o.Translation == null)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
 
                 var subset = data.Where(o => !o.SourceLanguageError && !o.TranslationCacheTested && o.Translation == null).Take(50).ToList();
                 var query = cache.Translations.Select();
@@ -234,6 +236,9 @@ namespace GeoTransformer.Transformers.Translator
                     var x = subset.First(o => o.Hash == r.Value(ro => ro.HashCode));
                     if (x.SourceLanguage == r.Value(ro => ro.SourceLanguage))
                         x.Translation = r.Value(o => o.Translation);
+
+                    if (string.IsNullOrWhiteSpace(x.Translation))
+                        x.Translation = null;
                 }
             }
 
@@ -242,8 +247,8 @@ namespace GeoTransformer.Transformers.Translator
 
             while ((c = data.Count(o => o.Translation == null && !o.TranslationError && !o.SourceLanguageError)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
 
                 var subset = data.Where(o => o.Translation == null && !o.TranslationError && !o.SourceLanguageError)
                                  .GroupBy(o => o.SourceLanguage + "-" + o.IsHtml)
@@ -275,6 +280,9 @@ namespace GeoTransformer.Transformers.Translator
                             subset[i].TranslationError = true;
                             continue;
                         }
+
+                        if (string.IsNullOrWhiteSpace(results[i].TranslatedText))
+                            continue;
 
                         subset[i].Translation = results[i].TranslatedText;
                         var uq = cache.Translations.Replace();
@@ -331,7 +339,7 @@ namespace GeoTransformer.Transformers.Translator
         {
             if ((options & TransformerOptions.LoadingViewerCache) == TransformerOptions.LoadingViewerCache)
             {
-                this.ReportStatus("Translation is only done when publishing.");
+                this.ExecutionContext.ReportStatus("Translation is only done when publishing.");
                 return;
             }
 
@@ -366,17 +374,17 @@ namespace GeoTransformer.Transformers.Translator
 
             for (int i = 0; i < data.Count; i++)
             {
-                this.TerminateExecutionIfNeeded();
+                this.ExecutionContext.ThrowIfCancellationPending();
                 if (i % 10 == 0)
-                    this.ReportStatus(((double)i / data.Count).ToString("P2") + " of values updated");
+                    this.ExecutionContext.ReportStatus(((double)i / data.Count).ToString("P2") + " of values updated");
 
                 var d = data[i];
-                if (!string.Equals(d.Translation, d.Text, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(d.Translation) && !string.Equals(d.Translation, d.Text, StringComparison.OrdinalIgnoreCase))
                     d.UpdateValue(d.Translation + (d.IsHtml ? "<hr/>" : Environment.NewLine + "-------------" + Environment.NewLine) + d.Text);
             }
 
             var errors = data.Count(o => o.SourceLanguageError || o.TranslationError);
-            this.ReportStatus("Translation complete (" + (data.Count - errors) + " values translated, " + ignored + " skipped, " + errors + " errors)");
+            this.ExecutionContext.ReportStatus("Translation complete (" + (data.Count - errors) + " values translated, " + ignored + " skipped, " + errors + " errors)");
 
             this._processConfigCache = null;
         }

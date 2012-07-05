@@ -45,6 +45,7 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>Binaries\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="ObjectListView, Version=2.5.0.28371, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.72.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
@@ -88,10 +89,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ReleaseNotes.cs" />
-    <Compile Include="TransformProgress.cs">
+    <Compile Include="TransformerProgress\ExecutionContext.cs" />
+    <Compile Include="TransformerProgress\TransformerMessageDisplay.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TransformerProgress\TransformProgress.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TransformProgress.Designer.cs">
+    <Compile Include="TransformerProgress\TransformProgress.Designer.cs">
       <DependentUpon>TransformProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="WelcomeScreen\WelcomeScreen.cs">
@@ -115,7 +120,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="TransformProgress.resx">
+    <EmbeddedResource Include="TransformerProgress\TransformProgress.resx">
       <DependentUpon>TransformProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WelcomeScreen\WelcomeScreen.resx">
@@ -133,6 +138,7 @@
     </None>
     <None Include="Icons\Geocaching_LIVE_poweredby_128.png" />
     <Content Include="Icons\FAQ-icon.png" />
+    <Content Include="Icons\warning.png" />
     <Content Include="Icons\Wizard.ico" />
     <None Include="Icons\Actions-dialog-cancel-icon.png" />
     <Content Include="Icons\Actions-document-save-icon.png" />

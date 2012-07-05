@@ -275,6 +275,14 @@ namespace GeoTransformer.GeocachingService
             req.CacheCode = new CacheCodeFilter() { CacheCodes = new string[] { code } };
             req.IsLite = useLite;
             var res = this.SearchForGeocaches(req);
+
+            while (res.Status.StatusCode == 140)
+            {
+                // 140 - too many calls per minute
+                System.Threading.Thread.Sleep(10000);
+                res = this.SearchForGeocaches(req);
+            }
+
             if (res.Status.StatusCode != 0)
                 return null;
 
@@ -316,6 +324,13 @@ namespace GeoTransformer.GeocachingService
                     req.MaxPerPage = subset.Count;
                     req.CacheCode = new CacheCodeFilter() { CacheCodes = subset.ToArray() };
                     var res = this.SearchForGeocaches(req);
+
+                    while (res.Status.StatusCode == 140)
+                    {
+                        // 140 - too many calls per minute
+                        System.Threading.Thread.Sleep(10000);
+                        res = this.SearchForGeocaches(req);
+                    }
 
                     if (res.Status.StatusCode != 0)
                     {

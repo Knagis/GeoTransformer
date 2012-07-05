@@ -78,8 +78,10 @@ namespace GeoTransformer.Transformers.EditorExtensions
 
             try
             {
+                int i = 0;
                 foreach (var tempResult in cachedResults)
                 {
+                    i++;
                     if (existingCodes.Contains(tempResult.Key))
                         continue;
 
@@ -99,9 +101,10 @@ namespace GeoTransformer.Transformers.EditorExtensions
                         && tempResult.Key.StartsWith("GC", StringComparison.OrdinalIgnoreCase)
                         && (options & TransformerOptions.UseLocalStorage) == 0)
                     {
-                        this.TerminateExecutionIfNeeded();
+                        this.ExecutionContext.ThrowIfCancellationPending();
 
-                        this.ReportStatus("Loading " + tempResult.Key + " from Live API.");
+                        this.ExecutionContext.ReportProgress(i, cachedResults.Count);
+                        this.ExecutionContext.ReportStatus("Loading " + tempResult.Key + " from Live API.");
 
                         if (service == null)
                             service = GeocachingService.LiveClient.CreateClientProxy();
@@ -129,7 +132,7 @@ namespace GeoTransformer.Transformers.EditorExtensions
                             iq.Value(o => o.Data, copy.ToString());
                             iq.Execute();
                         }
-                        this.ReportStatus(string.Empty);
+                        this.ExecutionContext.ReportStatus(string.Empty);
                     }
 
                     if (gpx == null)
@@ -147,6 +150,8 @@ namespace GeoTransformer.Transformers.EditorExtensions
 
                     newDoc.Waypoints.Add(gpx);
                 }
+
+                this.ExecutionContext.ReportProgress(cachedResults.Count, cachedResults.Count);
             }
             finally
             {

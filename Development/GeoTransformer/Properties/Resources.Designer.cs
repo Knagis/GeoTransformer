@@ -193,9 +193,9 @@ namespace GeoTransformer.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap TreeView {
+        internal static System.Drawing.Bitmap Warning {
             get {
-                object obj = ResourceManager.GetObject("TreeView", resourceCulture);
+                object obj = ResourceManager.GetObject("Warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

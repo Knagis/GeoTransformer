@@ -62,7 +62,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
 
             foreach (var q in queries)
             {
-                this.ReportStatus("Loading '{0}'.", q.Title);
+                this.ExecutionContext.ReportStatus("Loading '{0}'.", q.Title);
                 var cacheFile = System.IO.Path.Combine(this.LocalStoragePath, q.Id.ToString() + ".gpx");
                 if (!System.IO.File.Exists(cacheFile))
                 {
@@ -77,13 +77,13 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                     yield return gpx;
                 }
 
-                this.ReportProgress(cached + notAvailable, queries.Count);
+                this.ExecutionContext.ReportProgress(cached + notAvailable, queries.Count);
             }
 
             if (notAvailable > 0)
-                this.ReportStatus(StatusSeverity.Warning, "{0}/{1} queries loaded, {2} caches", cached, queries.Count, wptCount);
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "{0}/{1} queries loaded, {2} caches", cached, queries.Count, wptCount);
             else
-                this.ReportStatus(StatusSeverity.Information, "{0} queries loaded, {1} caches", queries.Count, wptCount);
+                this.ExecutionContext.ReportStatus(StatusSeverity.Information, "{0} queries loaded, {1} caches", queries.Count, wptCount);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
         private IEnumerable<Gpx.GpxDocument> LoadRegular(IList<Query> queries)
         {
             if (!GeocachingService.LiveClient.IsEnabled)
-                this.ReportStatus(StatusSeverity.Error, "Live API is not enabled.");
+                this.ExecutionContext.ReportStatus(StatusSeverity.Error, "Live API is not enabled.");
 
             int cached = 0;
             int downloaded = 0;
@@ -103,7 +103,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
 
             foreach (var q in queries)
             {
-                this.ReportStatus("Loading {0}/{1}: '{2}'.", queries.Count - notAvailable - cached - downloaded, queries.Count, q.Title);
+                this.ExecutionContext.ReportStatus("Loading {0}/{1}: '{2}'.", queries.Count - notAvailable - cached - downloaded, queries.Count, q.Title);
 
                 var cacheFile = System.IO.Path.Combine(this.LocalStoragePath, q.Id.ToString() + ".gpx");
                 var age = DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(cacheFile)).TotalHours;
@@ -137,9 +137,9 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
             }
 
             if (notAvailable > 0)
-                this.ReportStatus(StatusSeverity.Warning, "{0} cached, {1} downloaded, {2} not available, {3} caches", cached, downloaded, notAvailable, wptCount);
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "{0} cached, {1} downloaded, {2} not available, {3} caches", cached, downloaded, notAvailable, wptCount);
             else
-                this.ReportStatus(StatusSeverity.Information, "{0} cached, {1} downloaded, {2} caches", cached, downloaded, wptCount);
+                this.ExecutionContext.ReportStatus(StatusSeverity.Information, "{0} cached, {1} downloaded, {2} caches", cached, downloaded, wptCount);
         }
 
         private Gpx.GpxDocument DownloadQuery(Query q)
@@ -152,7 +152,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                 var basic = service.IsBasicMember();
                 if (!basic.HasValue)
                 {
-                    this.ReportStatus(StatusSeverity.Warning, "Cannot download '{0}' because Live API is not available.", q.Title);
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Cannot download '{0}' because Live API is not available.", q.Title);
                     return null;
                 }
 
@@ -179,7 +179,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
                         gpx.Waypoints.Add(new Gpx.GpxWaypoint(gc) { LastRefresh = DateTime.Now });
 
                     loaded += result.Geocaches.Length;
-                    this.ReportProgress(loaded, q.MaximumCaches);
+                    this.ExecutionContext.ReportProgress(loaded, q.MaximumCaches);
 
                     // if the maximum has been loaded or there are no more caches to be loaded, break.
                     if (result.Geocaches.Length == 0 || loaded >= q.MaximumCaches)
@@ -192,7 +192,7 @@ namespace GeoTransformer.Transformers.LoadFromLiveApi
 
                 if (result.Status.StatusCode != 0)
                 {
-                    this.ReportStatus(StatusSeverity.Warning, "Unable to download '{0}': " + result.Status.StatusMessage);
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to download '{0}': " + result.Status.StatusMessage);
                     return null;
                 }
 
