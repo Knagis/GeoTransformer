@@ -21,7 +21,8 @@ namespace GeoTransformer
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
             { Version.Parse("4.3.0.0"), "Transformation status window now displays progress indicator for long running tasks." + Environment.NewLine +
-                                        "Transformation status window displays warnings and errors separate from other messages." } ,
+                                        "Transformation status window displays warnings and errors separate from other messages." + Environment.NewLine + 
+                                        "Pocket query download now warns if the query is not available or is too old." } ,
             { Version.Parse("4.2.1.0"), "Fixed Bing Translator extension according to the Bing service changes." } ,
             { Version.Parse("4.2.0.2"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
                                         "Added ability to publish images to Garmin GPS devices (configurable)." + Environment.NewLine +

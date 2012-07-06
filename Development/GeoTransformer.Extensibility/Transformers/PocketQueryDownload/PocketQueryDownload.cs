@@ -119,13 +119,19 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
             {
                 var x = new DownloadInfo(this.LocalStoragePath) { Id = g.Key, Title = g.Value };
 
-                if (!System.IO.File.Exists(x.CacheFileName))
+                var file = x.CacheFileName;
+                if (!System.IO.File.Exists(x.CacheFileName) || !System.IO.File.Exists(x.CacheKeyFileName))
                 {
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' has not been downloaded yet.", x.Title);
                     notInCache++;
                     continue;
                 }
 
-                var file = x.CacheFileName;
+                var queryDate = DateTime.Parse(System.IO.File.ReadAllText(x.CacheKeyFileName), System.Globalization.CultureInfo.InvariantCulture);                
+                var queryAge = (int)DateTime.Now.Subtract(queryDate).TotalDays;
+                if (queryAge > 15)
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "The local copy of '{0}' is {1} day{2} old.", x.Title, queryAge, (queryAge % 10 == 1 && queryAge % 100 != 11) ? string.Empty : "s");
+
                 try
                 {
                     foreach (var xml in Gpx.Loader.Zip(file))
@@ -186,19 +192,26 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     var x = new DownloadInfo(this.LocalStoragePath) { Id = g.Key, Title = g.Value };
                     downloadList.Add(x);
                     var actualPq = pqList.PocketQueryList.FirstOrDefault(o => o.GUID == x.Id || o.Name == x.Title);
+                    x.Title = actualPq.Name;
                     if (actualPq == null)
                     {
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' is not available for download.", x.Title);
                         x.NotAvailable = true;
                         continue;
                     }
 
                     x.LastGenerated = actualPq.DateLastGenerated.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
+                    var queryAge = (int)DateTime.Now.Subtract(actualPq.DateLastGenerated).TotalDays;
+                    if (queryAge > 8)
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' is {1} day{2} old.", x.Title, queryAge, (queryAge % 10 == 1 && queryAge % 100 != 11) ? string.Empty : "s");
+
                     if (x.CacheUpToDate)
                         continue;
 
                     if (!actualPq.IsDownloadAvailable)
                     {
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' is not available for download.", x.Title);
                         x.NotAvailable = true;
                         continue;
                     }
