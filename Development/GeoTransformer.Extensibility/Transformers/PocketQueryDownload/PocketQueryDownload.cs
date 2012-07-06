@@ -155,7 +155,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
             if (notInCache > 0)
             {
                 this.ExecutionContext.ReportStatus(StatusSeverity.Warning,
-                    "Done. {2} from cache, {1} not in cache. {0} caches.",
+                    "Done. {2} from cache, {1} not in cache. {0} geocaches.",
                     wptCount,
                     notInCache,
                     this._options.CheckedQueries.Count - notInCache);
@@ -220,15 +220,30 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 foreach (var x in downloadList.Where(o => !o.NotAvailable && !o.CacheUpToDate))
                 {
                     this.ExecutionContext.ReportStatus("Downloading: " + x.Title);
-                    var response = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
-                    if (response.Status.StatusCode != 0)
+                    x.NotAvailable = true;
+                    try
                     {
-                        x.NotAvailable = true;
-                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
+                        var response = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
+                        if (response.Status.StatusCode != 0)
+                        {
+                            this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
+                        }
+                        else
+                        {
+                            System.IO.File.WriteAllBytes(x.TempFileName, System.Convert.FromBase64String(response.ZippedFile));
+                            x.NotAvailable = false;
+                        }
                     }
-                    else
+                    catch (TransformerCancelledException ex)
                     {
-                        System.IO.File.WriteAllBytes(x.TempFileName, System.Convert.FromBase64String(response.ZippedFile));
+                        if (!ex.CanContinue)
+                            throw;
+
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + ex.Message);
                     }
                 }
             }
@@ -285,10 +300,10 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
             }
 
             this.ExecutionContext.ReportStatus(notInCache > 0 ? StatusSeverity.Warning : StatusSeverity.Information,
-                "Done. {1} downloaded, {2} from cache, {3} not available. {0} caches.",
+                "Done. {1} downloaded, {2} from cache, {3} not available. {0} geocaches.",
                 wptCount,
-                downloadList.Count - fromCache - notInCache,
-                fromCache,
+                downloadList.Count - fromCache,
+                fromCache - notInCache,
                 notInCache);
         }
 
