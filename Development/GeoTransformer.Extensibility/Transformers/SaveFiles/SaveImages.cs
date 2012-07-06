@@ -246,7 +246,9 @@ namespace GeoTransformer.Transformers.SaveFiles
                 yn = image.Height;
             }
 
-            using (var imageCopy = new System.Drawing.Bitmap(xn, yn, image.PixelFormat))
+            var pixelFormat = image.PixelFormat.HasFlag(PixelFormat.Indexed) ? PixelFormat.Format24bppRgb : image.PixelFormat;
+
+            using (var imageCopy = new System.Drawing.Bitmap(xn, yn, pixelFormat))
             using (var graphics = System.Drawing.Graphics.FromImage(imageCopy))
             {
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
