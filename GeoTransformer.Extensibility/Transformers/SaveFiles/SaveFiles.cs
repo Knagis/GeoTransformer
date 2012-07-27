@@ -37,6 +37,11 @@ namespace GeoTransformer.Transformers.SaveFiles
         private string _waypointDirectory;
         private HashSet<string> _usedNames;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SaveFiles"/> class.
+        /// </summary>
+        /// <param name="cacheDirectory">The file system path where the GPX files for geocaches are stored.</param>
+        /// <param name="waypointDirectory">The file system path where the GPX files for geocache waypoints are stored.</param>
         public SaveFiles(string cacheDirectory, string waypointDirectory)
         {
             if (string.IsNullOrWhiteSpace(cacheDirectory))
@@ -45,6 +50,11 @@ namespace GeoTransformer.Transformers.SaveFiles
             this._waypointDirectory = waypointDirectory;
         }
 
+        /// <summary>
+        /// Processes the specified GPX documents. Calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// </summary>
+        /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
         public override void Process(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
             this._usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -56,6 +66,11 @@ namespace GeoTransformer.Transformers.SaveFiles
             base.Process(documents, options);
         }
 
+        /// <summary>
+        /// Processes the specified GPX document - stores it in the specified folder as XML file.
+        /// </summary>
+        /// <param name="document">The document that has to be processed.</param>
+        /// <param name="options">The options that instruct how the transformer should proceed.</param>
         protected override void Process(Gpx.GpxDocument document, TransformerOptions options)
         {
             var fname = document.Metadata.OriginalFileName;
@@ -75,10 +90,15 @@ namespace GeoTransformer.Transformers.SaveFiles
 
             this._usedNames.Add(fname);
 
+            string targetFile;
             if (origname.Name.EndsWith("-wpts.gpx", StringComparison.OrdinalIgnoreCase))
-                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._waypointDirectory ?? this._cacheDirectory, fname));
+                targetFile = System.IO.Path.Combine(this._waypointDirectory ?? this._cacheDirectory, fname);
             else
-                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).Save(System.IO.Path.Combine(this._cacheDirectory, fname));
+                targetFile = System.IO.Path.Combine(this._cacheDirectory, fname);
+
+            using (var fileStream = System.IO.File.Create(targetFile))
+            using (var xmlWriter = System.Xml.XmlWriter.Create(fileStream, new System.Xml.XmlWriterSettings() { CheckCharacters = false }))
+                document.Serialize(Gpx.GpxSerializationOptions.Compatibility).WriteTo(xmlWriter);
         }
     }
 }
