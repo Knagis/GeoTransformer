@@ -22,7 +22,9 @@ namespace GeoTransformer
         {
             { Version.Parse("4.3.0.0"), "Transformation status window now displays progress indicator for long running tasks." + Environment.NewLine +
                                         "Transformation status window displays warnings and errors separate from other messages." + Environment.NewLine + 
-                                        "Pocket query download now warns if the query is not available or is too old." } ,
+                                        "Pocket query download now warns if the query is not available or is too old." + Environment.NewLine +
+                                        "Pocket query download uses local copies when network connection is not available." + Environment.NewLine +
+                                        "Pocket query download no longer remove fresh copies of pocket queries that are unselected." } ,
             { Version.Parse("4.2.1.0"), "Fixed Bing Translator extension according to the Bing service changes." } ,
             { Version.Parse("4.2.0.2"), "Map view now automatically picks up changes made to a cache." + Environment.NewLine +
                                         "Added ability to publish images to Garmin GPS devices (configurable)." + Environment.NewLine +
