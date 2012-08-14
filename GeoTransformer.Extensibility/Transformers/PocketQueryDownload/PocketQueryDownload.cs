@@ -168,19 +168,46 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
         private void LoadFiles(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
+            if (this._options.CheckedQueries.Count == 0)
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Information, "There are no pocket queries selected for download.");
+                return;
+            }
+
             if (!GeocachingService.LiveClient.IsEnabled)
-                this.ExecutionContext.ReportStatus(StatusSeverity.Error, "Live API must be enabled to download PQs.");
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Using local copies because Live API is disabled.");
+                this.LoadFilesFromCache(documents);
+                return;
+            }
 
             var downloadList = new List<DownloadInfo>(this._options.CheckedQueries.Count);
+
             using (var service = GeocachingService.LiveClient.CreateClientProxy())
             {
                 this.ExecutionContext.ReportStatus("Retrieving pocket query list.");
-                var pqList = service.GetPocketQueryList(service.AccessToken);
+                GeocachingService.GetPocketQueryListResponse pqList;
+                try
+                {
+                    pqList = service.GetPocketQueryList(service.AccessToken);
+                }
+                catch (Exception ex)
+                {
+                    pqList = new GeocachingService.GetPocketQueryListResponse()
+                    {
+                        Status = new GeocachingService.StatusResponse()
+                        {
+                            StatusCode = -1,
+                            StatusMessage = ex is System.ServiceModel.EndpointNotFoundException 
+                                ? "Network connection or geocaching.com site is not available." 
+                                : ex.Message
+                        }
+                    };
+                }
+
                 if (pqList.Status.StatusCode != 0)
                 {
                     this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Using local copies because of unable to connect to Live API: " + pqList.Status.StatusMessage);
-
-                    // fall back to the cached copies.
                     this.LoadFilesFromCache(documents);
                     return;
                 }
@@ -288,12 +315,13 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 }
             }
 
-            // remove all obsolete files
+            // remove all obsolete (older than a month and not currently selected) files.
             var validFiles = downloadList.Select(o => o.CacheFileName).Union(downloadList.Select(o => o.CacheKeyFileName));
             foreach (var f in System.IO.Directory.GetFiles(this.LocalStoragePath).Except(validFiles, StringComparer.OrdinalIgnoreCase))
             {
                 try
                 {
+                    if (DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(f)).TotalDays > 30)
                     System.IO.File.Delete(f);
                 }
                 catch { }
