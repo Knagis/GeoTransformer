@@ -127,11 +127,15 @@ treated as added directly to the listing.");
         /// <param name="imageData">The image data.</param>
         private static void UpdateWaypoint(Gpx.GpxWaypoint waypoint, IEnumerable<GeocachingService.ImageData> imageData)
         {
+            if (!imageData.Any())
+                return;
+
             var collection = waypoint.Geocache.Images;
+            var existingUris = new HashSet<Uri>(collection.Select(o => o.Address).Union(waypoint.Geocache.Logs.SelectMany(l => l.Images.Select(i => i.Address))));
             foreach (var img in imageData)
             {
                 var uri = new Uri(img.Url);
-                if (!collection.Any(o => o.Address == uri))
+                if (!existingUris.Contains(uri))
                     collection.Add(new Gpx.GeocacheImage() { Title = img.Name, Address = new Uri(img.Url) });
             }
         }
