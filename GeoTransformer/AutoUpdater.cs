@@ -13,6 +13,9 @@ using System.IO;
 
 namespace GeoTransformer
 {
+    /// <summary>
+    /// Class that handles automatic updating of the application.
+    /// </summary>
     internal static class AutoUpdater
     {
         /// <summary>
@@ -92,14 +95,31 @@ namespace GeoTransformer
         }
 
         /// <summary>
+        /// Backs up the GeoTransformer.data file.
+        /// </summary>
+        private static void BackupDataFile()
+        {
+            if (File.Exists(@"..\GeoTransformer.data"))
+            {
+                Directory.CreateDirectory(@"..\Backup");
+                File.Copy(@"..\GeoTransformer.data", @"..\Backup\GeoTransformer.data." + DateTime.Now.ToString("yyyyMMddHHmmss"), true);
+            }
+
+            if (File.Exists(@"..\GeoTransformer.data.backup"))
+            {
+                Directory.CreateDirectory(@"..\Backup");
+                File.Move(@"..\GeoTransformer.data.backup", @"..\Backup\GeoTransformer.data.backup." + DateTime.Now.ToString("yyyyMMddHHmmss"));
+            }
+        }
+
+        /// <summary>
         /// Installs the update if any is available and already downloaded.
         /// </summary>
         private static void InstallUpdate()
         {
             try
             {
-                if (File.Exists(@"..\GeoTransformer.data"))
-                    File.Copy(@"..\GeoTransformer.data", @"..\GeoTransformer.data.backup", true);
+                BackupDataFile();
 
                 var fz = new ICSharpCode.SharpZipLib.Zip.FastZip();
                 fz.ExtractZip("Update.zip", @"..\", ICSharpCode.SharpZipLib.Zip.FastZip.Overwrite.Always, null, null, null, false);
