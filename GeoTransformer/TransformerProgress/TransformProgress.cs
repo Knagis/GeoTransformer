@@ -346,13 +346,17 @@ namespace GeoTransformer
                 catch (Exception ex)
                 {
                     this.ReportStatus(i, Transformers.StatusSeverity.FatalError, ex.Message + Environment.NewLine + ex.ToString());
-                    break;
+
+                    var result = this.Invoke(t => MessageBox.Show(t, "The current step finished with a fatal error. It is possible to ignore it but it may cause unexpected behavior or corrupted data." + Environment.NewLine + Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + "Do you want to ignore it and continue with the next step?", "Transformer error", MessageBoxButtons.YesNo, MessageBoxIcon.Error));
+                    if (result == System.Windows.Forms.DialogResult.No)
+                        break;
                 }
                 finally
                 {
-                    this.ReportDone(i);
                     if (context.ExpectedException != null)
-                        throw new InvalidOperationException("The transformer has suppressed a TransformerCancelledException that is not allowed to be suppressed.", context.ExpectedException);
+                        this.ReportStatus(i, Transformers.StatusSeverity.FatalError, "The transformer has suppressed a TransformerCancelledException that is not allowed to be suppressed: " + context.ExpectedException.Message);
+
+                    this.ReportDone(i);
                 }
 
                 i++;

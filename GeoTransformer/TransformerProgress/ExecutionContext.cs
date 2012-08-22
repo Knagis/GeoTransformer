@@ -78,7 +78,8 @@ namespace GeoTransformer
 
             if (severity == Transformers.StatusSeverity.FatalError)
             {
-                this.ExpectedException = new Transformers.TransformerCancelledException(message, false, true);
+                var result = this.ParentWindow.Invoke(t => MessageBox.Show(t, "The current step finished with a fatal error. It is possible to ignore it but it may cause unexpected behavior or corrupted data." + Environment.NewLine + Environment.NewLine + message + Environment.NewLine + Environment.NewLine + "Do you want to ignore it and continue with the next step?", "Transformer error", MessageBoxButtons.YesNo, MessageBoxIcon.Error));
+                this.ExpectedException = new Transformers.TransformerCancelledException(message, false, result != System.Windows.Forms.DialogResult.Yes);
                 throw this.ExpectedException;
             }
             else if (severity == Transformers.StatusSeverity.Error)
