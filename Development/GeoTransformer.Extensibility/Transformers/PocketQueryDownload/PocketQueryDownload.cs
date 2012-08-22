@@ -113,6 +113,12 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
         private void LoadFilesFromCache(IList<Gpx.GpxDocument> documents)
         {
+            if (this._options.CheckedQueries.Count == 0)
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "There are no pocket queries selected for download.");
+                return;
+            }
+
             int wptCount = 0;
             int notInCache = 0;
             foreach (var g in this._options.CheckedQueries)
@@ -170,7 +176,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
         {
             if (this._options.CheckedQueries.Count == 0)
             {
-                this.ExecutionContext.ReportStatus(StatusSeverity.Information, "There are no pocket queries selected for download.");
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "There are no pocket queries selected for download.");
                 return;
             }
 
