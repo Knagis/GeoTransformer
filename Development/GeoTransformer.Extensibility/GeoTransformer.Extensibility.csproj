@@ -285,6 +285,7 @@
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Native.cs" />
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Volume.cs" />
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\VolumeDeviceClass.cs" />
+    <Compile Include="Transformers\SaveFiles\SaveImagesCacheSchema.cs" />
     <Compile Include="Transformers\SaveFiles\SaveFiles.cs" />
     <Compile Include="Transformers\SaveFiles\SaveImages.cs" />
     <Compile Include="Transformers\StatusMessageEventArgs.cs" />
