@@ -34,11 +34,11 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
         /// <returns>Key-value pair of the captcha input fields.</returns>
         private Dictionary<string, string> RequestCaptcha(string script)
         {
-            if (this.ParentWindow.InvokeRequired)
-                return this.ParentWindow.Invoke(s => this.RequestCaptcha(s), script);
+            if (this.ExecutionContext.ParentWindow.InvokeRequired)
+                return this.ExecutionContext.ParentWindow.Invoke(s => this.RequestCaptcha(s), script);
 
             var form = new CaptchaForm(script);
-            var result = form.ShowDialog(this.ParentWindow);
+            var result = form.ShowDialog(this.ExecutionContext.ParentWindow);
             if (result != System.Windows.Forms.DialogResult.OK)
                 this.ExecutionContext.ReportStatus(StatusSeverity.Error, "User cancelled from CAPTCHA window");
 
@@ -288,19 +288,6 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
         /// Gets or sets the local storage path where the extension can store its cache if needed. The value is set by the main engine once the extension instance is created.
         /// </summary>
         public string LocalStoragePath
-        {
-            get;
-            set;
-        }
-
-        #endregion
-
-        #region [ ITransformerWithPopup ]
-
-        /// <summary>
-        /// Sets the parent window that should be used if the transformer has to show a dialog user interface.
-        /// </summary>
-        public System.Windows.Forms.Form ParentWindow
         {
             get;
             set;
