@@ -55,7 +55,11 @@ This function is also available for Basic Members.
 
 Unfortunately this method cannot separate images added
 to logs from the listing images and all images are
-treated as added directly to the listing.");
+treated as added directly to the listing.
+
+Note that this function will add the information about
+all images that are attached to every log, even very old
+ones.");
 
             this._configurationControl.checkBoxEnabled.Checked = currentConfiguration == null || (currentConfiguration.Length > 0 && currentConfiguration[0] == 1);
             return this._configurationControl;
@@ -188,10 +192,6 @@ treated as added directly to the listing.");
                 foreach (var doc in documents)
                     foreach (var wpt in doc.Waypoints)
                     {
-                        // if the waypoint already contains images, skip it
-                        if (wpt.Geocache.Images.Count > 0)
-                            continue;
-
                         // ignore additional waypoints and caches that are not from geocaching.com
                         if (wpt.Name == null || !wpt.Name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
                             continue;
