@@ -229,6 +229,8 @@ ones.");
                                     {
                                         waypointsToDownload.Enqueue(wpt);
 
+                                        this.ExecutionContext.ThrowIfCancellationPending();
+
                                         // sleep for 10 seconds
                                         System.Threading.Thread.Sleep(10000);
                                         continue;
