@@ -113,19 +113,31 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
         private void LoadFilesFromCache(IList<Gpx.GpxDocument> documents)
         {
+            if (this._options.CheckedQueries.Count == 0)
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "There are no pocket queries selected for download.");
+                return;
+            }
+
             int wptCount = 0;
             int notInCache = 0;
             foreach (var g in this._options.CheckedQueries)
             {
                 var x = new DownloadInfo(this.LocalStoragePath) { Id = g.Key, Title = g.Value };
 
-                if (!System.IO.File.Exists(x.CacheFileName))
+                var file = x.CacheFileName;
+                if (!System.IO.File.Exists(x.CacheFileName) || !System.IO.File.Exists(x.CacheKeyFileName))
                 {
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' has not been downloaded yet.", x.Title);
                     notInCache++;
                     continue;
                 }
 
-                var file = x.CacheFileName;
+                var queryDate = DateTime.Parse(System.IO.File.ReadAllText(x.CacheKeyFileName), System.Globalization.CultureInfo.InvariantCulture);                
+                var queryAge = (int)DateTime.Now.Subtract(queryDate).TotalDays;
+                if (queryAge > 15)
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "The local copy of '{0}' is {1} day{2} old.", x.Title, queryAge, (queryAge % 10 == 1 && queryAge % 100 != 11) ? string.Empty : "s");
+
                 try
                 {
                     foreach (var xml in Gpx.Loader.Zip(file))
@@ -133,6 +145,10 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                         documents.Add(xml);
                         wptCount += xml.Waypoints.Count(o => o.Geocache.IsDefined());
                     }
+                }
+                catch (Transformers.TransformerCancelledException)
+                {
+                    throw;
                 }
                 catch
                 {
@@ -144,33 +160,60 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
             if (notInCache > 0)
             {
-                this.ReportStatus(StatusSeverity.Warning,
-                    "Done. {2} from cache, {1} not in cache. {0} caches.",
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning,
+                    "Done. {2} from cache, {1} not in cache. {0} geocaches.",
                     wptCount,
                     notInCache,
                     this._options.CheckedQueries.Count - notInCache);
             }
             else
             {
-                this.ReportStatus("Done. {0} files loaded, {1} caches.", this._options.CheckedQueries.Count, wptCount);
+                this.ExecutionContext.ReportStatus("Done. {0} files loaded, {1} caches.", this._options.CheckedQueries.Count, wptCount);
             }
         }
 
         private void LoadFiles(IList<Gpx.GpxDocument> documents, TransformerOptions options)
         {
+            if (this._options.CheckedQueries.Count == 0)
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "There are no pocket queries selected for download.");
+                return;
+            }
+
             if (!GeocachingService.LiveClient.IsEnabled)
-                this.ReportStatus(StatusSeverity.Error, "Live API must be enabled to download PQs.");
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Using local copies because Live API is disabled.");
+                this.LoadFilesFromCache(documents);
+                return;
+            }
 
             var downloadList = new List<DownloadInfo>(this._options.CheckedQueries.Count);
+
             using (var service = GeocachingService.LiveClient.CreateClientProxy())
             {
-                this.ReportStatus("Retrieving pocket query list.");
-                var pqList = service.GetPocketQueryList(service.AccessToken);
+                this.ExecutionContext.ReportStatus("Retrieving pocket query list.");
+                GeocachingService.GetPocketQueryListResponse pqList;
+                try
+                {
+                    pqList = service.GetPocketQueryList(service.AccessToken);
+                }
+                catch (Exception ex)
+                {
+                    pqList = new GeocachingService.GetPocketQueryListResponse()
+                    {
+                        Status = new GeocachingService.StatusResponse()
+                        {
+                            StatusCode = -1,
+                            StatusMessage = ex is System.ServiceModel.EndpointNotFoundException 
+                                ? "Network connection or geocaching.com site is not available." 
+                                : ex.Message
+                        }
+                    };
+                }
+
                 if (pqList.Status.StatusCode != 0)
                 {
-                    this.ReportStatus(StatusSeverity.Warning, "Using local copies because of unable to connect to Live API: " + pqList.Status.StatusMessage);
-
-                    // fall back to the cached copies.
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Using local copies because of unable to connect to Live API: " + pqList.Status.StatusMessage);
                     this.LoadFilesFromCache(documents);
                     return;
                 }
@@ -182,19 +225,26 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     var x = new DownloadInfo(this.LocalStoragePath) { Id = g.Key, Title = g.Value };
                     downloadList.Add(x);
                     var actualPq = pqList.PocketQueryList.FirstOrDefault(o => o.GUID == x.Id || o.Name == x.Title);
+                    x.Title = actualPq.Name;
                     if (actualPq == null)
                     {
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' is not available for download.", x.Title);
                         x.NotAvailable = true;
                         continue;
                     }
 
                     x.LastGenerated = actualPq.DateLastGenerated.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
+                    var queryAge = (int)DateTime.Now.Subtract(actualPq.DateLastGenerated).TotalDays;
+                    if (queryAge > 8)
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' is {1} day{2} old.", x.Title, queryAge, (queryAge % 10 == 1 && queryAge % 100 != 11) ? string.Empty : "s");
+
                     if (x.CacheUpToDate)
                         continue;
 
                     if (!actualPq.IsDownloadAvailable)
                     {
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Query '{0}' is not available for download.", x.Title);
                         x.NotAvailable = true;
                         continue;
                     }
@@ -202,21 +252,36 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
                 foreach (var x in downloadList.Where(o => !o.NotAvailable && !o.CacheUpToDate))
                 {
-                    this.ReportStatus("Downloading: " + x.Title);
-                    var response = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
-                    if (response.Status.StatusCode != 0)
+                    this.ExecutionContext.ReportStatus("Downloading: " + x.Title);
+                    x.NotAvailable = true;
+                    try
                     {
-                        x.NotAvailable = true;
-                        this.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
+                        var response = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
+                        if (response.Status.StatusCode != 0)
+                        {
+                            this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
+                        }
+                        else
+                        {
+                            System.IO.File.WriteAllBytes(x.TempFileName, System.Convert.FromBase64String(response.ZippedFile));
+                            x.NotAvailable = false;
+                        }
                     }
-                    else
+                    catch (TransformerCancelledException ex)
                     {
-                        System.IO.File.WriteAllBytes(x.TempFileName, System.Convert.FromBase64String(response.ZippedFile));
+                        if (!ex.CanContinue)
+                            throw;
+
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + ex.Message);
                     }
                 }
             }
 
-            this.ReportStatus("Download complete, loading data.");
+            this.ExecutionContext.ReportStatus("Download complete, loading data.");
 
             int wptCount = 0;
             int notInCache = 0;
@@ -244,7 +309,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 catch
                 {
                     System.IO.File.Delete(file);
-                    this.ReportStatus(StatusSeverity.Warning, "The {1} copy for '{0}' could not be loaded.", x.Title, useCache ? "cached" : "downloaded");
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "The {1} copy for '{0}' could not be loaded.", x.Title, useCache ? "cached" : "downloaded");
                 }
 
                 if (!useCache)
@@ -256,22 +321,23 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 }
             }
 
-            // remove all obsolete files
+            // remove all obsolete (older than a month and not currently selected) files.
             var validFiles = downloadList.Select(o => o.CacheFileName).Union(downloadList.Select(o => o.CacheKeyFileName));
             foreach (var f in System.IO.Directory.GetFiles(this.LocalStoragePath).Except(validFiles, StringComparer.OrdinalIgnoreCase))
             {
                 try
                 {
+                    if (DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(f)).TotalDays > 30)
                     System.IO.File.Delete(f);
                 }
                 catch { }
             }
 
-            this.ReportStatus(notInCache > 0 ? StatusSeverity.Warning : StatusSeverity.Information,
-                "Done. {1} downloaded, {2} from cache, {3} not available. {0} caches.",
+            this.ExecutionContext.ReportStatus(notInCache > 0 ? StatusSeverity.Warning : StatusSeverity.Information,
+                "Done. {1} downloaded, {2} from cache, {3} not available. {0} geocaches.",
                 wptCount,
-                downloadList.Count - fromCache - notInCache,
-                fromCache,
+                downloadList.Count - fromCache,
+                fromCache - notInCache,
                 notInCache);
         }
 

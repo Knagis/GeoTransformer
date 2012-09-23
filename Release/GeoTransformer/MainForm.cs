@@ -283,7 +283,6 @@ namespace GeoTransformer
             UI.SingletonTooltip.SetRealToolTip(this.toolTipForOptions);
 
             this.imageList.Images.Add("Treasure", Properties.Resources.Treasure);
-            this.imageList.Images.Add("TreeView", Properties.Resources.TreeView);
             this.imageList.Images.Add("Settings", Properties.Resources.Settings);
             this.imageList.Images.Add("About", Properties.Resources.About);
 

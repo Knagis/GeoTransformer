@@ -163,8 +163,8 @@ namespace GeoTransformer.Transformers.Translator
             double c;
             while ((c = data.Count(o => !o.SourceLanguageCacheTested && o.SourceLanguage == null)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
 
                 var subset = data.Where(o => !o.SourceLanguageCacheTested && o.SourceLanguage == null).Take(50).ToList();
                 var query = cache.LanguageDetects.Select();
@@ -182,8 +182,8 @@ namespace GeoTransformer.Transformers.Translator
 
             while ((c = data.Count(o => o.SourceLanguage == null && !o.SourceLanguageError)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of language detection done");
 
                 var subset = data.Where(o => o.SourceLanguage == null && !o.SourceLanguageError).Take(5).ToList();
                 string[] results;
@@ -219,8 +219,8 @@ namespace GeoTransformer.Transformers.Translator
             double c;
             while ((c = data.Count(o => !o.SourceLanguageError && !o.TranslationCacheTested && o.Translation == null)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
 
                 var subset = data.Where(o => !o.SourceLanguageError && !o.TranslationCacheTested && o.Translation == null).Take(50).ToList();
                 var query = cache.Translations.Select();
@@ -247,8 +247,8 @@ namespace GeoTransformer.Transformers.Translator
 
             while ((c = data.Count(o => o.Translation == null && !o.TranslationError && !o.SourceLanguageError)) > 0)
             {
-                this.TerminateExecutionIfNeeded();
-                this.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
+                this.ExecutionContext.ThrowIfCancellationPending();
+                this.ExecutionContext.ReportStatus((1 - c / data.Count()).ToString("P2") + " of translation done");
 
                 var subset = data.Where(o => o.Translation == null && !o.TranslationError && !o.SourceLanguageError)
                                  .GroupBy(o => o.SourceLanguage + "-" + o.IsHtml)
@@ -339,7 +339,7 @@ namespace GeoTransformer.Transformers.Translator
         {
             if ((options & TransformerOptions.LoadingViewerCache) == TransformerOptions.LoadingViewerCache)
             {
-                this.ReportStatus("Translation is only done when publishing.");
+                this.ExecutionContext.ReportStatus("Translation is only done when publishing.");
                 return;
             }
 
@@ -374,9 +374,9 @@ namespace GeoTransformer.Transformers.Translator
 
             for (int i = 0; i < data.Count; i++)
             {
-                this.TerminateExecutionIfNeeded();
+                this.ExecutionContext.ThrowIfCancellationPending();
                 if (i % 10 == 0)
-                    this.ReportStatus(((double)i / data.Count).ToString("P2") + " of values updated");
+                    this.ExecutionContext.ReportStatus(((double)i / data.Count).ToString("P2") + " of values updated");
 
                 var d = data[i];
                 if (!string.IsNullOrWhiteSpace(d.Translation) && !string.Equals(d.Translation, d.Text, StringComparison.OrdinalIgnoreCase))
@@ -384,7 +384,7 @@ namespace GeoTransformer.Transformers.Translator
             }
 
             var errors = data.Count(o => o.SourceLanguageError || o.TranslationError);
-            this.ReportStatus("Translation complete (" + (data.Count - errors) + " values translated, " + ignored + " skipped, " + errors + " errors)");
+            this.ExecutionContext.ReportStatus("Translation complete (" + (data.Count - errors) + " values translated, " + ignored + " skipped, " + errors + " errors)");
 
             this._processConfigCache = null;
         }

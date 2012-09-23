@@ -73,6 +73,13 @@ namespace FieldNoteManager
                         req.IsLite = true;
                         var res = service.SearchForGeocaches(req);
 
+                        while (res.Status.StatusCode == 140)
+                        {
+                            this.toolStripStatusLabel.Text = "Loading geocache data (waiting because of API limit): " + (i * 100 / parsed.Count) + "%";
+                            System.Threading.Thread.Sleep(10000);
+                            res = service.SearchForGeocaches(req);
+                        }
+
                         foreach (var n in subset)
                         {
                             if (res.Status.StatusCode != 0)
@@ -187,6 +194,15 @@ namespace FieldNoteManager
                             req.WptLogTypeId = logType.WptLogTypeId;
 
                             var result = service.CreateFieldNoteAndPublish(req);
+                            
+                            // 140 - too many method calls per minute
+                            while (result.Status.StatusCode == 140)
+                            {
+                                this.toolStripStatusLabel.Text = "Too many logs per minute. Waiting...";
+                                System.Threading.Thread.Sleep(10000);
+                                result = service.CreateFieldNoteAndPublish(req);
+                            }
+
                             if (result.Status.StatusCode != 0)
                                 n.Result = "Error: " + result.Status.StatusMessage;
                             else
@@ -253,6 +269,24 @@ namespace FieldNoteManager
 
             var code = ((FieldNote)this.dataGrid.Rows[e.RowIndex].DataBoundItem).CacheCode;
             System.Diagnostics.Process.Start("http://coord.info/" + code);
+        }
+
+        private void dataGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            var cc = this.dataGrid.CurrentCell;
+            if (cc == null || cc.ColumnIndex != this.colLogText.DisplayIndex || cc.RowIndex == -1)
+                return;
+
+            var textBox = (TextBox)e.Control;
+            textBox.TextChanged += (a, b) =>
+                {
+                    var selected = this.dataGrid.SelectedCells.OfType<DataGridViewTextBoxCell>()
+                                    .Where(o => o.ColumnIndex == this.colLogText.DisplayIndex && o.RowIndex != cc.RowIndex)
+                                    .Where(o => !o.ReadOnly);
+
+                    foreach (var cell in selected)
+                        cell.Value = textBox.Text;
+                };
         }
     }
 }

@@ -55,7 +55,11 @@ This function is also available for Basic Members.
 
 Unfortunately this method cannot separate images added
 to logs from the listing images and all images are
-treated as added directly to the listing.");
+treated as added directly to the listing.
+
+Note that this function will add the information about
+all images that are attached to every log, even very old
+ones.");
 
             this._configurationControl.checkBoxEnabled.Checked = currentConfiguration == null || (currentConfiguration.Length > 0 && currentConfiguration[0] == 1);
             return this._configurationControl;
@@ -127,11 +131,15 @@ treated as added directly to the listing.");
         /// <param name="imageData">The image data.</param>
         private static void UpdateWaypoint(Gpx.GpxWaypoint waypoint, IEnumerable<GeocachingService.ImageData> imageData)
         {
+            if (!imageData.Any())
+                return;
+
             var collection = waypoint.Geocache.Images;
+            var existingUris = new HashSet<Uri>(collection.Select(o => o.Address).Union(waypoint.Geocache.Logs.SelectMany(l => l.Images.Select(i => i.Address))));
             foreach (var img in imageData)
             {
                 var uri = new Uri(img.Url);
-                if (!collection.Any(o => o.Address == uri))
+                if (!existingUris.Contains(uri))
                     collection.Add(new Gpx.GeocacheImage() { Title = img.Name, Address = new Uri(img.Url) });
             }
         }
@@ -184,10 +192,6 @@ treated as added directly to the listing.");
                 foreach (var doc in documents)
                     foreach (var wpt in doc.Waypoints)
                     {
-                        // if the waypoint already contains images, skip it
-                        if (wpt.Geocache.Images.Count > 0)
-                            continue;
-
                         // ignore additional waypoints and caches that are not from geocaching.com
                         if (wpt.Name == null || !wpt.Name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
                             continue;
@@ -211,7 +215,7 @@ treated as added directly to the listing.");
                         {
                             int i = 0;
                             int errors = 0;
-                            this.ReportStatus("Downloading geocache information using Live API.");
+                            this.ExecutionContext.ReportStatus("Downloading geocache information using Live API.");
                             while (waypointsToDownload.Count > 0)
                             {
                                 var wpt = waypointsToDownload.Dequeue();
@@ -225,12 +229,14 @@ treated as added directly to the listing.");
                                     {
                                         waypointsToDownload.Enqueue(wpt);
 
+                                        this.ExecutionContext.ThrowIfCancellationPending();
+
                                         // sleep for 10 seconds
                                         System.Threading.Thread.Sleep(10000);
                                         continue;
                                     }
 
-                                    this.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + downloaded.Status.StatusMessage);
+                                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + downloaded.Status.StatusMessage);
                                     errors++;
                                     if (errors > 20)
                                     {
@@ -250,19 +256,28 @@ treated as added directly to the listing.");
                                 insQ.Value(o => o.RetrievedOn, DateTime.Now);
                                 insQ.Execute();
 
-                                this.ReportProgress(i, i + waypointsToDownload.Count);
+                                this.ExecutionContext.ReportProgress(i, i + waypointsToDownload.Count, true);
 
-                                //TODO: remove once the transformer progress shows progress indicator
-                                this.ReportStatus("Progress: {0}% (press cancel to skip download)", i * 100 / (i + waypointsToDownload.Count));
-
-                                this.TerminateExecutionIfNeeded();
+                                this.ExecutionContext.ThrowIfCancellationPending();
                             }
                         }
+                    }
+                    catch (Transformers.TransformerCancelledException ex)
+                    {
+                        if (!ex.CanContinue)
+                            throw;
+
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Skipping geocache download.");
+                        downloadFailed = true;
                     }
                     catch (Exception ex)
                     {
                         downloadFailed = true;
-                        this.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + ex.Message);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to download image data: " + ex.Message);
+                    }
+                    finally
+                    {
+                        this.ExecutionContext.ReportProgressFinished();
                     }
                 }
 

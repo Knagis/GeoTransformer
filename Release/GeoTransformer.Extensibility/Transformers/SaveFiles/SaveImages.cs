@@ -162,12 +162,33 @@ namespace GeoTransformer.Transformers.SaveFiles
         }
 
         /// <summary>
-        /// Downloads the given image when needed and saves it in the local cache. Returns the path to 
+        /// Downloads the given image when needed and saves it in the local cache. Returns the path to the image file.
         /// </summary>
-        /// <param name="waypoint"></param>
-        /// <param name="image"></param>
-        /// <returns></returns>
+        /// <param name="waypoint">The waypoint that contains the image</param>
+        /// <param name="image">The image data.</param>
+        /// <returns>The path to the image file on disk.</returns>
         private string DownloadImage(Gpx.GpxWaypoint waypoint, Gpx.GeocacheImage image)
+        {
+            var filePath = System.IO.Path.Combine(this._localStorage, this.CreateLocalRelativePath(waypoint, image));
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(filePath));
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                this.ExecutionContext.ReportStatus("Downloading image '{0}' for cache {1}.", image.Title, waypoint.Geocache.Name);
+                this._webClient.DownloadFile(image.Address, filePath);
+            }
+
+            return filePath;
+        }
+
+        /// <summary>
+        /// Creates the path relative to the local storage folder that would store the given image.
+        /// </summary>
+        /// <param name="waypoint">The waypoint that contains the image</param>
+        /// <param name="image">The image data.</param>
+        /// <param name="convertedImage">If <c>true</c>, the returned path is for the converted image, not the original.</param>
+        /// <returns>The relative path to the local image.</returns>
+        private string CreateLocalRelativePath(Gpx.GpxWaypoint waypoint, Gpx.GeocacheImage image, bool convertedImage = false)
         {
             var code = waypoint.Name;
 
@@ -178,17 +199,12 @@ namespace GeoTransformer.Transformers.SaveFiles
             foreach (var x in System.IO.Path.GetInvalidFileNameChars())
                 fname = fname.Replace(x, '_');
 
-            var path = System.IO.Path.Combine(this._localStorage, lastChar, lastChar2, code);
-            System.IO.Directory.CreateDirectory(path);
-            var filePath = System.IO.Path.Combine(path, fname);
+            var relativePath = System.IO.Path.Combine(lastChar, lastChar2, code, fname);
 
-            if (!System.IO.File.Exists(filePath))
-            {
-                this.ReportStatus("Downloading image '{0}' for cache {1}.", image.Title, waypoint.Geocache.Name);
-                this._webClient.DownloadFile(image.Address, filePath);
-            }
+            if (convertedImage)
+                relativePath = relativePath.Substring(0, relativePath.Length - System.IO.Path.GetExtension(relativePath).Length) + ".converted" + this._defaultExtension;
 
-            return filePath;
+            return relativePath;
         }
 
         /// <summary>
@@ -246,7 +262,9 @@ namespace GeoTransformer.Transformers.SaveFiles
                 yn = image.Height;
             }
 
-            using (var imageCopy = new System.Drawing.Bitmap(xn, yn, image.PixelFormat))
+            var pixelFormat = image.PixelFormat.HasFlag(PixelFormat.Indexed) ? PixelFormat.Format24bppRgb : image.PixelFormat;
+
+            using (var imageCopy = new System.Drawing.Bitmap(xn, yn, pixelFormat))
             using (var graphics = System.Drawing.Graphics.FromImage(imageCopy))
             {
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -331,6 +349,8 @@ namespace GeoTransformer.Transformers.SaveFiles
 
             this._defaultExtension = DefaultEncoder.FilenameExtension.Split(';')[0].Substring(1);
 
+            bool userInterrupted = false;
+            int i = 0;
             try
             {
                 this._webClient = new System.Net.WebClient();
@@ -353,33 +373,60 @@ namespace GeoTransformer.Transformers.SaveFiles
                         }
                     }
 
-                int i = 0;
+                // update the image last use cache before the images are processed so that the dates are persisted even if the user
+                // skips the download/publish.
+                using (var schema = new SaveImagesCacheSchema(System.IO.Path.Combine(this._localStorage, "images_last_used.db")))
+                using (var scope = schema.Database().BeginTransaction())
+                {
+                    foreach (var img in images)
+                    {
+                        var q = schema.LastUsed.Replace();
+                        q.Value(o => o.Path, this.CreateLocalRelativePath(img.Item1, img.Item2, false));
+                        q.Value(o => o.LastUsed, DateTime.UtcNow);
+                        q.Execute();
+
+                        q = schema.LastUsed.Replace();
+                        q.Value(o => o.Path, this.CreateLocalRelativePath(img.Item1, img.Item2, true));
+                        q.Value(o => o.LastUsed, DateTime.UtcNow);
+                        q.Execute();
+                    }
+
+                    scope.Commit();
+                }
+
                 foreach (var img in images)
                 {
                     this.Process(img.Item1, img.Item2);
 
-                    this.TerminateExecutionIfNeeded();
+                    this.ExecutionContext.ThrowIfCancellationPending();
 
                     i++;
-                    this.ReportProgress(i, images.Count);
-
-                    //TODO: remove when transformerprogress will show progress
-                    this.ReportStatus("Progress: {0}%", i * 100 / images.Count);
+                    this.ExecutionContext.ReportProgress(i, images.Count, true);
                 }
+            }
+            catch (TransformerCancelledException ex)
+            {
+                if (!ex.CanContinue)
+                    throw;
+
+                userInterrupted = true;
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, ex.Message);
             }
             finally
             {
+                this.ExecutionContext.ReportProgressFinished();
+
                 if (this._webClient != null)
                     this._webClient.Dispose();
                 this._webClient = null;
             }
 
-            if (this.RemoveObsoleteImages)
+            if (this.RemoveObsoleteImages && !userInterrupted)
             {
                 if (string.IsNullOrEmpty(this.ImageRootPath))
                     throw new InvalidOperationException("ImageRootPath must be set when RemoveObsoleteImages is true.");
 
-                this.ReportStatus("Removing obsolete images.");
+                this.ExecutionContext.ReportStatus("Removing obsolete images.");
 
                 try
                 {
@@ -410,11 +457,84 @@ namespace GeoTransformer.Transformers.SaveFiles
                 }
                 catch (System.IO.IOException ex)
                 {
-                    this.ReportStatus(StatusSeverity.Warning, "Unable to clean old images: " + ex.Message);
+                    this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to clean old images: " + ex.Message);
                 }
             }
 
-            this.ReportStatus("Images published.");
+            this.CleanLocalStorage();
+
+            this.ExecutionContext.ReportStatus("{0} images published.", i);
+        }
+
+        /// <summary>
+        /// Removes all images from local storage that have not been used in the last month.
+        /// </summary>
+        private void CleanLocalStorage()
+        {
+            HashSet<string> needed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            using (var schema = new SaveImagesCacheSchema(System.IO.Path.Combine(this._localStorage, "images_last_used.db")))
+            {
+                var q = schema.LastUsed.Select();
+                q.Select(o => o.Path);
+                q.Where(o => o.LastUsed, Data.WhereOperator.Greater, DateTime.UtcNow.AddMonths(-1));
+                foreach (var res in q.Execute())
+                    needed.Add(System.IO.Path.Combine(this._localStorage, res.Value(o => o.Path)));
+            }
+
+            // since the images are stored in the folders by last digits of GC code, assume that all these are image folders and do not process anything else
+            foreach (var dir in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+            {
+                this.CleanLocalStorage(needed, System.IO.Path.Combine(this._localStorage, dir.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Removes obsolete images from the given local storage path. Removes the given path if it is empty.
+        /// </summary>
+        /// <returns><c>True</c> if the given folder has been completely cleaned and thus removed.</returns>
+        private bool CleanLocalStorage(HashSet<string> neededPaths, string path)
+        {
+            if (!System.IO.Directory.Exists(path))
+                return true;
+
+            bool shouldRemove = true;
+            foreach (var subdir in System.IO.Directory.GetDirectories(path))
+            {
+                shouldRemove &= CleanLocalStorage(neededPaths, subdir);
+            }
+
+            foreach (var file in System.IO.Directory.GetFiles(path))
+            {
+                if (neededPaths.Contains(file))
+                {
+                    shouldRemove = false;
+                }
+                else
+                {
+                    try
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                    catch (System.IO.IOException)
+                    {
+                        shouldRemove = false;
+                    }
+                }
+            }
+
+            if (shouldRemove)
+            {
+                try
+                {
+                    System.IO.Directory.Delete(path);
+                }
+                catch (System.IO.IOException)
+                {
+                    shouldRemove = false;
+                }
+            }
+
+            return shouldRemove;
         }
 
         /// <summary>
@@ -438,7 +558,7 @@ namespace GeoTransformer.Transformers.SaveFiles
             }
             catch (Exception ex)
             {
-                this.ReportStatus(StatusSeverity.Warning, "Unable to publish an image '{1}' for cache {0}: {2}", waypoint.Name, image.Title, ex.Message);
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Unable to publish an image '{1}' for cache {0}: {2}", waypoint.Name, image.Title, ex.Message);
             }
         }
     }

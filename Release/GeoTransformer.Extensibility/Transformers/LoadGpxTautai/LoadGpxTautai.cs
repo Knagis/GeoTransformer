@@ -12,7 +12,7 @@ using GeoTransformer.Extensions;
 
 namespace GeoTransformer.Transformers.LoadGpxTautai
 {
-    public class LoadGpxTautai : TransformerBase, ITransformerWithPopup, IConfigurable, ILocalStorage
+    public class LoadGpxTautai : TransformerBase, ITransformer, IConfigurable, ILocalStorage
     {
         /// <summary>
         /// Gets the title of the transformer to display to the user.
@@ -34,13 +34,13 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
         /// <returns>Key-value pair of the captcha input fields.</returns>
         private Dictionary<string, string> RequestCaptcha(string script)
         {
-            if (this.ParentWindow.InvokeRequired)
-                return this.ParentWindow.Invoke(s => this.RequestCaptcha(s), script);
+            if (this.ExecutionContext.ParentWindow.InvokeRequired)
+                return this.ExecutionContext.ParentWindow.Invoke(s => this.RequestCaptcha(s), script);
 
             var form = new CaptchaForm(script);
-            var result = form.ShowDialog(this.ParentWindow);
+            var result = form.ShowDialog(this.ExecutionContext.ParentWindow);
             if (result != System.Windows.Forms.DialogResult.OK)
-                this.ReportStatus(StatusSeverity.Error, "User cancelled from CAPTCHA window");
+                this.ExecutionContext.ReportStatus(StatusSeverity.Error, "User cancelled from CAPTCHA window");
 
             return form.FieldValues;
         }
@@ -85,7 +85,7 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
         /// <returns>The path to the GPX file</returns>
         private string DownloadGpx(Dictionary<string, string> fields)
         {
-            this.ReportStatus("Preparing request...");
+            this.ExecutionContext.ReportStatus("Preparing request...");
 
             var req = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://stats.geoforums.lv/tools/gpxtautai.php");
             req.Timeout = 300000; // 5 minutes
@@ -105,7 +105,7 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
                 }
             }
 
-            this.ReportStatus("Downloading the GPX data. This may take a while...");
+            this.ExecutionContext.ReportStatus("Downloading the GPX data. This may take a while...");
 
             using (var resp = req.GetResponse())
             using (var stream = resp.GetResponseStream())
@@ -120,7 +120,7 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
                 } while (i > 0);
             }
 
-            this.ReportStatus("Download complete. Loading the data...");
+            this.ExecutionContext.ReportStatus("Download complete. Loading the data...");
 
             return System.IO.Path.Combine(this.LocalStoragePath, "GpxTautai.zip.temp");
 
@@ -161,7 +161,7 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
 
             if (userOnlyLocalStorage && !useCache)
             {
-                this.ReportStatus(StatusSeverity.Warning, "Cached copy is not available.");
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Cached copy is not available.");
                 return;
             }
 
@@ -170,19 +170,32 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
                 try
                 {
                     var captcha = this.SendInitialRequest();
-                    this.TerminateExecutionIfNeeded();
+                    this.ExecutionContext.ThrowIfCancellationPending();
                     var fields = this.RequestCaptcha(captcha);
-                    this.TerminateExecutionIfNeeded();
+                    this.ExecutionContext.ThrowIfCancellationPending();
                     this.AddFilterFields(fields);
                     file = this.DownloadGpx(fields);
-                    this.TerminateExecutionIfNeeded();
+                    this.ExecutionContext.ThrowIfCancellationPending();
+                }
+                catch (Transformers.TransformerCancelledException ex)
+                {
+                    if (!ex.CanContinue)
+                        throw;
+
+                    if (!System.IO.File.Exists(cache))
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Error, "Cached copy does not exist. " + ex.Message);
+                    else
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Skipping download.");
+                    
+                    file = cache;
+                    useCache = true;
                 }
                 catch (Exception ex)
                 {
                     if (!System.IO.File.Exists(cache))
-                        this.ReportStatus(StatusSeverity.Error, "Unable to download the GPX data: " + ex.Message);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Error, "Unable to download the GPX data: " + ex.Message);
                     else
-                        this.ReportStatus(StatusSeverity.Warning, "Using the cached copy because unable to download a new copy: " + ex.Message);
+                        this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Using the cached copy because unable to download a new copy: " + ex.Message);
 
                     file = cache;
                     useCache = true;
@@ -199,9 +212,9 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
                 }
 
                 if (useCache)
-                    this.ReportStatus("Using file downloaded {0:0.0} minutes ago - {1} caches loaded.", DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(cache)).TotalMinutes, wptCount);
+                    this.ExecutionContext.ReportStatus("Using file downloaded {0:0.0} minutes ago - {1} caches loaded.", DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(cache)).TotalMinutes, wptCount);
                 else
-                    this.ReportStatus("Download complete - " + wptCount + " caches loaded.");
+                    this.ExecutionContext.ReportStatus("Download complete - " + wptCount + " caches loaded.");
             }
             catch
             {
@@ -213,7 +226,7 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
                     return;
                 }
 
-                this.ReportStatus(StatusSeverity.Error, "Could not download valid GPX file. Please try again.");
+                this.ExecutionContext.ReportStatus(StatusSeverity.Error, "Could not download valid GPX file. Please try again.");
             }
 
             if (!useCache)
@@ -275,19 +288,6 @@ namespace GeoTransformer.Transformers.LoadGpxTautai
         /// Gets or sets the local storage path where the extension can store its cache if needed. The value is set by the main engine once the extension instance is created.
         /// </summary>
         public string LocalStoragePath
-        {
-            get;
-            set;
-        }
-
-        #endregion
-
-        #region [ ITransformerWithPopup ]
-
-        /// <summary>
-        /// Sets the parent window that should be used if the transformer has to show a dialog user interface.
-        /// </summary>
-        public System.Windows.Forms.Form ParentWindow
         {
             get;
             set;

@@ -17,24 +17,9 @@ namespace GeoTransformer.Transformers
     public abstract class TransformerBase : Extensions.ITransformer
     {
         /// <summary>
-        /// Stores a value indication whether <see cref="Extensions.ITransformer.CancelExecution"/> method has been called.
-        /// </summary>
-        private bool _cancelExecutionCalled;
-
-        /// <summary>
         /// Gets the title of the transformer to display to the user.
         /// </summary>
         public abstract string Title { get; }
-
-        /// <summary>
-        /// Occurs when the transformer has a new status message to report to the user.
-        /// </summary>
-        public event EventHandler<StatusMessageEventArgs> StatusUpdate;
-
-        /// <summary>
-        /// Occurs when the transformer progress has changed.
-        /// </summary>
-        public event EventHandler<ProgressUpdateEventArgs> ProgressUpdate;
 
         /// <summary>
         /// Gets the required execution for this transformer. Smaller values indicate that the transformer has to be executed earlier.
@@ -43,54 +28,9 @@ namespace GeoTransformer.Transformers
         public abstract ExecutionOrder ExecutionOrder { get; }
 
         /// <summary>
-        /// Reports the current status of the execution to the user.
+        /// Gets the execution context. <c>Null</c> if the transformer is not currently being executed by the engine.
         /// </summary>
-        /// <param name="severity">The severity of the message.</param>
-        /// <param name="message">The message text.</param>
-        /// <param name="args">The arguments to pass to <see cref="String.Format(string, object[])"/> function; if specified, the <paramref name="message"/> is considered
-        /// to contain the formatting template.</param>
-        protected virtual void ReportStatus(StatusSeverity severity, string message, params object[] args)
-        {
-            var h = this.StatusUpdate;
-            if (h != null)
-                h(this, new StatusMessageEventArgs(severity, message, args));
-        }
-
-        /// <summary>
-        /// Reports the current status of the execution to the user. The message severity is set to <see cref="StatusSeverity.Information"/>.
-        /// </summary>
-        /// <param name="message">The message text.</param>
-        /// <param name="args">The arguments to pass to <see cref="String.Format(string, object[])"/> function; if specified, the <paramref name="message"/> is considered
-        /// to contain the formatting template.</param>
-        protected void ReportStatus(string message, params object[] args)
-        {
-            this.ReportStatus(StatusSeverity.Information, message, args);
-        }
-
-        /// <summary>
-        /// Reports the progress of the transformer execution to the user.
-        /// </summary>
-        /// <param name="initial">The initial value.</param>
-        /// <param name="current">The current value. Automatically forced to be between <paramref name="initial"/> and <paramref name="maximum"/>.</param>
-        /// <param name="maximum">The maximum value. Must be greater than or equal to <paramref name="initial"/>.</param>
-        /// <exception cref="ArgumentException">when <paramref name="maximum"/> is smaller than <paramref name="initial"/>.</exception>
-        protected virtual void ReportProgress(decimal initial, decimal current, decimal maximum)
-        {
-            var h = this.ProgressUpdate;
-            if (h != null)
-                h(this, new ProgressUpdateEventArgs(initial, current, maximum));
-        }
-
-        /// <summary>
-        /// Reports the progress of the transformer execution to the user.
-        /// </summary>
-        /// <param name="current">The current value. Automatically forced to be between <c>zero</c> and <paramref name="maximum"/>.</param>
-        /// <param name="maximum">The maximum value. Must be greater than or equal to <c>zero</c>.</param>
-        /// <exception cref="ArgumentException">when <paramref name="maximum"/> is smaller than <c>zero</c>.</exception>
-        protected void ReportProgress(decimal current, decimal maximum)
-        {
-            this.ReportProgress(0m, current, maximum);
-        }
+        protected IExecutionContext ExecutionContext { get; private set; }
 
         /// <summary>
         /// Holds a value how many GPX waypoints have already been processed in previous documents in regards to
@@ -104,11 +44,12 @@ namespace GeoTransformer.Transformers
         private int _waypointsTotal;
 
         /// <summary>
-        /// Holds a value if <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> report progress update
-        /// after processing certain number of waypoints. This is enabled only when the default implementation of 
-        /// <see name="Process(IList{Gpx.GpxDocument}, Transformers.TransformerOptions)"/> is used.
+        /// Holds the timer that is set if <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> 
+        /// reports progress update after processing certain number of waypoints. This is enabled only when the 
+        /// default implementation of <see name="Process(IList{Gpx.GpxDocument}, Transformers.TransformerOptions)"/> 
+        /// is used. The progress bar is only shown if the process runs for more than 1 second.
         /// </summary>
-        private bool _reportWaypointProgress;
+        private System.Diagnostics.Stopwatch _reportWaypointProgress;
 
         /// <summary>
         /// Processes the specified GPX documents. If the method is not overriden in the derived class,
@@ -118,21 +59,35 @@ namespace GeoTransformer.Transformers
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
         public virtual void Process(IList<Gpx.GpxDocument> documents, Transformers.TransformerOptions options)
         {
-            this._reportWaypointProgress = true;
-            this._waypointsTotal = documents.Sum(o => o.Waypoints.Count);
-            this._waypointsAlreadyProcessed = 0;
-            foreach (var gpx in documents)
+            try
             {
-                this.ReportStatus("Processing file '{0}'.", gpx.Metadata.OriginalFileName ?? gpx.Metadata.Name);
-                this.Process(gpx, options);
+                this._reportWaypointProgress = new System.Diagnostics.Stopwatch();
+                this._reportWaypointProgress.Start();
+                this._waypointsTotal = documents.Sum(o => o.Waypoints.Count);
+                this._waypointsAlreadyProcessed = 0;
+                foreach (var gpx in documents)
+                {
+                    this.ExecutionContext.ReportStatus("Processing file '{0}'.", gpx.Metadata.OriginalFileName ?? gpx.Metadata.Name);
+                    this.Process(gpx, options);
 
-                this._waypointsAlreadyProcessed += gpx.Waypoints.Count;
-                this.ReportProgress(this._waypointsAlreadyProcessed, this._waypointsTotal);
+                    this._waypointsAlreadyProcessed += gpx.Waypoints.Count;
+                    if (this._reportWaypointProgress.ElapsedMilliseconds > 1000)
+                        this.ExecutionContext.ReportProgress(this._waypointsAlreadyProcessed, this._waypointsTotal);
 
-                if (this._waypointsAlreadyProcessed != this._waypointsTotal) this.TerminateExecutionIfNeeded();
+                    if (this._waypointsAlreadyProcessed != this._waypointsTotal)
+                        this.ExecutionContext.ThrowIfCancellationPending();
+                }
+
+                this.ExecutionContext.ReportStatus(string.Empty);
             }
-
-            this.ReportStatus(string.Empty);
+            finally
+            {
+                if (this._reportWaypointProgress != null)
+                {
+                    this._reportWaypointProgress.Stop();
+                    this._reportWaypointProgress = null;
+                }
+            }
         }
 
         /// <summary>
@@ -153,15 +108,15 @@ namespace GeoTransformer.Transformers
                 if (currentlyProcessed % 10 != 0)
                     continue;
 
-                if (this._reportWaypointProgress)
+                if (this._reportWaypointProgress != null && this._reportWaypointProgress.ElapsedMilliseconds > 1000)
                 {
-                    this.ReportProgress(this._waypointsAlreadyProcessed + currentlyProcessed, this._waypointsTotal);
+                    this.ExecutionContext.ReportProgress(this._waypointsAlreadyProcessed + currentlyProcessed, this._waypointsTotal);
                     if (this._waypointsAlreadyProcessed + currentlyProcessed != this._waypointsTotal)
-                        this.TerminateExecutionIfNeeded();
+                        this.ExecutionContext.ThrowIfCancellationPending();
                 }
                 else if (currentlyProcessed != document.Waypoints.Count)
                 {
-                    this.TerminateExecutionIfNeeded();
+                    this.ExecutionContext.ThrowIfCancellationPending();
                 }
             }
         }
@@ -177,34 +132,21 @@ namespace GeoTransformer.Transformers
         }
 
         /// <summary>
-        /// Checks if <see cref="Extensions.ITransformer.CancelExecution"/> is called and if it is then stops the execution of the transformer.
-        /// </summary>
-        protected void TerminateExecutionIfNeeded()
-        {
-            if (this._cancelExecutionCalled)
-                this.ReportStatus(StatusSeverity.FatalError, "User cancelled");
-        }
-
-        /// <summary>
-        /// Notifies the transformer that the <see cref="Extensions.ITransformer.Process"/> method should be now terminated. This is called from a separate thread by the controlling form.
-        /// Note that the implementing method has to support multiple calls to <see cref="Extensions.ITransformer.Process"/> method on the same instance so the cancellation
-        /// has to leave the instance in valid state.
-        /// </summary>
-        void Extensions.ITransformer.CancelExecution()
-        {
-            this._cancelExecutionCalled = true;
-        }
-
-        /// <summary>
         /// Processes the specified GPX documents.
         /// </summary>
         /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
-        /// <param name="options">The options that instruct how the transformer should proceed.</param>
-        void Extensions.ITransformer.Process(IList<Gpx.GpxDocument> documents, Transformers.TransformerOptions options)
+        /// <param name="context">The context for the transformer execution.</param>
+        void Extensions.ITransformer.Process(IList<Gpx.GpxDocument> documents, Transformers.IExecutionContext context)
         {
-            this._cancelExecutionCalled = false;
-
-            this.Process(documents, options);
+            try
+            {
+                this.ExecutionContext = context;
+                this.Process(documents, context.Options);
+            }
+            finally
+            {
+                this.ExecutionContext = null;
+            }
         }
     }
 }
