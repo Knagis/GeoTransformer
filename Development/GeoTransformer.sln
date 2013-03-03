@@ -1,12 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTransformer", "GeoTransformer\GeoTransformer.csproj", "{4CAF2A90-5C35-444D-867D-F8FE2CC324B5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTransformer.Extensibility", "GeoTransformer.Extensibility\GeoTransformer.Extensibility.csproj", "{6E59E27D-5635-4F44-B6AA-DDB9EF6CB216}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTransformer.UnitTests", "GeoTransformer.UnitTests\GeoTransformer.UnitTests.csproj", "{CAA3E5AA-0AF8-453B-841E-4A2FF9121360}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0EBCD3DE-CA2C-4958-A692-DC1B90633965}"
 	ProjectSection(SolutionItems) = preProject
 		GeoTransformer.licenseheader = GeoTransformer.licenseheader
@@ -17,16 +11,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Private Items", "Private Items", "{B13D5C5D-4077-4552-8081-CBA7912679B1}"
+	ProjectSection(SolutionItems) = preProject
+		Private Items\Read me.txt = Private Items\Read me.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTransformer", "GeoTransformer\GeoTransformer.csproj", "{4CAF2A90-5C35-444D-867D-F8FE2CC324B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTransformer.Extensibility", "GeoTransformer.Extensibility\GeoTransformer.Extensibility.csproj", "{6E59E27D-5635-4F44-B6AA-DDB9EF6CB216}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTransformer.UnitTests", "GeoTransformer.UnitTests\GeoTransformer.UnitTests.csproj", "{CAA3E5AA-0AF8-453B-841E-4A2FF9121360}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FetchStatistics", "FetchStatistics\FetchStatistics.csproj", "{CA8A6623-6910-4A28-A6ED-30DBD3866E7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FetchStatistics.Web", "FetchStatistics.Web\FetchStatistics.Web.csproj", "{5E7D8EC2-65E4-4545-BB58-35CC943AE427}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeocachingService.OAuth", "GeocachingService.OAuth\GeocachingService.OAuth.csproj", "{699636E9-0B8C-4A70-8A72-EF962B9C9655}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Private Items", "Private Items", "{B13D5C5D-4077-4552-8081-CBA7912679B1}"
-	ProjectSection(SolutionItems) = preProject
-		Private Items\Read me.txt = Private Items\Read me.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldNoteManager", "FieldNoteManager\FieldNoteManager.csproj", "{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9}"
 EndProject
