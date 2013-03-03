@@ -35,6 +35,8 @@
             this.comboBoxPocketQuery = new GeoTransformer.UI.CheckedComboBox();
             this.linkRefresh = new System.Windows.Forms.LinkLabel();
             this.toolTipForOptions = new GeoTransformer.UI.SingletonTooltip();
+            this.chkDownloadFullData = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,11 +47,13 @@
             this.flowLayoutPanel3.Controls.Add(this.labelPocketQuery);
             this.flowLayoutPanel3.Controls.Add(this.comboBoxPocketQuery);
             this.flowLayoutPanel3.Controls.Add(this.linkRefresh);
+            this.flowLayoutPanel3.Controls.Add(this.label1);
+            this.flowLayoutPanel3.Controls.Add(this.chkDownloadFullData);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(357, 47);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(357, 71);
             this.flowLayoutPanel3.TabIndex = 3;
             // 
             // checkBoxEnablePocketQuery
@@ -104,7 +108,7 @@
             this.linkRefresh.Enabled = false;
             this.flowLayoutPanel3.SetFlowBreak(this.linkRefresh, true);
             this.linkRefresh.Location = new System.Drawing.Point(295, 26);
-            this.linkRefresh.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.linkRefresh.Margin = new System.Windows.Forms.Padding(3);
             this.linkRefresh.Name = "linkRefresh";
             this.linkRefresh.Size = new System.Drawing.Size(59, 13);
             this.linkRefresh.TabIndex = 6;
@@ -113,6 +117,30 @@
             this.toolTipForOptions.SetToolTip(this.linkRefresh, resources.GetString("linkRefresh.ToolTip"));
             this.linkRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkRefresh_LinkClicked);
             // 
+            // chkDownloadFullData
+            // 
+            this.chkDownloadFullData.AutoSize = true;
+            this.flowLayoutPanel3.SetFlowBreak(this.chkDownloadFullData, true);
+            this.chkDownloadFullData.Location = new System.Drawing.Point(136, 50);
+            this.chkDownloadFullData.Name = "chkDownloadFullData";
+            this.chkDownloadFullData.Size = new System.Drawing.Size(183, 17);
+            this.chkDownloadFullData.TabIndex = 7;
+            this.chkDownloadFullData.Text = "Download full data instead of ZIP";
+            this.toolTipForOptions.SetToolTip(this.chkDownloadFullData, resources.GetString("chkDownloadFullData.ToolTip"));
+            this.chkDownloadFullData.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.Enabled = false;
+            this.label1.Location = new System.Drawing.Point(32, 47);
+            this.label1.Margin = new System.Windows.Forms.Padding(32, 0, 3, 3);
+            this.label1.MinimumSize = new System.Drawing.Size(0, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 21);
+            this.label1.TabIndex = 8;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTipForOptions.SetToolTip(this.label1, resources.GetString("label1.ToolTip"));
+            // 
             // PocketQueryDownloadOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -120,7 +148,7 @@
             this.Controls.Add(this.flowLayoutPanel3);
             this.MinimumSize = new System.Drawing.Size(357, 47);
             this.Name = "PocketQueryDownloadOptions";
-            this.Size = new System.Drawing.Size(357, 48);
+            this.Size = new System.Drawing.Size(357, 72);
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
@@ -136,5 +164,7 @@
         private UI.CheckedComboBox comboBoxPocketQuery;
         private System.Windows.Forms.LinkLabel linkRefresh;
         private UI.SingletonTooltip toolTipForOptions;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chkDownloadFullData;
     }
 }

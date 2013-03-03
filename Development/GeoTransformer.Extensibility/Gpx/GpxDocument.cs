@@ -58,6 +58,24 @@ namespace GeoTransformer.Gpx
         /// <summary>
         /// Initializes a new instance of the <see cref="GpxDocument"/> class.
         /// </summary>
+        /// <param name="data">The geocache data.</param>
+        /// <param name="metadata">The metadata associated with this document</param>
+        public GpxDocument(IEnumerable<GeocachingService.Geocache> data, GpxMetadata metadata = null)
+            : base(true, 4)
+        {
+            if (this.Metadata != null)
+                this.SetValue("Metadata", metadata, true);
+
+            if (data != null)
+                foreach (var gc in data)
+                    this.Waypoints.Add(new GpxWaypoint(gc));
+
+            this.ResumeObservation();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GpxDocument"/> class.
+        /// </summary>
         /// <param name="document">The document containing GPX 1.0 or 1.1 data.</param>
         public GpxDocument(XDocument document)
             : base(true, 4)

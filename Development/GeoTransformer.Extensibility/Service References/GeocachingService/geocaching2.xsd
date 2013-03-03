@@ -2,6 +2,34 @@
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd2" namespace="http://www.geocaching.com/Geocaching.Live/data" />
   <xs:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:element name="AddGeocachesToBookmarkList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q1:AddGeocachesToBookmarkListRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddGeocachesToBookmarkListResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="AddGeocachesToBookmarkListResult" nillable="true" type="q2:StatusResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetGeocacheStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q3:GetGeocacheStatusRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetGeocacheStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheStatusResult" nillable="true" type="q4:GetGeocacheStatusResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetMembershipTypes">
     <xs:complexType>
       <xs:sequence>
@@ -12,7 +40,7 @@
   <xs:element name="GetMembershipTypesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetMembershipTypesResult" nillable="true" type="q1:GetMembershipTypesResponse" />
+        <xs:element xmlns:q5="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetMembershipTypesResult" nillable="true" type="q5:GetMembershipTypesResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -26,7 +54,7 @@
   <xs:element name="GetAPILimitsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetAPILimitsResult" nillable="true" type="q2:GetAPILimitsResponse" />
+        <xs:element xmlns:q6="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetAPILimitsResult" nillable="true" type="q6:GetAPILimitsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -40,21 +68,7 @@
   <xs:element name="GetSiteStatsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetSiteStatsResult" nillable="true" type="q3:GetSiteStatsResponse" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetServerDetails">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetServerDetailsResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q4="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetServerDetailsResult" nillable="true" type="q4:GetServerDetailsResponse" />
+        <xs:element xmlns:q7="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetSiteStatsResult" nillable="true" type="q7:GetSiteStatsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -68,7 +82,7 @@
   <xs:element name="GetStatusMessagesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetStatusMessagesResult" nillable="true" type="q5:GetStatusMessageResponse" />
+        <xs:element xmlns:q8="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetStatusMessagesResult" nillable="true" type="q8:GetStatusMessageResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -83,7 +97,7 @@
   <xs:element name="GetImagesForGeocacheResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetImagesForGeocacheResult" nillable="true" type="q6:GetImagesForGeocacheResponse" />
+        <xs:element xmlns:q9="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetImagesForGeocacheResult" nillable="true" type="q9:GetImagesForGeocacheResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -97,7 +111,7 @@
   <xs:element name="GetWptLogTypesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q7="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetWptLogTypesResult" nillable="true" type="q7:GetWptLogTypesResponse" />
+        <xs:element xmlns:q10="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetWptLogTypesResult" nillable="true" type="q10:GetWptLogTypesResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -111,7 +125,7 @@
   <xs:element name="GetGeocacheTypesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheTypesResult" nillable="true" type="q8:GetGeocacheTypesResponse" />
+        <xs:element xmlns:q11="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheTypesResult" nillable="true" type="q11:GetGeocacheTypesResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -128,7 +142,7 @@
   <xs:element name="GetGeocacheDataTypesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q9="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheDataTypesResult" nillable="true" type="q9:GetGeocacheDataTypesResponse" />
+        <xs:element xmlns:q12="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheDataTypesResult" nillable="true" type="q12:GetGeocacheDataTypesResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -142,7 +156,7 @@
   <xs:element name="GetPocketQueryListResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q10="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryListResult" nillable="true" type="q10:GetPocketQueryListResponse" />
+        <xs:element xmlns:q13="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryListResult" nillable="true" type="q13:GetPocketQueryListResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -150,7 +164,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string" />
-        <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="pocketQueryGuid" type="q11:guid" />
+        <xs:element xmlns:q14="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="pocketQueryGuid" type="q14:guid" />
         <xs:element minOccurs="0" name="startItem" type="xs:int" />
         <xs:element minOccurs="0" name="maxItems" type="xs:int" />
         <xs:element minOccurs="0" name="gcListOnly" type="xs:boolean" />
@@ -160,22 +174,24 @@
   <xs:element name="GetPocketQueryDataResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q12="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryDataResult" nillable="true" type="q12:GetGeocacheDataResponse" />
+        <xs:element xmlns:q15="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryDataResult" nillable="true" type="q15:GetGeocacheDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetPocketQueryUrls">
+  <xs:element name="GetFullPocketQueryData">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string" />
-        <xs:element xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="pocketQueryGuid" type="q13:guid" />
+        <xs:element xmlns:q16="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="pocketQueryGuid" type="q16:guid" />
+        <xs:element minOccurs="0" name="startItem" type="xs:int" />
+        <xs:element minOccurs="0" name="maxItems" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="GetPocketQueryUrlsResponse">
+  <xs:element name="GetFullPocketQueryDataResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q14="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryUrlsResult" nillable="true" type="q14:GetPocketQueryUrlsResponse" />
+        <xs:element xmlns:q17="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetFullPocketQueryDataResult" nillable="true" type="q17:GetGeocacheDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -183,14 +199,14 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string" />
-        <xs:element xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="pocketQueryGuid" type="q15:guid" />
+        <xs:element xmlns:q18="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="pocketQueryGuid" type="q18:guid" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetPocketQueryZippedFileResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q16="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryZippedFileResult" nillable="true" type="q16:GetPocketQueryZippedFileResponse" />
+        <xs:element xmlns:q19="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetPocketQueryZippedFileResult" nillable="true" type="q19:GetPocketQueryZippedFileResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -206,7 +222,7 @@
   <xs:element name="GetTrackablesByTrackingNumberResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q17="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackablesByTrackingNumberResult" nillable="true" type="q17:GetTrackableResponse" />
+        <xs:element xmlns:q20="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackablesByTrackingNumberResult" nillable="true" type="q20:GetTrackableResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -222,7 +238,7 @@
   <xs:element name="GetTrackablesByTBCodeResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q18="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackablesByTBCodeResult" nillable="true" type="q18:GetTrackableResponse" />
+        <xs:element xmlns:q21="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackablesByTBCodeResult" nillable="true" type="q21:GetTrackableResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -240,7 +256,7 @@
   <xs:element name="GetTrackablesInCacheResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q19="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackablesInCacheResult" nillable="true" type="q19:GetTrackableResponse" />
+        <xs:element xmlns:q22="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackablesInCacheResult" nillable="true" type="q22:GetTrackableResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -255,7 +271,7 @@
   <xs:element name="GetTrackableTravelListResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q20="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackableTravelListResult" nillable="true" type="q20:GetTrackableTravelResponse" />
+        <xs:element xmlns:q23="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackableTravelListResult" nillable="true" type="q23:GetTrackableTravelResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -269,7 +285,7 @@
   <xs:element name="GetAttributeTypesDataResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q21="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetAttributeTypesDataResult" nillable="true" type="q21:GetAttributeTypesDataResponse" />
+        <xs:element xmlns:q24="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetAttributeTypesDataResult" nillable="true" type="q24:GetAttributeTypesDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -277,7 +293,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="consumerKey" nillable="true" type="xs:string" />
-        <xs:element xmlns:q22="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="licenseGuid" type="q22:guid" />
+        <xs:element xmlns:q25="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="licenseGuid" type="q25:guid" />
         <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
       </xs:sequence>
@@ -286,7 +302,7 @@
   <xs:element name="GetUserCredentialsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q23="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUserCredentialsResult" nillable="true" type="q23:GetUserCredentialsResponse" />
+        <xs:element xmlns:q26="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUserCredentialsResult" nillable="true" type="q26:GetUserCredentialsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -301,7 +317,7 @@
   <xs:element name="DeleteCacheNoteResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q24="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="DeleteCacheNoteResult" nillable="true" type="q24:StatusResponse" />
+        <xs:element xmlns:q27="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="DeleteCacheNoteResult" nillable="true" type="q27:StatusResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -318,7 +334,7 @@
   <xs:element name="GetGeocacheLogsByCacheCodeResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q25="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheLogsByCacheCodeResult" nillable="true" type="q25:GetGeocacheLogResponse" />
+        <xs:element xmlns:q28="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheLogsByCacheCodeResult" nillable="true" type="q28:GetGeocacheLogResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -335,7 +351,7 @@
   <xs:element name="GetTrackableLogsByTBCodeResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q26="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackableLogsByTBCodeResult" nillable="true" type="q26:GetTrackableLogsResponse" />
+        <xs:element xmlns:q29="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetTrackableLogsByTBCodeResult" nillable="true" type="q29:GetTrackableLogsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -351,7 +367,7 @@
   <xs:element name="GetUsersCacheNotesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q27="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersCacheNotesResult" nillable="true" type="q27:GetUsersCacheNotesResponse" />
+        <xs:element xmlns:q30="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersCacheNotesResult" nillable="true" type="q30:GetUsersCacheNotesResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -366,7 +382,7 @@
   <xs:element name="GetUserWaypointsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q28="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUserWaypointsResult" nillable="true" type="q28:GetUserWaypointsResponse" />
+        <xs:element xmlns:q31="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUserWaypointsResult" nillable="true" type="q31:GetUserWaypointsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -381,7 +397,7 @@
   <xs:element name="DeleteUserWaypointResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q29="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="DeleteUserWaypointResult" nillable="true" type="q29:StatusResponse" />
+        <xs:element xmlns:q32="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="DeleteUserWaypointResult" nillable="true" type="q32:StatusResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -396,7 +412,7 @@
   <xs:element name="GetCacheByTileGuidResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q30="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetCacheByTileGuidResult" nillable="true" type="q30:GetGeocacheDataResponse" />
+        <xs:element xmlns:q33="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetCacheByTileGuidResult" nillable="true" type="q33:GetGeocacheDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -411,7 +427,7 @@
   <xs:element name="AddFavoritePointToCacheResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q31="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="AddFavoritePointToCacheResult" nillable="true" type="q31:FavoritePointsSummaryResponse" />
+        <xs:element xmlns:q34="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="AddFavoritePointToCacheResult" nillable="true" type="q34:FavoritePointsSummaryResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -426,7 +442,7 @@
   <xs:element name="RemoveFavoritePointFromCacheResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q32="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="RemoveFavoritePointFromCacheResult" nillable="true" type="q32:FavoritePointsSummaryResponse" />
+        <xs:element xmlns:q35="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="RemoveFavoritePointFromCacheResult" nillable="true" type="q35:FavoritePointsSummaryResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -440,7 +456,7 @@
   <xs:element name="GetUsersFavoritePointsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q33="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersFavoritePointsResult" nillable="true" type="q33:GetUserFavoritePointsResponse" />
+        <xs:element xmlns:q36="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersFavoritePointsResult" nillable="true" type="q36:GetUserFavoritePointsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -455,7 +471,7 @@
   <xs:element name="GetUsersWhoFavoritedCacheResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q34="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersWhoFavoritedCacheResult" nillable="true" type="q34:GetUsersWhoFavoritedCacheResponse" />
+        <xs:element xmlns:q37="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersWhoFavoritedCacheResult" nillable="true" type="q37:GetUsersWhoFavoritedCacheResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -469,7 +485,7 @@
   <xs:element name="GetCacheIdsFavoritedByUserResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q35="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetCacheIdsFavoritedByUserResult" nillable="true" type="q35:GetCacheIdsFavoritedByUserResponse" />
+        <xs:element xmlns:q38="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetCacheIdsFavoritedByUserResult" nillable="true" type="q38:GetCacheIdsFavoritedByUserResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -483,7 +499,7 @@
   <xs:element name="GetCachesFavoritedByUserResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q36="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetCachesFavoritedByUserResult" nillable="true" type="q36:GetCachesFavoritedByUserResponse" />
+        <xs:element xmlns:q39="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetCachesFavoritedByUserResult" nillable="true" type="q39:GetCachesFavoritedByUserResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -497,7 +513,7 @@
   <xs:element name="GetBookmarkListsForUserResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q37="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetBookmarkListsForUserResult" nillable="true" type="q37:GetBookmarkListsResponse" />
+        <xs:element xmlns:q40="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetBookmarkListsForUserResult" nillable="true" type="q40:GetBookmarkListsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -512,287 +528,287 @@
   <xs:element name="GetBookmarkListsByUserIDResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q38="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetBookmarkListsByUserIDResult" nillable="true" type="q38:GetBookmarkListsResponse" />
+        <xs:element xmlns:q41="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetBookmarkListsByUserIDResult" nillable="true" type="q41:GetBookmarkListsResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GeocodeString">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q42="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q42:GeocodeRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GeocodeStringResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q43="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GeocodeStringResult" nillable="true" type="q43:GetGeocodeResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="WindowsPhoneTileSearch">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q39="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q39:WindowsPhoneTileSearchRequest" />
+        <xs:element xmlns:q44="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q44:WindowsPhoneTileSearchRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="WindowsPhoneTileSearchResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q40="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="WindowsPhoneTileSearchResult" nillable="true" type="q40:GetGeocacheDataResponse" />
+        <xs:element xmlns:q45="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="WindowsPhoneTileSearchResult" nillable="true" type="q45:GetGeocacheDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="RegisterWP7DeviceTile">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q41="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q41:RegisterWP7DeviceTileRequest" />
+        <xs:element xmlns:q46="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q46:RegisterWP7DeviceTileRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="RegisterWP7DeviceTileResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q42="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="RegisterWP7DeviceTileResult" nillable="true" type="q42:StatusResponse" />
+        <xs:element xmlns:q47="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="RegisterWP7DeviceTileResult" nillable="true" type="q47:StatusResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUsersCacheCounts">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q43="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q43:GetUsersCacheCountsRequest" />
+        <xs:element xmlns:q48="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q48:GetUsersCacheCountsRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUsersCacheCountsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q44="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersCacheCountsResult" nillable="true" type="q44:GetUserCacheCountsResponse" />
+        <xs:element xmlns:q49="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersCacheCountsResult" nillable="true" type="q49:GetUserCacheCountsResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUsersTrackables">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q45="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q45:GetTrackablesByUserRequest" />
+        <xs:element xmlns:q50="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q50:GetTrackablesByUserRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUsersTrackablesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q46="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersTrackablesResult" nillable="true" type="q46:GetTrackableResponse" />
+        <xs:element xmlns:q51="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersTrackablesResult" nillable="true" type="q51:GetTrackableResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetOwnedTrackables">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q47="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q47:GetTrackablesByOwnerRequest" />
+        <xs:element xmlns:q52="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q52:GetTrackablesByOwnerRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetOwnedTrackablesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q48="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetOwnedTrackablesResult" nillable="true" type="q48:GetTrackableResponse" />
+        <xs:element xmlns:q53="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetOwnedTrackablesResult" nillable="true" type="q53:GetTrackableResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUserGallery">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q49="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q49:GetUserGalleryRequest" />
+        <xs:element xmlns:q54="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q54:GetUserGalleryRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUserGalleryResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q50="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUserGalleryResult" nillable="true" type="q50:GetUserGalleryResponse" />
+        <xs:element xmlns:q55="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUserGalleryResult" nillable="true" type="q55:GetUserGalleryResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SaveUserWaypoint">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q51="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q51:SaveUserWaypointRequest" />
+        <xs:element xmlns:q56="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q56:SaveUserWaypointRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SaveUserWaypointResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q52="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="SaveUserWaypointResult" nillable="true" type="q52:SaveUserWaypointResponse" />
+        <xs:element xmlns:q57="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="SaveUserWaypointResult" nillable="true" type="q57:SaveUserWaypointResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUsersGeocacheLogs">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q53="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q53:GetUsersGeocacheLogsRequest" />
+        <xs:element xmlns:q58="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q58:GetUsersGeocacheLogsRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetUsersGeocacheLogsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q54="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersGeocacheLogsResult" nillable="true" type="q54:GetGeocacheLogResponse" />
+        <xs:element xmlns:q59="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetUsersGeocacheLogsResult" nillable="true" type="q59:GetGeocacheLogResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetMoreGeocaches">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q55="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q55:GetMoreGeocachesRequest" />
+        <xs:element xmlns:q60="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q60:GetMoreGeocachesRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetMoreGeocachesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q56="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetMoreGeocachesResult" nillable="true" type="q56:GetGeocacheDataResponse" />
+        <xs:element xmlns:q61="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetMoreGeocachesResult" nillable="true" type="q61:GetGeocacheDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SearchForGeocaches">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q57="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q57:SearchForGeocachesRequest" />
+        <xs:element xmlns:q62="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q62:SearchForGeocachesRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SearchForGeocachesResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q58="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="SearchForGeocachesResult" nillable="true" type="q58:GetGeocacheDataResponse" />
+        <xs:element xmlns:q63="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="SearchForGeocachesResult" nillable="true" type="q63:GetGeocacheDataResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetAnotherUsersProfile">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q59="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q59:GetAnotherUsersProfileRequest" />
+        <xs:element xmlns:q64="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q64:GetAnotherUsersProfileRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetAnotherUsersProfileResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q60="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetAnotherUsersProfileResult" nillable="true" type="q60:GetUserProfileResponse" />
+        <xs:element xmlns:q65="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetAnotherUsersProfileResult" nillable="true" type="q65:GetUserProfileResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CreateFieldNoteAndPublish">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q61="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q61:CreateFieldNoteAndPublishRequest" />
+        <xs:element xmlns:q66="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q66:CreateFieldNoteAndPublishRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CreateFieldNoteAndPublishResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q62="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="CreateFieldNoteAndPublishResult" nillable="true" type="q62:CreateFieldNoteAndPublishResponse" />
+        <xs:element xmlns:q67="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="CreateFieldNoteAndPublishResult" nillable="true" type="q67:CreateFieldNoteAndPublishResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SearchForSouvenirsByPublicGuid">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q63="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q63:SearchForSouvenirsByPublicGuidRequest" />
+        <xs:element xmlns:q68="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q68:SearchForSouvenirsByPublicGuidRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="SearchForSouvenirsByPublicGuidResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q64="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="SearchForSouvenirsByPublicGuidResult" nillable="true" type="q64:SouvenirResponse" />
+        <xs:element xmlns:q69="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="SearchForSouvenirsByPublicGuidResult" nillable="true" type="q69:SouvenirResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="UpdateCacheNote">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q65="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q65:UpdateCacheNoteRequest" />
+        <xs:element xmlns:q70="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q70:UpdateCacheNoteRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="UpdateCacheNoteResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q66="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="UpdateCacheNoteResult" nillable="true" type="q66:StatusResponse" />
+        <xs:element xmlns:q71="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="UpdateCacheNoteResult" nillable="true" type="q71:StatusResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetYourUserProfile">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q67="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q67:GetYourUserProfileRequest" />
+        <xs:element xmlns:q72="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q72:GetYourUserProfileRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetYourUserProfileResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q68="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetYourUserProfileResult" nillable="true" type="q68:GetUserProfileResponse" />
+        <xs:element xmlns:q73="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetYourUserProfileResult" nillable="true" type="q73:GetUserProfileResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="UploadImageToGeocacheLog">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q69="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q69:UploadImageToGeocacheLogRequest" />
+        <xs:element xmlns:q74="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q74:UploadImageToGeocacheLogRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="UploadImageToGeocacheLogResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q70="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="UploadImageToGeocacheLogResult" nillable="true" type="q70:UploadImageResponse" />
+        <xs:element xmlns:q75="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="UploadImageToGeocacheLogResult" nillable="true" type="q75:UploadImageResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CreateTrackableLog">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q71="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q71:CreateTrackableLogRequest" />
+        <xs:element xmlns:q76="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q76:CreateTrackableLogRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="CreateTrackableLogResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q72="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="CreateTrackableLogResult" nillable="true" type="q72:CreateTrackableLogResponse" />
+        <xs:element xmlns:q77="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="CreateTrackableLogResult" nillable="true" type="q77:CreateTrackableLogResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImageToTrackableLog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q78="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q78:UploadImageToTrackableLogRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImageToTrackableLogResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q79="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="UploadImageToTrackableLogResult" nillable="true" type="q79:UploadImageResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetBookmarkListByGuid">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q73="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q73:GetBookmarkListByGuidRequest" />
+        <xs:element xmlns:q80="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q80:GetBookmarkListByGuidRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetBookmarkListByGuidResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q74="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetBookmarkListByGuidResult" nillable="true" type="q74:GetBookmarkListResponse" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="AddGeocachesToBookmarkList">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q75="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q75:AddGeocachesToBookmarkListRequest" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="AddGeocachesToBookmarkListResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q76="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="AddGeocachesToBookmarkListResult" nillable="true" type="q76:StatusResponse" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetGeocacheStatus">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q77="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="request" nillable="true" type="q77:GetGeocacheStatusRequest" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetGeocacheStatusResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element xmlns:q78="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetGeocacheStatusResult" nillable="true" type="q78:GetGeocacheStatusResponse" />
+        <xs:element xmlns:q81="http://www.geocaching.com/Geocaching.Live/data" minOccurs="0" name="GetBookmarkListByGuidResult" nillable="true" type="q81:GetBookmarkListResponse" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
