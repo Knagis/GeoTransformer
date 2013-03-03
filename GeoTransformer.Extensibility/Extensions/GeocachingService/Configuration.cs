@@ -12,14 +12,14 @@ namespace GeoTransformer.Extensions.GeocachingService
 {
     internal static class Configuration
     {
-#if DEBUG
-        public const string ServiceAddress = "https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc/Silverlightsoap";
+//#if DEBUG
+//        public const string ServiceAddress = "https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc/Silverlightsoap";
 
-        public const string AuthenticationAddress = "http://knagis.miga.lv/GeoTransformer/LiveApiAuth/LoginStaging.ashx";
-#else
+//        public const string AuthenticationAddress = "http://knagis.miga.lv/GeoTransformer/LiveApiAuth/LoginStaging.ashx";
+//#else
         public const string ServiceAddress = "https://api.groundspeak.com/LiveV6/geocaching.svc/Silverlightsoap";
 
         public const string AuthenticationAddress = "http://knagis.miga.lv/GeoTransformer/LiveApiAuth/Login.ashx";
-#endif
+//#endif
     }
 }

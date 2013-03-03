@@ -631,6 +631,9 @@
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheTypesResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetImagesForGeocacheResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -640,13 +643,7 @@
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryListResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryUrlsResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryZippedFileResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetServerDetailsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetSiteStatsResponse.datasource">

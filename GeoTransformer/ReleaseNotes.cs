@@ -20,6 +20,8 @@ namespace GeoTransformer
         /// </summary>
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
+            { Version.Parse("4.4.0.0"), "It is now possible to download pocket query data with favorite points, images etc." + Environment.NewLine +
+                                        "" },
             { Version.Parse("4.3.0.0"), "Transformation status window now displays progress indicator for long running tasks." + Environment.NewLine +
                                         "Transformation status window displays warnings and errors separate from other messages." + Environment.NewLine + 
                                         "Pocket query download now warns if the query is not available or is too old." + Environment.NewLine +
