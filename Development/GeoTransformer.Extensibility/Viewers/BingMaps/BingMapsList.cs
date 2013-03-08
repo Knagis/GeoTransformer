@@ -49,6 +49,9 @@ namespace GeoTransformer.Viewers.BingMaps
         public System.Windows.Forms.Control Initialize()
         {
             this._browser = new System.Windows.Forms.WebBrowser();
+            this._browser.AllowNavigation = false;
+            this._browser.IsWebBrowserContextMenuEnabled = false;
+            this._browser.WebBrowserShortcutsEnabled = false;
             return this._browser;
         }
 
