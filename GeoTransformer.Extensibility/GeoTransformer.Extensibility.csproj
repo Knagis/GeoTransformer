@@ -420,6 +420,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Viewers\GoogleMaps\GoogleMapsView.cs" />
+    <Compile Include="Viewers\GoogleMaps\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Viewers\TableView\EditedCacheTableView.cs" />
     <Compile Include="Viewers\SelectedWaypointsChangedEventArgs.cs" />
     <Compile Include="Viewers\TableView\Resources.Designer.cs">
@@ -536,6 +542,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Viewers\CacheWebPage\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\GoogleMaps\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -774,6 +784,7 @@
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
     <Content Include="UI\CacheTypeIcons\VirtualCache.gif" />
     <Content Include="Viewers\BingMaps\MapTemplate.html" />
+    <None Include="Viewers\GoogleMaps\Web.png" />
     <Content Include="Viewers\TableView\table.png" />
   </ItemGroup>
   <ItemGroup />
