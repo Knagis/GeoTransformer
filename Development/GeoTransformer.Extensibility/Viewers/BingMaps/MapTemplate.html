@@ -36,10 +36,13 @@
                 if (pushpin.getId() != code)
                     continue;
 
-                pushpin.setLocation(new Microsoft.Maps.Location(lat, lon));
+                var loc = new Microsoft.Maps.Location(lat, lon);
+                pushpin.setLocation(loc);
                 pushpin.setOptions({ icon: iconRoot + icon });
                 var ppel = document.getElementById(code);
                 if (ppel != null) ppel.title = desc;
+
+                map.setView({center: loc});
                 break;
             }
         }
