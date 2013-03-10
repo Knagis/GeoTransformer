@@ -24,7 +24,7 @@ namespace GeoTransformer
                                         "Added transformer that adds [DNF] in the cache title when the last logs are negative." + Environment.NewLine +
                                         "Updated coordinates automatically show up in the maps view." + Environment.NewLine +
                                         "Added Google Maps quick view for individual cache listing." + Environment.NewLine +
-                                        "" },
+                                        "Most recent publisher (e.g. a Garmin device) show up in the bottom toolbar by themselves." },
             { Version.Parse("4.3.0.0"), "Transformation status window now displays progress indicator for long running tasks." + Environment.NewLine +
                                         "Transformation status window displays warnings and errors separate from other messages." + Environment.NewLine + 
                                         "Pocket query download now warns if the query is not available or is too old." + Environment.NewLine +

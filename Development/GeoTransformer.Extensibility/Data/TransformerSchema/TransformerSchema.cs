@@ -31,6 +31,7 @@ namespace GeoTransformer.Data.TransformerSchema
      *  16 - added ExtensionTableVersions table
      *  17 - added Settings.DoNotShowWelcomeScreen column
      *  18 - added Settings.ListViewerHeight column
+     *  19 - added Settings.RecentPublishers column
      */
 
     internal class TransformerSchema : DatabaseSchema
