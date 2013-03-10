@@ -272,6 +272,13 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Transformers\PrefixNotFound\ConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\PrefixNotFound\ConfigurationControl.Designer.cs">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\PrefixNotFound\PrefixNotFound.cs" />
     <Compile Include="Transformers\ProgressUpdateEventArgs.cs" />
     <Compile Include="Transformers\ReadableAttributes\ReadableAttributes.cs" />
     <Compile Include="Transformers\RefreshFromLiveApi\RefreshFromLiveApi.cs" />
@@ -508,6 +515,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Transformers\PrefixDisabled\ConfigurationControl.resx">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\PrefixNotFound\ConfigurationControl.resx">
       <DependentUpon>ConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Transformers\SimpleConfigurationControl.resx">

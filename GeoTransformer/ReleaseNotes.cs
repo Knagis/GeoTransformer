@@ -21,6 +21,7 @@ namespace GeoTransformer
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
             { Version.Parse("4.4.0.0"), "It is now possible to download pocket query data with favorite points, images etc." + Environment.NewLine +
+                                        "Added transformer that adds [DNF] in the cache title when the last logs are negative." + Environment.NewLine +
                                         "Updated coordinates automatically show up in the maps view." + Environment.NewLine +
                                         "Added Google Maps quick view for individual cache listing." + Environment.NewLine +
                                         "" },
