@@ -59,6 +59,7 @@
             this.toolStripDropDownHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.launchWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.onlineDocumentationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripRecentPublisher = new System.Windows.Forms.ToolStripButton();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.toolTipForOptions = new System.Windows.Forms.ToolTip(this.components);
             label1 = new System.Windows.Forms.Label();
@@ -83,18 +84,20 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(100, 20);
+            label1.Location = new System.Drawing.Point(75, 16);
+            label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(196, 17);
+            label1.Size = new System.Drawing.Size(150, 13);
             label1.TabIndex = 1;
             label1.Text = "Powered by Geocaching Live.";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(100, 54);
+            label3.Location = new System.Drawing.Point(75, 44);
+            label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(761, 17);
+            label3.Size = new System.Drawing.Size(575, 13);
             label3.TabIndex = 3;
             label3.Text = "Groundspeak’s Geocaching.com Cache Type Icons © 2011 Groundspeak Inc. All rights " +
     "reserved. Used with Permission.";
@@ -104,9 +107,9 @@
             pictureBoxLiveLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             pictureBoxLiveLogo.Image = global::GeoTransformer.Properties.Resources.Geocaching_LIVE_poweredby_64;
             pictureBoxLiveLogo.Location = new System.Drawing.Point(-1, 0);
-            pictureBoxLiveLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            pictureBoxLiveLogo.Margin = new System.Windows.Forms.Padding(2);
             pictureBoxLiveLogo.Name = "pictureBoxLiveLogo";
-            pictureBoxLiveLogo.Size = new System.Drawing.Size(85, 90);
+            pictureBoxLiveLogo.Size = new System.Drawing.Size(64, 73);
             pictureBoxLiveLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             pictureBoxLiveLogo.TabIndex = 0;
             pictureBoxLiveLogo.TabStop = false;
@@ -115,13 +118,13 @@
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new System.Drawing.Size(302, 6);
+            toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
             // 
             // openPocketQueriesToolStripMenuItem
             // 
             openPocketQueriesToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.PocketQuery;
             openPocketQueriesToolStripMenuItem.Name = "openPocketQueriesToolStripMenuItem";
-            openPocketQueriesToolStripMenuItem.Size = new System.Drawing.Size(305, 24);
+            openPocketQueriesToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
             openPocketQueriesToolStripMenuItem.Tag = "http://www.geocaching.com/pocket/";
             openPocketQueriesToolStripMenuItem.Text = "Open pocket query page";
             openPocketQueriesToolStripMenuItem.ToolTipText = "http://www.geocaching.com/pocket/";
@@ -131,7 +134,7 @@
             // 
             openGeocachingcomToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.Geocaching;
             openGeocachingcomToolStripMenuItem.Name = "openGeocachingcomToolStripMenuItem";
-            openGeocachingcomToolStripMenuItem.Size = new System.Drawing.Size(305, 24);
+            openGeocachingcomToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
             openGeocachingcomToolStripMenuItem.Tag = "http://www.geocaching.com/";
             openGeocachingcomToolStripMenuItem.Text = "Open geocaching.com";
             openGeocachingcomToolStripMenuItem.ToolTipText = "http://www.geocaching.com/";
@@ -142,10 +145,9 @@
             this.tabPageCaches.Controls.Add(this.cachePanel);
             this.tabPageCaches.ImageKey = "Treasure";
             this.tabPageCaches.Location = new System.Drawing.Point(4, 31);
-            this.tabPageCaches.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPageCaches.Name = "tabPageCaches";
-            this.tabPageCaches.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tabPageCaches.Size = new System.Drawing.Size(1119, 645);
+            this.tabPageCaches.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCaches.Size = new System.Drawing.Size(837, 512);
             this.tabPageCaches.TabIndex = 0;
             this.tabPageCaches.Text = "Cache viewer and editor";
             this.tabPageCaches.UseVisualStyleBackColor = true;
@@ -154,7 +156,7 @@
             // 
             this.cachePanel.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cachePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cachePanel.Location = new System.Drawing.Point(4, 4);
+            this.cachePanel.Location = new System.Drawing.Point(3, 3);
             this.cachePanel.Margin = new System.Windows.Forms.Padding(0);
             this.cachePanel.Name = "cachePanel";
             this.cachePanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -167,8 +169,8 @@
             // cachePanel.Panel2
             // 
             this.cachePanel.Panel2.Controls.Add(this.cacheViewers);
-            this.cachePanel.Size = new System.Drawing.Size(1111, 637);
-            this.cachePanel.SplitterDistance = 430;
+            this.cachePanel.Size = new System.Drawing.Size(831, 506);
+            this.cachePanel.SplitterDistance = 341;
             this.cachePanel.SplitterWidth = 2;
             this.cachePanel.TabIndex = 1;
             // 
@@ -178,9 +180,9 @@
             this.listViewers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewers.Location = new System.Drawing.Point(0, 0);
             this.listViewers.Margin = new System.Windows.Forms.Padding(0);
-            this.listViewers.MinimumSize = new System.Drawing.Size(133, 62);
+            this.listViewers.MinimumSize = new System.Drawing.Size(100, 50);
             this.listViewers.Name = "listViewers";
-            this.listViewers.Size = new System.Drawing.Size(1111, 430);
+            this.listViewers.Size = new System.Drawing.Size(831, 341);
             this.listViewers.TabIndex = 1;
             // 
             // cacheViewers
@@ -190,9 +192,9 @@
             this.cacheViewers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cacheViewers.Location = new System.Drawing.Point(0, 0);
             this.cacheViewers.Margin = new System.Windows.Forms.Padding(0);
-            this.cacheViewers.MinimumSize = new System.Drawing.Size(133, 62);
+            this.cacheViewers.MinimumSize = new System.Drawing.Size(100, 50);
             this.cacheViewers.Name = "cacheViewers";
-            this.cacheViewers.Size = new System.Drawing.Size(1111, 205);
+            this.cacheViewers.Size = new System.Drawing.Size(831, 163);
             this.cacheViewers.TabIndex = 0;
             // 
             // imageList
@@ -209,11 +211,10 @@
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.ImageList = this.imageList;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
-            this.tabControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1127, 680);
+            this.tabControl.Size = new System.Drawing.Size(845, 547);
             this.tabControl.TabIndex = 0;
             // 
             // tabPageConfiguration
@@ -221,9 +222,8 @@
             this.tabPageConfiguration.AutoScroll = true;
             this.tabPageConfiguration.ImageKey = "Settings";
             this.tabPageConfiguration.Location = new System.Drawing.Point(4, 31);
-            this.tabPageConfiguration.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPageConfiguration.Name = "tabPageConfiguration";
-            this.tabPageConfiguration.Size = new System.Drawing.Size(1119, 638);
+            this.tabPageConfiguration.Size = new System.Drawing.Size(837, 512);
             this.tabPageConfiguration.TabIndex = 5;
             this.tabPageConfiguration.Text = "Configuration";
             this.tabPageConfiguration.UseVisualStyleBackColor = true;
@@ -237,10 +237,9 @@
             this.tabPageAbout.Controls.Add(this.pictureBoxPayPal);
             this.tabPageAbout.ImageKey = "About";
             this.tabPageAbout.Location = new System.Drawing.Point(4, 31);
-            this.tabPageAbout.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPageAbout.Name = "tabPageAbout";
-            this.tabPageAbout.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tabPageAbout.Size = new System.Drawing.Size(1119, 638);
+            this.tabPageAbout.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAbout.Size = new System.Drawing.Size(837, 512);
             this.tabPageAbout.TabIndex = 4;
             this.tabPageAbout.Text = "About";
             this.tabPageAbout.UseVisualStyleBackColor = true;
@@ -252,18 +251,19 @@
             this.panel1.Controls.Add(label1);
             this.panel1.Controls.Add(pictureBoxLiveLogo);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(4, 528);
-            this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panel1.Location = new System.Drawing.Point(3, 423);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1111, 90);
+            this.panel1.Size = new System.Drawing.Size(831, 73);
             this.panel1.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(100, 37);
+            this.label2.Location = new System.Drawing.Point(75, 30);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(678, 17);
+            this.label2.Size = new System.Drawing.Size(507, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "The Groundspeak Geocaching Logo is a registered trademark of Groundspeak, Inc. Us" +
     "ed with permission.";
@@ -271,10 +271,9 @@
             // labelVersion2
             // 
             this.labelVersion2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.labelVersion2.Location = new System.Drawing.Point(4, 618);
-            this.labelVersion2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelVersion2.Location = new System.Drawing.Point(3, 496);
             this.labelVersion2.Name = "labelVersion2";
-            this.labelVersion2.Size = new System.Drawing.Size(1111, 16);
+            this.labelVersion2.Size = new System.Drawing.Size(831, 13);
             this.labelVersion2.TabIndex = 2;
             this.labelVersion2.Text = "Application version: 2.0";
             this.labelVersion2.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -284,10 +283,9 @@
             // labelAbout
             // 
             this.labelAbout.Dock = System.Windows.Forms.DockStyle.Top;
-            this.labelAbout.Location = new System.Drawing.Point(4, 85);
-            this.labelAbout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAbout.Location = new System.Drawing.Point(3, 69);
             this.labelAbout.Name = "labelAbout";
-            this.labelAbout.Size = new System.Drawing.Size(1111, 249);
+            this.labelAbout.Size = new System.Drawing.Size(831, 202);
             this.labelAbout.TabIndex = 0;
             this.labelAbout.Text = resources.GetString("labelAbout.Text");
             this.labelAbout.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -297,10 +295,9 @@
             this.pictureBoxPayPal.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBoxPayPal.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBoxPayPal.Image = global::GeoTransformer.Properties.Resources.Donate;
-            this.pictureBoxPayPal.Location = new System.Drawing.Point(4, 4);
-            this.pictureBoxPayPal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBoxPayPal.Location = new System.Drawing.Point(3, 3);
             this.pictureBoxPayPal.Name = "pictureBoxPayPal";
-            this.pictureBoxPayPal.Size = new System.Drawing.Size(1111, 81);
+            this.pictureBoxPayPal.Size = new System.Drawing.Size(831, 66);
             this.pictureBoxPayPal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxPayPal.TabIndex = 1;
             this.pictureBoxPayPal.TabStop = false;
@@ -314,11 +311,12 @@
             this.toolStripOpenDefaultWebPage,
             this.toolStripSave,
             this.toolStripExport,
-            this.toolStripDropDownHelp});
+            this.toolStripDropDownHelp,
+            this.toolStripRecentPublisher});
             this.toolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStrip.Location = new System.Drawing.Point(0, 680);
+            this.toolStrip.Location = new System.Drawing.Point(0, 547);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(1127, 31);
+            this.toolStrip.Size = new System.Drawing.Size(845, 31);
             this.toolStrip.TabIndex = 1;
             this.toolStrip.TabStop = true;
             this.toolStrip.Text = "toolStrip";
@@ -336,7 +334,7 @@
             this.toolStripOpenDefaultWebPage.Image = global::GeoTransformer.Properties.Resources.Geocaching;
             this.toolStripOpenDefaultWebPage.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripOpenDefaultWebPage.Name = "toolStripOpenDefaultWebPage";
-            this.toolStripOpenDefaultWebPage.Size = new System.Drawing.Size(198, 28);
+            this.toolStripOpenDefaultWebPage.Size = new System.Drawing.Size(168, 28);
             this.toolStripOpenDefaultWebPage.Tag = "http://www.geocaching.com/";
             this.toolStripOpenDefaultWebPage.Text = "Open geocaching.com";
             this.toolStripOpenDefaultWebPage.ButtonClick += new System.EventHandler(this.toolStripWebPage_Click);
@@ -345,7 +343,7 @@
             // toolStripWebPageChangeDefault
             // 
             this.toolStripWebPageChangeDefault.Name = "toolStripWebPageChangeDefault";
-            this.toolStripWebPageChangeDefault.Size = new System.Drawing.Size(305, 24);
+            this.toolStripWebPageChangeDefault.Size = new System.Drawing.Size(255, 22);
             this.toolStripWebPageChangeDefault.Text = "Change the default";
             this.toolStripWebPageChangeDefault.Click += new System.EventHandler(this.toolStripWebPageChangeDefault_Click);
             // 
@@ -353,7 +351,7 @@
             // 
             this.openGeoTransformerHomePageToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.GeoTransformer;
             this.openGeoTransformerHomePageToolStripMenuItem.Name = "openGeoTransformerHomePageToolStripMenuItem";
-            this.openGeoTransformerHomePageToolStripMenuItem.Size = new System.Drawing.Size(305, 24);
+            this.openGeoTransformerHomePageToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
             this.openGeoTransformerHomePageToolStripMenuItem.Tag = "http://knagis.miga.lv/blog/?tag=/GeoTransformer";
             this.openGeoTransformerHomePageToolStripMenuItem.Text = "Open GeoTransformer home page";
             this.openGeoTransformerHomePageToolStripMenuItem.ToolTipText = "http://knagis.miga.lv/blog/?tag=/GeoTransformer";
@@ -363,7 +361,7 @@
             // 
             this.openGpxTautaiToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.Latvia;
             this.openGpxTautaiToolStripMenuItem.Name = "openGpxTautaiToolStripMenuItem";
-            this.openGpxTautaiToolStripMenuItem.Size = new System.Drawing.Size(305, 24);
+            this.openGpxTautaiToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
             this.openGpxTautaiToolStripMenuItem.Tag = "http://www.geoforums.lv/";
             this.openGpxTautaiToolStripMenuItem.Text = "Open GPX Tautai forum page";
             this.openGpxTautaiToolStripMenuItem.ToolTipText = "http://www.geoforums.lv/";
@@ -375,7 +373,7 @@
             this.toolStripSave.Image = global::GeoTransformer.Properties.Resources.Save;
             this.toolStripSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSave.Name = "toolStripSave";
-            this.toolStripSave.Size = new System.Drawing.Size(68, 28);
+            this.toolStripSave.Size = new System.Drawing.Size(59, 28);
             this.toolStripSave.Text = "Save";
             this.toolStripSave.Click += new System.EventHandler(this.toolStripSave_Click);
             // 
@@ -385,7 +383,7 @@
             this.toolStripExport.Image = global::GeoTransformer.Properties.Resources.SaveAndPublish;
             this.toolStripExport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripExport.Name = "toolStripExport";
-            this.toolStripExport.Size = new System.Drawing.Size(150, 28);
+            this.toolStripExport.Size = new System.Drawing.Size(127, 28);
             this.toolStripExport.Text = "Export / Publish";
             // 
             // toolStripDropDownHelp
@@ -398,13 +396,13 @@
             this.toolStripDropDownHelp.Image = global::GeoTransformer.Properties.Resources.Help;
             this.toolStripDropDownHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownHelp.Name = "toolStripDropDownHelp";
-            this.toolStripDropDownHelp.Size = new System.Drawing.Size(78, 28);
+            this.toolStripDropDownHelp.Size = new System.Drawing.Size(69, 28);
             this.toolStripDropDownHelp.Text = "Help";
             // 
             // launchWizardToolStripMenuItem
             // 
             this.launchWizardToolStripMenuItem.Name = "launchWizardToolStripMenuItem";
-            this.launchWizardToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.launchWizardToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.launchWizardToolStripMenuItem.Text = "Launch wizard";
             this.launchWizardToolStripMenuItem.Click += new System.EventHandler(this.launchWizardToolStripMenuItem_Click);
             // 
@@ -412,10 +410,21 @@
             // 
             this.onlineDocumentationToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.FAQ;
             this.onlineDocumentationToolStripMenuItem.Name = "onlineDocumentationToolStripMenuItem";
-            this.onlineDocumentationToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.onlineDocumentationToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.onlineDocumentationToolStripMenuItem.Tag = "http://geotransformer.codeplex.com/documentation";
             this.onlineDocumentationToolStripMenuItem.Text = "Online documentation";
             this.onlineDocumentationToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
+            // 
+            // toolStripRecentPublisher
+            // 
+            this.toolStripRecentPublisher.AutoToolTip = false;
+            this.toolStripRecentPublisher.Image = ((System.Drawing.Image)(resources.GetObject("toolStripRecentPublisher.Image")));
+            this.toolStripRecentPublisher.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripRecentPublisher.Name = "toolStripRecentPublisher";
+            this.toolStripRecentPublisher.Size = new System.Drawing.Size(123, 28);
+            this.toolStripRecentPublisher.Text = "Recent publisher";
+            this.toolStripRecentPublisher.Visible = false;
+            this.toolStripRecentPublisher.Click += new System.EventHandler(this.PublisherClick);
             // 
             // folderBrowserDialog
             // 
@@ -433,13 +442,12 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1127, 711);
+            this.ClientSize = new System.Drawing.Size(845, 578);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.toolStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "GeoTransformer";
@@ -490,6 +498,7 @@
         private System.Windows.Forms.ToolStripMenuItem launchWizardToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPageCaches;
         private System.Windows.Forms.ToolStripMenuItem onlineDocumentationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripRecentPublisher;
     }
 }
 
