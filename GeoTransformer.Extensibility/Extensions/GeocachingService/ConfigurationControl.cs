@@ -182,5 +182,21 @@ namespace GeoTransformer.Extensions.GeocachingService
         {
             this.OpenAuthenticationForm();
         }
+
+        private void ShowAccessToken(object sender, EventArgs e)
+        {
+            this.textBoxToken.Text = this.AccessToken;
+            this.textBoxToken.Visible = true;
+        }
+
+        private void textBoxToken_TextChanged(object sender, EventArgs e)
+        {
+            this.AccessToken = this.textBoxToken.Text.Trim();
+
+            GeoTransformer.GeocachingService.LiveClient.OnIsEnabledChanged();
+            this.labelUsernameValue.Font = new Font(this.labelUsernameValue.Font, FontStyle.Italic);
+            this.labelUsernameValue.Text = "retrieving...";
+            System.Threading.ThreadPool.QueueUserWorkItem(this.RetrieveUserName);
+        }
     }
 }
