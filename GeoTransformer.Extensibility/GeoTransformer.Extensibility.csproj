@@ -209,6 +209,8 @@
     </Compile>
     <Compile Include="Transformers\EditorExtensions\SaveEditorExtensions.cs" />
     <Compile Include="Transformers\EditorExtensions\LoadEditorExtensions.cs" />
+    <Compile Include="Transformers\EditorOnlineBackup\EditorOnlineBackup.cs" />
+    <Compile Include="Transformers\EditorOnlineBackup\CacheTable.cs" />
     <Compile Include="Transformers\ExecutionContextExtensions.cs" />
     <Compile Include="Transformers\IExecutionContext.cs" />
     <Compile Include="Transformers\LoadFromLiveApi\ConfigurationControl.cs">

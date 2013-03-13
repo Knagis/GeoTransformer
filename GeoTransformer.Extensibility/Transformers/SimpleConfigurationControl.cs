@@ -28,5 +28,14 @@ namespace GeoTransformer.Transformers
             this.checkBoxEnabled.Text = checkBoxText;
             this.configurationTooltip.SetToolTip(this.checkBoxEnabled, checkBoxToolTip);
         }
+
+        /// <summary>
+        /// Gets or sets if the checkbox has been selected.
+        /// </summary>
+        public bool IsChecked
+        {
+            get { return this.checkBoxEnabled.Checked; }
+            set { this.checkBoxEnabled.Checked = value; }
+        }
     }
 }

@@ -10,8 +10,30 @@ using System.Text;
 
 namespace GeoTransformer.Transformers.UpdateCoordinates
 {
+    /// <summary>
+    /// The transformer that enables the user to update the cache coordinates.
+    /// </summary>
     public class UpdateCoordinates : TransformerBase, Extensions.IEditor
     {
+        /// <summary>
+        /// Initializes static members of the <see cref="UpdateCoordinates"/> class.
+        /// </summary>
+        static UpdateCoordinates()
+        {
+            EditorOnlineBackup.EditorOnlineBackup.RegisterForBackup(wpt =>
+                {
+                    var configElement = wpt.FindExtensionElement(typeof(UpdateCoordinates));
+                    if (configElement == null)
+                        return null;
+
+                    var coords = UI.CoordinateEditor.ReadXmlConfiguration(configElement);
+                    if (!coords.HasValue)
+                        return null;
+
+                    return coords.Value.ToString();
+                });
+        }
+
         /// <summary>
         /// Gets the title of the transformer to display to the user.
         /// </summary>
