@@ -16,6 +16,23 @@ namespace GeoTransformer.Transformers.AdditionalHints
     /// </summary>
     public class AdditionalHints : TransformerBase, Extensions.IEditor
     {
+        /// <summary>
+        /// Initializes static members of the <see cref="AdditionalHints"/> class.
+        /// </summary>
+        static AdditionalHints()
+        {
+            EditorOnlineBackup.EditorOnlineBackup.RegisterForBackup(wpt =>
+                {
+                    var configElement = wpt.FindExtensionElement(typeof(AdditionalHints));
+                    if (configElement == null)
+                        return null;
+
+                    if (string.IsNullOrWhiteSpace(configElement.Value))
+                        return null;
+
+                    return configElement.Value;
+                });
+        }
         private EditorControl _editorControl;
 
         /// <summary>
