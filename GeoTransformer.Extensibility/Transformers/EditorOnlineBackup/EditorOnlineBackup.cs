@@ -213,7 +213,7 @@ This extension requires Live API to be enabled.");
                         }
                         else if (result.StatusCode != 0)
                         {
-                            System.Windows.Forms.MessageBox.Show("Error while backing up the data using Live API: " + Environment.NewLine + result.StatusMessage, "Online backup", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Exclamation);
+                            System.Windows.Forms.MessageBox.Show("Error while backing up the data for '" + note.Key + "' using Live API: " + Environment.NewLine + result.StatusMessage, "Online backup", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Exclamation);
                             return;
                         }
 
