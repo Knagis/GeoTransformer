@@ -182,6 +182,9 @@ This extension requires Live API to be enabled.");
                         break;
                 }
 
+                if (newNotes.Count > 10 && System.Windows.Forms.MessageBox.Show("There are more than 10 entries that need to be backed up. It may take up to several minutes to do so." + Environment.NewLine + Environment.NewLine + "Do you want to backup edited data online now?", "Online backup", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question, System.Windows.Forms.MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    return;
+
                 // STEP 3 - update the notes online.
                 var removeOld = new System.Text.RegularExpressions.Regex(@"\s*\[GT\].+\[\/GT\]", System.Text.RegularExpressions.RegexOptions.Singleline);
                 foreach (var note in newNotes)
