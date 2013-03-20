@@ -30,9 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeocachingService.OAuth", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldNoteManager", "FieldNoteManager\FieldNoteManager.csproj", "{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalNoteManager", "PersonalNoteManager\PersonalNoteManager.csproj", "{C8C63FA3-C87A-4C78-A338-1709054117EC}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs19
 		SccLocalPath0 = .
@@ -61,6 +63,10 @@ Global
 		SccProjectTopLevelParentUniqueName7 = GeoTransformer.sln
 		SccProjectName7 = FieldNoteManager
 		SccLocalPath7 = FieldNoteManager
+		SccProjectUniqueName8 = PersonalNoteManager\\PersonalNoteManager.csproj
+		SccProjectTopLevelParentUniqueName8 = GeoTransformer.sln
+		SccProjectName8 = PersonalNoteManager
+		SccLocalPath8 = PersonalNoteManager
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = GeoTransformer.vsmdi
@@ -126,6 +132,14 @@ Global
 		{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C8C63FA3-C87A-4C78-A338-1709054117EC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,5 +149,6 @@ Global
 		{5E7D8EC2-65E4-4545-BB58-35CC943AE427} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
 		{699636E9-0B8C-4A70-8A72-EF962B9C9655} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
 		{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
+		{C8C63FA3-C87A-4C78-A338-1709054117EC} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
 	EndGlobalSection
 EndGlobal
