@@ -252,8 +252,8 @@ namespace GeoTransformer.GeocachingService
         /// <summary>
         /// Retrieves a single geocache by its code.
         /// </summary>
-        /// <param name="code, "The code of the geocache to search for.</param>
-        /// <param name="liteVersion, "if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
+        /// <param name="code">The code of the geocache to search for.</param>
+        /// <param name="liteVersion">if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
         /// <returns>The <see cref="Geocache"/> object or <c>null</c> if the service is disabled or the cache cannot be found.</returns>
         public Geocache GetGeocacheByCode(string code, bool? liteVersion = null)
         {
@@ -295,9 +295,9 @@ namespace GeoTransformer.GeocachingService
         /// <summary>
         /// Retrieves a list of geocaches by their codes.
         /// </summary>
-        /// <param name="codes, "The list of codes for the geocache to search for.</param>
-        /// <param name="liteVersion, "if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
-        /// <param name="errorHandler, "specifies the delegate that will be called if the Live API returns an error.</param>
+        /// <param name="codes">The list of codes for the geocache to search for.</param>
+        /// <param name="liteVersion">if set to <c>true</c> returns the lite version of the data. Default is to use lite version if the user is not a premium member.</param>
+        /// <param name="errorHandler">specifies the delegate that will be called if the Live API returns an error.</param>
         /// <returns>The <see cref="Geocache"/> objects for all loaded caches. If the service is disabled returns an empty list. All caches that cannot be loaded are not returned in the result set.</returns>
         public IEnumerable<Geocache> GetGeocachesByCode(IEnumerable<string> codes, bool? liteVersion = null, Action<string> errorHandler = null)
         {
