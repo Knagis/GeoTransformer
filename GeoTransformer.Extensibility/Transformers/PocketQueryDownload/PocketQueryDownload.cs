@@ -102,7 +102,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 if (this._usingFullData)
                     System.IO.File.WriteAllText(this.CacheKeyFileName, DateTime.UtcNow.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 else
-                    System.IO.File.WriteAllText(this.CacheKeyFileName, this.LastGenerated.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    System.IO.File.WriteAllText(this.CacheKeyFileName, this.LastGenerated.ToUniversalTime().ToString(System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
