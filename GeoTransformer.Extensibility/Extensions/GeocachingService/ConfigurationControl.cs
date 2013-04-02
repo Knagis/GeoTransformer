@@ -192,7 +192,7 @@ namespace GeoTransformer.Extensions.GeocachingService
         private void textBoxToken_TextChanged(object sender, EventArgs e)
         {
             this.AccessToken = this.textBoxToken.Text.Trim();
-
+            this.IsEnabled = true;
             GeoTransformer.GeocachingService.LiveClient.OnIsEnabledChanged();
             this.labelUsernameValue.Font = new Font(this.labelUsernameValue.Font, FontStyle.Italic);
             this.labelUsernameValue.Text = "retrieving...";

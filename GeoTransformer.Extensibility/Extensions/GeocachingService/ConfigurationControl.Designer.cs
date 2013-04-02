@@ -93,7 +93,7 @@
             this.textBoxToken.TabIndex = 15;
             this.singletonTooltip.SetToolTip(this.textBoxToken, "The access token used to communicate with Live API");
             this.textBoxToken.Visible = false;
-            this.textBoxToken.Leave += new System.EventHandler(this.textBoxToken_TextChanged);
+            this.textBoxToken.TextChanged += new System.EventHandler(this.textBoxToken_TextChanged);
             // 
             // flowLayoutPanel3
             // 
