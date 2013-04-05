@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GeoTransformer.Viewers.GoogleMaps
+namespace GeoTransformer.Viewers.GeoHack
 {
     /// <summary>
     /// Waypoint viewer that displays Google Maps web site pointing to the waypoint coordinates.
@@ -30,7 +30,7 @@ namespace GeoTransformer.Viewers.GoogleMaps
         /// </summary>
         public string ButtonText
         {
-            get { return "Google maps"; }
+            get { return "GeoHack maps"; }
         }
 
         /// <summary>
@@ -61,12 +61,26 @@ namespace GeoTransformer.Viewers.GoogleMaps
             var wpt = waypoints[0];
             var coords = wpt.Coordinates;
 
-            this._browser.Navigate(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                        "https://maps.google.com/maps?q={3} ({2})&ll={0:0.00000},{1:0.00000}&z=16&mrt=loc", 
-                        coords.Latitude, 
-                        coords.Longitude,
-                        Uri.EscapeDataString(wpt.Name),
-                        coords.ToString()));
+            var sb = new StringBuilder();
+            sb.Append("http://toolserver.org/~geohack/geohack.php?pagename=");
+            sb.Append(Uri.EscapeDataString(wpt.Description));
+            sb.Append("&params=");
+
+            var n = Math.Abs(coords.Latitude);
+            var n1 = Math.Truncate(n);
+            var n2 = Math.Truncate((n - n1) * 60);
+            var n3 = Math.Round((n - n1 - n2 / 60) * 3600, 4);
+            var n4 = coords.Latitude < 0 ? "S" : "N";
+
+            var e = Math.Abs(coords.Longitude);
+            var e1 = Math.Truncate(e);
+            var e2 = Math.Truncate((e - e1) * 60);
+            var e3 = Math.Round((e - e1 - e2 / 60) * 3600, 4);
+            var e4 = coords.Longitude < 0 ? "W" : "E";
+
+            sb.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "{0}_{1}_{2}_{3}_{4}_{5}_{6}_{7}_type:landmark", n1, n2, n3, n4, e1, e2, e3, e4);
+
+            this._browser.Navigate(sb.ToString());
         }
 
         /// <summary>

@@ -429,8 +429,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Viewers\GoogleMaps\GoogleMapsView.cs" />
-    <Compile Include="Viewers\GoogleMaps\Resources.Designer.cs">
+    <Compile Include="Viewers\GeoHack\GeoHackView.cs" />
+    <Compile Include="Viewers\GeoHack\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -557,7 +557,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Viewers\GoogleMaps\Resources.resx">
+    <EmbeddedResource Include="Viewers\GeoHack\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -796,7 +796,7 @@
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
     <Content Include="UI\CacheTypeIcons\VirtualCache.gif" />
     <Content Include="Viewers\BingMaps\MapTemplate.html" />
-    <None Include="Viewers\GoogleMaps\Web.png" />
+    <None Include="Viewers\GeoHack\Web.png" />
     <Content Include="Viewers\TableView\table.png" />
   </ItemGroup>
   <ItemGroup />

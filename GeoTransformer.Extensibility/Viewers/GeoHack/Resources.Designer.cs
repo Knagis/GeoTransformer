@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GeoTransformer.Viewers.GoogleMaps {
+namespace GeoTransformer.Viewers.GeoHack {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace GeoTransformer.Viewers.GoogleMaps {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GeoTransformer.Viewers.GoogleMaps.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GeoTransformer.Viewers.GeoHack.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
