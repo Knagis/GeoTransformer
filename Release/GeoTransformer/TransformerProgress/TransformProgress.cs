@@ -387,6 +387,8 @@ namespace GeoTransformer
         private void TransformProgress_VisibleChanged(object sender, EventArgs e)
         {
             var queue = this._pendingOperations;
+            if (queue == null)
+                return;
 
 #if DEBUG
             // safety check for development - in theory the queue would not be used anymore, but to make sure we don't lose any messages, it is set to null (better to get an exception).

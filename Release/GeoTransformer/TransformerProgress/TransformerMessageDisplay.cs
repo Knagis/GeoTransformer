@@ -111,6 +111,10 @@ namespace GeoTransformer
                 };
                 this.progressPanel.Controls.Add(this.skipButton);
             }
+            else
+            {
+                this.progressPanel.Visible = true;
+            }
 
             this.skipButton.Visible = skipSupported;
 

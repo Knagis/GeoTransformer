@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Kārlis Gaņģis")]
 [assembly: AssemblyProduct("GeoTransformer")]
-[assembly: AssemblyCopyright("Copyright © Kārlis Gaņģis 2010-2012")]
+[assembly: AssemblyCopyright("Copyright © Kārlis Gaņģis 2010-2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("184ad110-77c2-4a87-8c48-d06b058374c6")]
 
-[assembly: AssemblyVersion("4.3.0.1")]
-[assembly: AssemblyFileVersion("4.3.0.1")]
+[assembly: AssemblyVersion("4.4.0.1")]
+[assembly: AssemblyFileVersion("4.4.0.1")]
 
-[assembly: AssemblyInformationalVersion("4.3")]
+[assembly: AssemblyInformationalVersion("4.4")]

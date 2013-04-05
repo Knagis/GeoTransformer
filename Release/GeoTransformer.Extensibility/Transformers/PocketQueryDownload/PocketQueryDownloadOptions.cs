@@ -34,6 +34,11 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
             }
         }
 
+        /// <summary>
+        /// Gets the value that determines if the pocket query download has to be performed using full data download instead of classic ZIP file.
+        /// </summary>
+        public bool DownloadFullData { get { return this.chkDownloadFullData.Checked; } }
+
         public Dictionary<Guid, string> CheckedQueries
         {
             get
@@ -58,6 +63,10 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     writer.Write(this.comboBoxPocketQuery.GetItemChecked(i));
                     i++;
                 }
+
+                // configuration version
+                writer.Write((byte)2);
+                writer.Write(this.chkDownloadFullData.Checked);
 
                 writer.Flush();
                 return ms.ToArray();
@@ -85,6 +94,13 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     this.comboBoxPocketQuery.Text = this.comboBoxPocketQuery.CheckedItems.Cast<Tuple<Guid, string>>().Select(o => o.Item2).DefaultIfEmpty(string.Empty).Aggregate((a, b) => a + ", " + b);
 
                     this.checkBoxEnablePocketQuery.Checked = enabled;
+
+                    // set the defaults for when loading older versions of configuration data
+                    this.chkDownloadFullData.Checked = false;
+
+                    // continuing reading at this point will result in exception if the configuration version is 1
+                    var version = reader.ReadByte();
+                    this.chkDownloadFullData.Checked = reader.ReadBoolean();
                 }
             }
             catch
@@ -154,7 +170,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     this.checkBoxEnablePocketQuery.Checked = false;
                     return;
                 }
-
+                
                 if (r.PocketQueryList.Length == 0)
                 {
                     MessageBox.Show("You currently do not have any pocket queries available for download. Please use the geocaching.com website to create and run a query.");

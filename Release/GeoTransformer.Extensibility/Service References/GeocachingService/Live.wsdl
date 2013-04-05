@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Live" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Live" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsp:Policy wsu:Id="CustomBinding_ILive_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -32,9 +32,9 @@
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd2" namespace="http://www.geocaching.com/Geocaching.Live/data" />
-      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Tucson.Geocaching.WCF.API.Geocaching.Types" />
-      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Groundspeak.API.AuthorizationLib" />
-      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Tucson.Geocaching.WCF.API.Geocaching.Types" />
+      <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/Groundspeak.API.AuthorizationLib" />
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/Groundspeak.Web.PocketQueries" />
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/Tucson.Geocaching.WCF.API.Utilities" />
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd8" namespace="http://www.geocaching.com/Challenges.Live/data" />
@@ -43,6 +43,18 @@
       <xsd:import schemaLocation="https://staging.api.groundspeak.com/Live/V6Beta/geocaching.svc?xsd=xsd11" namespace="http://schemas.datacontract.org/2004/07/Souvenirs.Common" />
     </xsd:schema>
   </wsdl:types>
+  <wsdl:message name="ILive_AddGeocachesToBookmarkList_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddGeocachesToBookmarkList" />
+  </wsdl:message>
+  <wsdl:message name="ILive_AddGeocachesToBookmarkList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddGeocachesToBookmarkListResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheStatus" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GetGeocacheStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGeocacheStatusResponse" />
+  </wsdl:message>
   <wsdl:message name="ILive_GetMembershipTypes_InputMessage">
     <wsdl:part name="parameters" element="tns:GetMembershipTypes" />
   </wsdl:message>
@@ -60,12 +72,6 @@
   </wsdl:message>
   <wsdl:message name="ILive_GetSiteStats_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetSiteStatsResponse" />
-  </wsdl:message>
-  <wsdl:message name="ILive_GetServerDetails_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetServerDetails" />
-  </wsdl:message>
-  <wsdl:message name="ILive_GetServerDetails_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetServerDetailsResponse" />
   </wsdl:message>
   <wsdl:message name="ILive_GetStatusMessages_InputMessage">
     <wsdl:part name="parameters" element="tns:GetStatusMessages" />
@@ -109,11 +115,11 @@
   <wsdl:message name="ILive_GetPocketQueryData_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetPocketQueryDataResponse" />
   </wsdl:message>
-  <wsdl:message name="ILive_GetPocketQueryUrls_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetPocketQueryUrls" />
+  <wsdl:message name="ILive_GetFullPocketQueryData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFullPocketQueryData" />
   </wsdl:message>
-  <wsdl:message name="ILive_GetPocketQueryUrls_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetPocketQueryUrlsResponse" />
+  <wsdl:message name="ILive_GetFullPocketQueryData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFullPocketQueryDataResponse" />
   </wsdl:message>
   <wsdl:message name="ILive_GetPocketQueryZippedFile_InputMessage">
     <wsdl:part name="parameters" element="tns:GetPocketQueryZippedFile" />
@@ -247,6 +253,12 @@
   <wsdl:message name="ILive_GetBookmarkListsByUserID_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetBookmarkListsByUserIDResponse" />
   </wsdl:message>
+  <wsdl:message name="ILive_GeocodeString_InputMessage">
+    <wsdl:part name="parameters" element="tns:GeocodeString" />
+  </wsdl:message>
+  <wsdl:message name="ILive_GeocodeString_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GeocodeStringResponse" />
+  </wsdl:message>
   <wsdl:message name="ILive_WindowsPhoneTileSearch_InputMessage">
     <wsdl:part name="parameters" element="tns:WindowsPhoneTileSearch" />
   </wsdl:message>
@@ -349,25 +361,27 @@
   <wsdl:message name="ILive_CreateTrackableLog_OutputMessage">
     <wsdl:part name="parameters" element="tns:CreateTrackableLogResponse" />
   </wsdl:message>
+  <wsdl:message name="ILive_UploadImageToTrackableLog_InputMessage">
+    <wsdl:part name="parameters" element="tns:UploadImageToTrackableLog" />
+  </wsdl:message>
+  <wsdl:message name="ILive_UploadImageToTrackableLog_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UploadImageToTrackableLogResponse" />
+  </wsdl:message>
   <wsdl:message name="ILive_GetBookmarkListByGuid_InputMessage">
     <wsdl:part name="parameters" element="tns:GetBookmarkListByGuid" />
   </wsdl:message>
   <wsdl:message name="ILive_GetBookmarkListByGuid_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetBookmarkListByGuidResponse" />
   </wsdl:message>
-  <wsdl:message name="ILive_AddGeocachesToBookmarkList_InputMessage">
-    <wsdl:part name="parameters" element="tns:AddGeocachesToBookmarkList" />
-  </wsdl:message>
-  <wsdl:message name="ILive_AddGeocachesToBookmarkList_OutputMessage">
-    <wsdl:part name="parameters" element="tns:AddGeocachesToBookmarkListResponse" />
-  </wsdl:message>
-  <wsdl:message name="ILive_GetGeocacheStatus_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetGeocacheStatus" />
-  </wsdl:message>
-  <wsdl:message name="ILive_GetGeocacheStatus_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetGeocacheStatusResponse" />
-  </wsdl:message>
   <wsdl:portType name="ILive">
+    <wsdl:operation name="AddGeocachesToBookmarkList">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/AddGeocachesToBookmarkList" message="tns:ILive_AddGeocachesToBookmarkList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/AddGeocachesToBookmarkListResponse" message="tns:ILive_AddGeocachesToBookmarkList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetGeocacheStatus" message="tns:ILive_GetGeocacheStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetGeocacheStatusResponse" message="tns:ILive_GetGeocacheStatus_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetMembershipTypes">
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetMembershipTypes" message="tns:ILive_GetMembershipTypes_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetMembershipTypesResponse" message="tns:ILive_GetMembershipTypes_OutputMessage" />
@@ -379,10 +393,6 @@
     <wsdl:operation name="GetSiteStats">
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetSiteStats" message="tns:ILive_GetSiteStats_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetSiteStatsResponse" message="tns:ILive_GetSiteStats_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetServerDetails">
-      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetServerDetails" message="tns:ILive_GetServerDetails_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetServerDetailsResponse" message="tns:ILive_GetServerDetails_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetStatusMessages">
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetStatusMessages" message="tns:ILive_GetStatusMessages_InputMessage" />
@@ -412,9 +422,9 @@
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryData" message="tns:ILive_GetPocketQueryData_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetPocketQueryDataResponse" message="tns:ILive_GetPocketQueryData_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetPocketQueryUrls">
-      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryUrls" message="tns:ILive_GetPocketQueryUrls_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetPocketQueryUrlsResponse" message="tns:ILive_GetPocketQueryUrls_OutputMessage" />
+    <wsdl:operation name="GetFullPocketQueryData">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetFullPocketQueryData" message="tns:ILive_GetFullPocketQueryData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetFullPocketQueryDataResponse" message="tns:ILive_GetFullPocketQueryData_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetPocketQueryZippedFile">
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetPocketQueryZippedFile" message="tns:ILive_GetPocketQueryZippedFile_InputMessage" />
@@ -504,6 +514,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetBookmarkListsByUserID" message="tns:ILive_GetBookmarkListsByUserID_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetBookmarkListsByUserIDResponse" message="tns:ILive_GetBookmarkListsByUserID_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="GeocodeString">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GeocodeString" message="tns:ILive_GeocodeString_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GeocodeStringResponse" message="tns:ILive_GeocodeString_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="WindowsPhoneTileSearch">
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/WindowsPhoneTileSearch" message="tns:ILive_WindowsPhoneTileSearch_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/WindowsPhoneTileSearchResponse" message="tns:ILive_WindowsPhoneTileSearch_OutputMessage" />
@@ -572,22 +586,36 @@
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/CreateTrackableLog" message="tns:ILive_CreateTrackableLog_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/CreateTrackableLogResponse" message="tns:ILive_CreateTrackableLog_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="UploadImageToTrackableLog">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILive/UploadImageToTrackableLog" message="tns:ILive_UploadImageToTrackableLog_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILive/UploadImageToTrackableLogResponse" message="tns:ILive_UploadImageToTrackableLog_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetBookmarkListByGuid">
       <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetBookmarkListByGuid" message="tns:ILive_GetBookmarkListByGuid_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetBookmarkListByGuidResponse" message="tns:ILive_GetBookmarkListByGuid_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="AddGeocachesToBookmarkList">
-      <wsdl:input wsaw:Action="http://tempuri.org/ILive/AddGeocachesToBookmarkList" message="tns:ILive_AddGeocachesToBookmarkList_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ILive/AddGeocachesToBookmarkListResponse" message="tns:ILive_AddGeocachesToBookmarkList_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetGeocacheStatus">
-      <wsdl:input wsaw:Action="http://tempuri.org/ILive/GetGeocacheStatus" message="tns:ILive_GetGeocacheStatus_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ILive/GetGeocacheStatusResponse" message="tns:ILive_GetGeocacheStatus_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CustomBinding_ILive" type="tns:ILive">
     <wsp:PolicyReference URI="#CustomBinding_ILive_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddGeocachesToBookmarkList">
+      <soap12:operation soapAction="http://tempuri.org/ILive/AddGeocachesToBookmarkList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGeocacheStatus">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetGeocacheStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetMembershipTypes">
       <soap12:operation soapAction="http://tempuri.org/ILive/GetMembershipTypes" style="document" />
       <wsdl:input>
@@ -608,15 +636,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetSiteStats">
       <soap12:operation soapAction="http://tempuri.org/ILive/GetSiteStats" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetServerDetails">
-      <soap12:operation soapAction="http://tempuri.org/ILive/GetServerDetails" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -687,8 +706,8 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetPocketQueryUrls">
-      <soap12:operation soapAction="http://tempuri.org/ILive/GetPocketQueryUrls" style="document" />
+    <wsdl:operation name="GetFullPocketQueryData">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GetFullPocketQueryData" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -894,6 +913,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GeocodeString">
+      <soap12:operation soapAction="http://tempuri.org/ILive/GeocodeString" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="WindowsPhoneTileSearch">
       <soap12:operation soapAction="http://tempuri.org/ILive/WindowsPhoneTileSearch" style="document" />
       <wsdl:input>
@@ -1047,26 +1075,17 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="UploadImageToTrackableLog">
+      <soap12:operation soapAction="http://tempuri.org/ILive/UploadImageToTrackableLog" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetBookmarkListByGuid">
       <soap12:operation soapAction="http://tempuri.org/ILive/GetBookmarkListByGuid" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="AddGeocachesToBookmarkList">
-      <soap12:operation soapAction="http://tempuri.org/ILive/AddGeocachesToBookmarkList" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetGeocacheStatus">
-      <soap12:operation soapAction="http://tempuri.org/ILive/GetGeocacheStatus" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

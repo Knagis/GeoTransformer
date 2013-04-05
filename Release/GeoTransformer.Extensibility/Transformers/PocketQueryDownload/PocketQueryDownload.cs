@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +20,18 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
         /// </summary>
         private class DownloadInfo
         {
-            public DownloadInfo(string localStoragePath)
+            public DownloadInfo(string localStoragePath, bool usingFullData)
             {
                 this._localStoragePath = localStoragePath;
+                this._usingFullData = usingFullData;
             }
             private string _localStoragePath;
             private bool? _cacheUpToDate;
+            private bool _usingFullData;
 
             public Guid Id;
             public string Title;
-            public string LastGenerated;
+            public DateTime LastGenerated;
             public bool NotAvailable;
 
             public bool CacheUpToDate
@@ -45,7 +47,19 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                         return false;
                     }
 
-                    _cacheUpToDate = string.Equals(this.LastGenerated, System.IO.File.ReadAllText(this.CacheKeyFileName), StringComparison.Ordinal);
+                    DateTime lastGenerated;
+                    if (!DateTime.TryParse(System.IO.File.ReadAllText(this.CacheKeyFileName), System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeUniversal, out lastGenerated))
+                    {
+                        _cacheUpToDate = false;
+                        return false;
+                    }
+
+                    // this.LastGenerated is not applied when downloading full data since the PQ might be week old - we still will get
+                    // fresh data using the full download.
+                    if (this._usingFullData)
+                        _cacheUpToDate = DateTime.UtcNow.Subtract(lastGenerated).TotalHours < 6;
+                    else
+                        _cacheUpToDate = Math.Abs(this.LastGenerated.Subtract(lastGenerated).TotalMinutes) < 5;
 
                     return _cacheUpToDate.Value;
                 }
@@ -78,6 +92,17 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 {
                     return this.CacheFileName + "key";
                 }
+            }
+
+            /// <summary>
+            /// Update the cache key file signaling that the cached data is refreshed.
+            /// </summary>
+            public void WriteCacheKey()
+            {
+                if (this._usingFullData)
+                    System.IO.File.WriteAllText(this.CacheKeyFileName, DateTime.UtcNow.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                else
+                    System.IO.File.WriteAllText(this.CacheKeyFileName, this.LastGenerated.ToUniversalTime().ToString(System.Globalization.CultureInfo.InvariantCulture));
             }
         }
 
@@ -123,7 +148,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
             int notInCache = 0;
             foreach (var g in this._options.CheckedQueries)
             {
-                var x = new DownloadInfo(this.LocalStoragePath) { Id = g.Key, Title = g.Value };
+                var x = new DownloadInfo(this.LocalStoragePath, this._options.DownloadFullData) { Id = g.Key, Title = g.Value };
 
                 var file = x.CacheFileName;
                 if (!System.IO.File.Exists(x.CacheFileName) || !System.IO.File.Exists(x.CacheKeyFileName))
@@ -133,7 +158,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     continue;
                 }
 
-                var queryDate = DateTime.Parse(System.IO.File.ReadAllText(x.CacheKeyFileName), System.Globalization.CultureInfo.InvariantCulture);                
+                var queryDate = DateTime.Parse(System.IO.File.ReadAllText(x.CacheKeyFileName), System.Globalization.CultureInfo.InvariantCulture);
                 var queryAge = (int)DateTime.Now.Subtract(queryDate).TotalDays;
                 if (queryAge > 15)
                     this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "The local copy of '{0}' is {1} day{2} old.", x.Title, queryAge, (queryAge % 10 == 1 && queryAge % 100 != 11) ? string.Empty : "s");
@@ -204,8 +229,8 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                         Status = new GeocachingService.StatusResponse()
                         {
                             StatusCode = -1,
-                            StatusMessage = ex is System.ServiceModel.EndpointNotFoundException 
-                                ? "Network connection or geocaching.com site is not available." 
+                            StatusMessage = ex is System.ServiceModel.EndpointNotFoundException
+                                ? "Network connection or geocaching.com site is not available."
                                 : ex.Message
                         }
                     };
@@ -219,10 +244,10 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 }
 
                 this._options.SetPocketQueryList(pqList.PocketQueryList, false);
-                
+
                 foreach (var g in this._options.CheckedQueries)
                 {
-                    var x = new DownloadInfo(this.LocalStoragePath) { Id = g.Key, Title = g.Value };
+                    var x = new DownloadInfo(this.LocalStoragePath, this._options.DownloadFullData) { Id = g.Key, Title = g.Value };
                     downloadList.Add(x);
                     var actualPq = pqList.PocketQueryList.FirstOrDefault(o => o.GUID == x.Id || o.Name == x.Title);
                     x.Title = actualPq.Name;
@@ -233,7 +258,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                         continue;
                     }
 
-                    x.LastGenerated = actualPq.DateLastGenerated.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    x.LastGenerated = actualPq.DateLastGenerated;
 
                     var queryAge = (int)DateTime.Now.Subtract(actualPq.DateLastGenerated).TotalDays;
                     if (queryAge > 8)
@@ -256,16 +281,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     x.NotAvailable = true;
                     try
                     {
-                        var response = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
-                        if (response.Status.StatusCode != 0)
-                        {
-                            this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
-                        }
-                        else
-                        {
-                            System.IO.File.WriteAllBytes(x.TempFileName, System.Convert.FromBase64String(response.ZippedFile));
-                            x.NotAvailable = false;
-                        }
+                        DownloadPocketQuery(service, x);
                     }
                     catch (TransformerCancelledException ex)
                     {
@@ -317,7 +333,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                     System.IO.File.Delete(x.CacheKeyFileName);
                     System.IO.File.Delete(x.CacheFileName);
                     System.IO.File.Move(x.TempFileName, x.CacheFileName);
-                    System.IO.File.WriteAllText(x.CacheKeyFileName, x.LastGenerated);
+                    x.WriteCacheKey();
                 }
             }
 
@@ -328,7 +344,7 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 try
                 {
                     if (DateTime.Now.Subtract(System.IO.File.GetLastWriteTime(f)).TotalDays > 30)
-                    System.IO.File.Delete(f);
+                        System.IO.File.Delete(f);
                 }
                 catch { }
             }
@@ -339,6 +355,64 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
                 downloadList.Count - fromCache,
                 fromCache - notInCache,
                 notInCache);
+        }
+
+        private void DownloadPocketQuery(GeocachingService.LiveClient service, DownloadInfo x)
+        {
+            if (this._options.DownloadFullData)
+            {
+                try
+                {
+                    int pqCount = 1000;
+                    var data = new List<GeocachingService.Geocache>();
+                    while (data.Count < pqCount)
+                    {
+                        this.ExecutionContext.ReportProgress(data.Count, pqCount, true);
+                        this.ExecutionContext.ThrowIfCancellationPending();
+
+                        var response = service.GetFullPocketQueryData(service.AccessToken, x.Id, data.Count, 75);
+                        if (response.Status.StatusCode == 140)
+                        {
+                            System.Threading.Thread.Sleep(10000);
+                            continue;
+                        }
+                        if (response.Status.StatusCode != 0)
+                        {
+                            this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + response.Status.StatusMessage);
+                            return;
+                        }
+
+                        pqCount = (int)response.PQCount;
+                        data.AddRange(response.Geocaches);
+                    }
+
+                    this.ExecutionContext.ReportProgressFinished();
+                    Gpx.Loader.Serialize(x.TempFileName, true, data, new Gpx.GpxMetadata() { LastRefresh = DateTime.Now });
+                    x.NotAvailable = false;
+
+                    return;
+                }
+                catch (TransformerCancelledException ex)
+                {
+                    if (!ex.CanContinue)
+                        throw;
+
+                    // fall back to the ZIP download instead.
+                }
+            }
+
+            var zresponse = service.GetPocketQueryZippedFile(service.AccessToken, x.Id);
+            if (zresponse.Status.StatusCode != 0)
+            {
+                this.ExecutionContext.ReportStatus(StatusSeverity.Warning, "Error while downloading: " + zresponse.Status.StatusMessage);
+            }
+            else
+            {
+                System.IO.File.WriteAllBytes(x.TempFileName, System.Convert.FromBase64String(zresponse.ZippedFile));
+                x.NotAvailable = false;
+            }
+
+            return;
         }
 
         #region [ ILocalStorage ]

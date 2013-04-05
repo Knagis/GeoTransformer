@@ -117,56 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTipForOptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="toolTipForOptions.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="labelPocketQuery.ToolTip" xml:space="preserve">
-    <value>Select the pocket queries the application should
-download. Note that if any of the pocket queries
-are not available for download (they have not been
-run in the last 7 days) they will just get skipped.
-
-The best results are when you schedule the pocket
-queries to run every day.
-
-Also note that this list will only show the queries that
-are available for download when the refresh is
-performed, not all queries.</value>
-  </data>
-  <data name="linkRefresh.ToolTip" xml:space="preserve">
-    <value>Refreshes the list of pocket queries from the geocaching.com
-site. Use this link when you have created new pocket queries
-that do not show up in the list (but note that the queries must
-be available for download (generated within the last week to
-show up in this list).</value>
-  </data>
-  <data name="label1.ToolTip" xml:space="preserve">
-    <value>Select the pocket queries the application should
-download. Note that if any of the pocket queries
-are not available for download (they have not been
-run in the last 7 days) they will just get skipped.
-
-The best results are when you schedule the pocket
-queries to run every day.
-
-Also note that this list will only show the queries that
-are available for download when the refresh is
-performed, not all queries.</value>
-  </data>
-  <data name="chkDownloadFullData.ToolTip" xml:space="preserve">
-    <value>Selecting this option will enable the application to download
-the full geocache information (including favorite points, images
-etc.) instead of the limited information available in the classic
-ZIP archive download.
-
-This type of download is slower than the classic ZIP archives but
-the data is refreshed after 6 hours instead of relying for the 
-pocket query to be generated on geocaching.com.
-
-If you Skip the full download, GeoTransformer will download
-the ZIP archive instead.</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Web" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Web.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

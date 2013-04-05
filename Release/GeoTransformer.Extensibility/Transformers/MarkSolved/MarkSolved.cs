@@ -16,6 +16,25 @@ namespace GeoTransformer.Transformers.MarkSolved
     /// </summary>
     public class MarkSolved : TransformerBase, Extensions.IEditor
     {
+        /// <summary>
+        /// Initializes static members of the <see cref="MarkSolved"/> class.
+        /// </summary>
+        static MarkSolved()
+        {
+            EditorOnlineBackup.EditorOnlineBackup.RegisterForBackup(wpt =>
+                {
+                    var configElement = wpt.FindExtensionElement(typeof(MarkSolved));
+                    if (configElement == null)
+                        return null;
+
+                    bool val;
+                    if (!bool.TryParse(configElement.Value, out val) || !val)
+                        return null;
+
+                    return "Solved";
+                });
+        }
+
         private EditorControl _editorControl;
 
         private Gpx.GpxWaypoint _boundWaypoint;

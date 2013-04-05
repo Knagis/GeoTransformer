@@ -38,6 +38,7 @@ namespace GeoTransformer
                 query.Value(o => o.MainFormDefaultUrl, this.toolStripOpenDefaultWebPage.Tag as string);
                 query.Value(o => o.DoNotShowWelcomeScreen, WelcomeScreen.WelcomeScreen.DoNotShowWelcomeScreen);
                 query.Value(o => o.ListViewerHeight, this.cachePanel.SplitterDistance * 1000 / this.cachePanel.Height);
+                query.Value(o => o.RecentPublishers, this.RecentPublishers.Take(10).Select(o => o.ToString()).Aggregate("", (a,b) => a + ',' + b));
                 query.Execute();
 
                 Extensions.ExtensionLoader.PersistExtensionConfiguration();
@@ -60,6 +61,7 @@ namespace GeoTransformer
                 if (res.Value(o => o.MainFormWindowWidth) != 0) this.Width = res.Value(o => o.MainFormWindowWidth);
                 if (res.Value(o => o.MainFormWindowHeight) != 0) this.Height = res.Value(o => o.MainFormWindowHeight);
                 if (res.Value(o => o.ListViewerHeight) != 0) this.cachePanel.SplitterDistance = res.Value(o => o.ListViewerHeight) * this.cachePanel.Height / 1000;
+                this.RecentPublishers = new List<Guid>((res.Value(o => o.RecentPublishers) ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(o => Guid.Parse(o)));
                 var durl = res.Value(o => o.MainFormDefaultUrl);
                 if (!string.IsNullOrWhiteSpace(durl))
                 {
@@ -92,6 +94,11 @@ namespace GeoTransformer
 
         #region [ Transforming and publishing ]
 
+        /// <summary>
+        /// Holds the most recent publisher target IDs.
+        /// </summary>
+        private List<Guid> RecentPublishers = new List<Guid>();
+
         private IList<IPublisher> _publisherExtensions = new List<IPublisher>();
 
         /// <summary>
@@ -119,16 +126,23 @@ namespace GeoTransformer
 
         private void PublisherClick(object sender, EventArgs args)
         {
-            var item = sender as ToolStripMenuItem;
-            if (item == null || item.DropDownItems.Count > 0)
+            var item = sender as ToolStripItem;
+            if (item == null)
+                return;
+
+            var mitem = sender as ToolStripMenuItem;
+            if (mitem != null && mitem.DropDownItems.Count > 0)
                 return;
 
             var target = item.Tag as Publishers.PublisherTarget;
             if (target == null)
                 return;
 
-            bool cancel;
+            this.RecentPublishers.Remove(target.Key);
+            this.RecentPublishers.Insert(0, target.Key);
+            this.UpdateMostRecentPublisher();
 
+            bool cancel;
             IEnumerable<Extensions.ITransformer> additionalTransformers = null;
             try
             {
@@ -153,6 +167,50 @@ namespace GeoTransformer
                             disp.Dispose();
                     }
             }
+        }
+
+        private void UpdateMostRecentPublisher()
+        {
+            List<ToolStripMenuItem> all = new List<ToolStripMenuItem>();
+            all.AddRange(this.toolStripExport.DropDownItems.OfType<ToolStripMenuItem>());
+            for (int i = 0; i < all.Count; i++)
+                all.AddRange(all[i].DropDownItems.OfType<ToolStripMenuItem>());
+
+            int bestPosition = int.MaxValue;
+            Publishers.PublisherTarget bestTarget = null;
+
+            for (int i = 0; i < all.Count; i++)
+            {
+                var target = all[i].Tag as Publishers.PublisherTarget;
+                var pos = this.RecentPublishers.IndexOf(target.Key);
+                if (pos != -1 && pos < bestPosition)
+                {
+                    bestTarget = target;
+                    if (pos == 0)
+                        break;
+                }
+            }
+
+            this.Invoke(() =>
+                {
+                    if (bestTarget != null)
+                    {
+                        this.toolStripRecentPublisher.Visible = true;
+                        this.toolStripRecentPublisher.Text = bestTarget.Text;
+                        this.toolStripRecentPublisher.Tag = bestTarget;
+                        this.toolStripRecentPublisher.Image = bestTarget.Icon;
+                    }
+                    else
+                    {
+                        this.toolStripRecentPublisher.Visible = false;
+                    }
+                });
+        }
+
+        private void UpdatePublisherTargetsOuter(Extensions.IPublisher publisher, IEnumerable<Publishers.PublisherTarget> targets)
+        {
+            this.UpdatePublisherTargets(publisher, targets);
+            this.UpdateMostRecentPublisher();
         }
 
         private void UpdatePublisherTargets(Extensions.IPublisher publisher, IEnumerable<Publishers.PublisherTarget> targets)
@@ -206,10 +264,12 @@ namespace GeoTransformer
 
             foreach (var publisher in Extensions.ExtensionLoader.RetrieveExtensions<Extensions.IPublisher>())
             {
-                publisher.TargetsChanged += (a, b) => this.UpdatePublisherTargets((IPublisher)a, b.Targets);
+                publisher.TargetsChanged += (a, b) => this.UpdatePublisherTargetsOuter((IPublisher)a, b.Targets);
                 this.UpdatePublisherTargets(publisher, publisher.Initialize());
                 this._publisherExtensions.Add(publisher);
             }
+
+            this.UpdateMostRecentPublisher();
 
             var thread = new System.Threading.Thread(this.NotifyPublishers);
             thread.Name = "MainForm.NotifyPublishers";

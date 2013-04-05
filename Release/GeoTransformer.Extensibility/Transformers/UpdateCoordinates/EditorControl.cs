@@ -27,6 +27,29 @@ namespace GeoTransformer.Transformers.UpdateCoordinates
         public EditorControl()
         {
             InitializeComponent();
+
+            this.coordinateEditor1.CoordinatesChanged += this.CoordinatesChanged;
+        }
+
+        /// <summary>
+        /// Handles the CoordinatesChanged event of the coordinate editor control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void CoordinatesChanged(object sender, EventArgs e)
+        {
+            var wpt = this.BoundElement;
+            if (wpt == null)
+                return;
+
+            if (!this.coordinateEditor1.Coordinates.HasValue)
+            {
+                wpt.Coordinates = wpt.OriginalValues.Coordinates;
+            }
+            else
+            {
+                wpt.Coordinates = this.coordinateEditor1.Coordinates.Value;
+            }
         }
 
         /// <summary>

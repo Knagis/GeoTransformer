@@ -173,10 +173,26 @@ namespace GeoTransformer.Gpx
             using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fileName))
                 foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry zipEntry in zip)
                 {
-                    if (!zipEntry.IsFile || !string.Equals(System.IO.Path.GetExtension(zipEntry.Name), ".gpx", StringComparison.OrdinalIgnoreCase))
+                    if (!zipEntry.IsFile)
                         continue;
 
-                    var gpx = new GpxDocument(LoadXDocument(() => zip.GetInputStream(zipEntry)));
+                    var ext = System.IO.Path.GetExtension(zipEntry.Name);
+                    GpxDocument gpx;
+                    if (string.Equals(ext, ".gpx", StringComparison.OrdinalIgnoreCase))
+                    {
+                        gpx = new GpxDocument(LoadXDocument(() => zip.GetInputStream(zipEntry)));
+
+                    }
+                    else if (string.Equals(ext, ".gclive", StringComparison.OrdinalIgnoreCase))
+                    {
+                        using (var stream = zip.GetInputStream(zipEntry))
+                            gpx = GcLive(stream);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
                     gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(zipEntry.Name);
                     yield return gpx;
                 }
@@ -192,10 +208,109 @@ namespace GeoTransformer.Gpx
         {
             using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fileName))
             {
-                var gpx = new GpxDocument(LoadXDocument(() => zip.GetInputStream(zip.GetEntry(entry))));
-                gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(entry);
+                var zipEntry = zip.GetEntry(entry);
+                if (!zipEntry.IsFile)
+                    throw new ArgumentException("Only file entries are supported.", "entry");
+
+                var ext = System.IO.Path.GetExtension(zipEntry.Name);
+                GpxDocument gpx;
+                if (string.Equals(ext, ".gpx", StringComparison.OrdinalIgnoreCase))
+                {
+                    gpx = new GpxDocument(LoadXDocument(() => zip.GetInputStream(zipEntry)));
+                }
+                else if (string.Equals(ext, ".gclive", StringComparison.OrdinalIgnoreCase))
+                {
+                    using (var stream = zip.GetInputStream(zipEntry))
+                        gpx = GcLive(stream);
+                }
+                else
+                {
+                    throw new ArgumentException("The format " + ext + " is not recognized.");
+                }
+
+                gpx.Metadata.OriginalFileName = System.IO.Path.GetFileName(zipEntry.Name);
                 return gpx;
             }
+        }
+
+        #endregion
+
+        #region [ GCLIVE files - serialized data from geocaching.com ]
+
+        /// <summary>
+        /// Serializes the given <paramref name="data" /> in <paramref name="fileName" />.
+        /// </summary>
+        /// <param name="fileName">The path to the file where the data will be serialized.</param>
+        /// <param name="useZip">If <c>true</c> then the created file is a ZIP archive with <c>.gclive</c> file in it. Otherwise it is just a <c>.gclive</c> file.</param>
+        /// <param name="data">The geocache information that will be updated.</param>
+        /// <param name="metadata">Additional document level metadata to be stored with the geocaches.</param>
+        /// <exception cref="System.ArgumentNullException">when <paramref name="data"/> is <c>null</c></exception>
+        public static void Serialize(string fileName, bool useZip, IEnumerable<GeocachingService.Geocache> data, GpxMetadata metadata = null)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            if (metadata == null)
+                metadata = new GpxMetadata();
+
+            Stream stream = null;
+            ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip = null;
+            try
+            {
+                stream = System.IO.File.Create(fileName);
+
+                if (useZip)
+                {
+                    zip = new ICSharpCode.SharpZipLib.Zip.ZipOutputStream(stream);
+                    zip.SetLevel(8);
+                    zip.UseZip64 = ICSharpCode.SharpZipLib.Zip.UseZip64.Off;
+                    zip.PutNextEntry(new ICSharpCode.SharpZipLib.Zip.ZipEntry(System.IO.Path.GetFileNameWithoutExtension(fileName) + ".gclive"));
+                    
+                    stream = zip;
+                }
+
+                // write the version.
+                var header = System.Text.Encoding.ASCII.GetBytes("GCLIVE.01");
+                stream.Write(header, 0, header.Length);
+
+                var serializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                serializer.Serialize(stream, metadata.Serialize(GpxSerializationOptions.Roundtrip).ToString());
+                serializer.Serialize(stream, data.ToArray());
+
+                if (useZip)
+                {
+                    zip.CloseEntry();
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+        }
+
+        /// <summary>
+        /// Loads the serialized data from Live API. The data should be serialized using 
+        /// </summary>
+        /// <param name="stream">The stream containing the serialized geocache data.</param>
+        /// <returns>A GPX document with the geocache information parsed.</returns>
+        public static GpxDocument GcLive(System.IO.Stream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+            var serializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            var header = new byte[System.Text.Encoding.ASCII.GetByteCount("GCLIVE.XX")];
+            stream.Read(header, 0, header.Length);
+
+            var headerText = System.Text.Encoding.ASCII.GetString(header);
+            if (!string.Equals(headerText, "GCLIVE.01"))
+                throw new System.IO.InvalidDataException("The stream does not contain valid header for the Live API serialized data.");
+
+            var metadataXml = (string)serializer.Deserialize(stream);
+            var metadata = new Gpx.GpxMetadata(XElement.Parse(metadataXml));
+            var data = (GeocachingService.Geocache[])serializer.Deserialize(stream);
+
+            return new GpxDocument(data, metadata);
         }
 
         #endregion

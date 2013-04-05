@@ -209,6 +209,8 @@
     </Compile>
     <Compile Include="Transformers\EditorExtensions\SaveEditorExtensions.cs" />
     <Compile Include="Transformers\EditorExtensions\LoadEditorExtensions.cs" />
+    <Compile Include="Transformers\EditorOnlineBackup\EditorOnlineBackup.cs" />
+    <Compile Include="Transformers\EditorOnlineBackup\CacheTable.cs" />
     <Compile Include="Transformers\ExecutionContextExtensions.cs" />
     <Compile Include="Transformers\IExecutionContext.cs" />
     <Compile Include="Transformers\LoadFromLiveApi\ConfigurationControl.cs">
@@ -272,6 +274,13 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Transformers\PrefixNotFound\ConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Transformers\PrefixNotFound\ConfigurationControl.Designer.cs">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transformers\PrefixNotFound\PrefixNotFound.cs" />
     <Compile Include="Transformers\ProgressUpdateEventArgs.cs" />
     <Compile Include="Transformers\ReadableAttributes\ReadableAttributes.cs" />
     <Compile Include="Transformers\RefreshFromLiveApi\RefreshFromLiveApi.cs" />
@@ -420,6 +429,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Viewers\GeoHack\GeoHackView.cs" />
+    <Compile Include="Viewers\GeoHack\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Viewers\TableView\EditedCacheTableView.cs" />
     <Compile Include="Viewers\SelectedWaypointsChangedEventArgs.cs" />
     <Compile Include="Viewers\TableView\Resources.Designer.cs">
@@ -504,6 +519,9 @@
     <EmbeddedResource Include="Transformers\PrefixDisabled\ConfigurationControl.resx">
       <DependentUpon>ConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Transformers\PrefixNotFound\ConfigurationControl.resx">
+      <DependentUpon>ConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Transformers\SimpleConfigurationControl.resx">
       <DependentUpon>SimpleConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -536,6 +554,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Viewers\CacheWebPage\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\GeoHack\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -631,6 +653,9 @@
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocacheTypesResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetGeocodeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetImagesForGeocacheResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -640,13 +665,7 @@
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryListResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryUrlsResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetPocketQueryZippedFileResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetServerDetailsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\GeocachingService\GeoTransformer.GeocachingService.GetSiteStatsResponse.datasource">
@@ -777,6 +796,7 @@
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
     <Content Include="UI\CacheTypeIcons\VirtualCache.gif" />
     <Content Include="Viewers\BingMaps\MapTemplate.html" />
+    <None Include="Viewers\GeoHack\Web.png" />
     <Content Include="Viewers\TableView\table.png" />
   </ItemGroup>
   <ItemGroup />
