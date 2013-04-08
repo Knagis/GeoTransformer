@@ -20,6 +20,16 @@ namespace FieldNoteManager
     /// </summary>
     internal partial class Window : UserControl
     {
+        private Dictionary<string, string> LogTypeMapping = new Dictionary<string, string> { { "Needs repair", "Needs Maintenance" } };
+
+        private string MapLogType(string fieldNoteLogType)
+        {
+            if (LogTypeMapping.Keys.Contains(fieldNoteLogType))
+                return LogTypeMapping[fieldNoteLogType];
+            else
+                return fieldNoteLogType;
+        }
+
         public Window()
         {
             InitializeComponent();
@@ -174,7 +184,7 @@ namespace FieldNoteManager
                     {
                         try
                         {
-                            var logType = logTypes.WptLogTypes.FirstOrDefault(o => string.Equals(n.LogType, o.WptLogTypeName, StringComparison.OrdinalIgnoreCase));
+                            var logType = logTypes.WptLogTypes.FirstOrDefault(o => string.Equals(this.MapLogType(n.LogType), o.WptLogTypeName, StringComparison.OrdinalIgnoreCase));
                             if (logType == null)
                             {
                                 n.Result = "Error: cannot find the appropriate log type on the server.";
