@@ -797,6 +797,8 @@
     <Content Include="UI\CacheTypeIcons\VirtualCache.gif" />
     <Content Include="Viewers\BingMaps\MapTemplate.html" />
     <None Include="Viewers\GeoHack\Web.png" />
+    <None Include="Viewers\TableView\clear.png" />
+    <Content Include="Viewers\TableView\search.png" />
     <Content Include="Viewers\TableView\table.png" />
   </ItemGroup>
   <ItemGroup />

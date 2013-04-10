@@ -19,6 +19,12 @@ namespace GeoTransformer.Viewers.TableView
     /// </summary>
     public class TableView : IWaypointListViewer, IConfigurable
     {
+        private const int searchPanelSize = 30;
+        private List<Gpx.GpxWaypoint> _originialItemsList;
+        private Panel _searchPanel;
+        private Panel _listViewPanel;
+        private ToolStripTextBox _searchBox;
+
         /// <summary>
         /// Gets the icon to be displayed on the button.
         /// </summary>
@@ -81,8 +87,31 @@ namespace GeoTransformer.Viewers.TableView
         /// <returns>
         /// An initialized control that display the cache list.
         /// </returns>
-        public System.Windows.Forms.Control Initialize()
+        public virtual System.Windows.Forms.Control Initialize()
         {
+            // Draw search panel
+            _searchPanel = new Panel();
+            _searchPanel.Height = 0;
+            _searchPanel.Visible = false;
+            _searchPanel.Dock = DockStyle.Top;
+
+            ToolStrip searchStrip = new ToolStrip();
+            this._searchBox = new ToolStripTextBox();
+            _searchBox.KeyDown += SearchBox_PreviewKeyDown;
+
+            ToolStripButton searchButton = new ToolStripButton("Search", Resources.Search);
+            searchButton.Click += SearchButton_Click;
+
+            ToolStripButton clearButton = new ToolStripButton("Clear", Resources.Clear);
+            clearButton.Click += ClearButton_Click;
+            searchStrip.Items.Add(this._searchBox);
+            searchStrip.Items.Add(searchButton);
+            searchStrip.Items.Add(new ToolStripSeparator());
+            searchStrip.Items.Add(clearButton);
+            searchStrip.Dock = DockStyle.Fill;
+            _searchPanel.Controls.Add(searchStrip);
+
+            // Draw cache list, restore control state
             this._control = new BrightIdeasSoftware.ObjectListView();
             this.PrepareListView(this._control);
             this._control.Columns.AddRange(this._control.AllColumns.ToArray());
@@ -95,8 +124,21 @@ namespace GeoTransformer.Viewers.TableView
             }
 
             this._control.SelectionChanged += ListView_SelectedIndexChanged;
+            this._control.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
+            this._control.Dock = DockStyle.Fill;
+            this._control.PreviewKeyDown += Panel_PreviewKeyDown;
 
-            return this._control;
+            // Draw panel for list view
+            _listViewPanel = new Panel();
+            _listViewPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            _listViewPanel.Controls.Add(this._control);
+
+            // Draw table layout to display common form
+            Panel panel = new Panel();
+            panel.Controls.Add(_searchPanel);
+            panel.Controls.Add(_listViewPanel);
+            panel.PreviewKeyDown += Panel_PreviewKeyDown;
+            return panel;
         }
 
         void ListView_SelectedIndexChanged(object sender, EventArgs e)
@@ -115,14 +157,14 @@ namespace GeoTransformer.Viewers.TableView
         /// </summary>
         /// <param name="data">A list of GPX documents containing the cache information. The viewer may modify the list.</param>
         /// <param name="selected">The waypoints that are currently selected. If the viewer does not support multiple selection the first waypoint should be used.</param>
-        public void DisplayCaches(IList<Gpx.GpxDocument> data, System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> selected)
+        public virtual void DisplayCaches(IList<Gpx.GpxDocument> data, System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> selected)
         {
-            var wpts = this.FilterData(data).ToList();
-            this._control.Invoke(o => o.SetObjects(wpts));
+            this._originialItemsList = this.FilterData(data).ToList();
+            this._control.Invoke(o => o.SetObjects(this._originialItemsList));
 
             if (selected != null && selected.Count > 0)
             {
-                var i = wpts.IndexOf(selected[0]);
+                var i = this._originialItemsList.IndexOf(selected[0]);
                 this._control.Invoke(o => o.SelectedIndex = i);
                 if (i > -1)
                     this._control.Invoke(o => o.SelectedItem.EnsureVisible());
@@ -182,6 +224,46 @@ namespace GeoTransformer.Viewers.TableView
         Category IHasCategory.Category
         {
             get { return Category.Viewers; }
+        }
+
+        #endregion
+
+        #region [ Search control event handlers ]
+
+        void SearchBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                this.SearchButton_Click(sender, e);
+        }
+
+        void SearchButton_Click(object sender, EventArgs e)
+        {
+            var filteredItems = this._originialItemsList
+                .Where(a => a.Name.ToUpper().Contains(this._searchBox.Text.ToUpper()) || a.Description.ToUpper().Contains(this._searchBox.Text.ToUpper()));
+            this._control.Invoke(o => o.SetObjects(filteredItems));
+        }
+
+        void Panel_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F && !_searchPanel.Visible)
+            {
+                _searchPanel.Visible = true;
+                _searchPanel.Height = searchPanelSize;
+                _listViewPanel.Top = searchPanelSize;
+                _listViewPanel.Height -= searchPanelSize;
+                _searchBox.Focus();
+            }
+        }
+
+        void ClearButton_Click(object sender, EventArgs e)
+        {
+            this._control.Invoke(o => o.SetObjects(this._originialItemsList));
+            this._searchBox.Text = string.Empty;
+            _searchPanel.Height = 0;
+            _searchPanel.Visible = false;
+            _listViewPanel.Top = 0;
+            _listViewPanel.Height += searchPanelSize;
+            this._control.Focus();
         }
 
         #endregion
