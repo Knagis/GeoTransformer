@@ -37,7 +37,10 @@ namespace GeoTransformer
                 query.Value(o => o.MainFormWindowHeight, this.RestoreBounds.Height);
                 query.Value(o => o.MainFormDefaultUrl, this.toolStripOpenDefaultWebPage.Tag as string);
                 query.Value(o => o.DoNotShowWelcomeScreen, WelcomeScreen.WelcomeScreen.DoNotShowWelcomeScreen);
-                query.Value(o => o.ListViewerHeight, this.cachePanel.SplitterDistance * 1000 / this.cachePanel.Height);
+
+                if (this.cachePanel.Height > 0)
+                    query.Value(o => o.ListViewerHeight, this.cachePanel.SplitterDistance * 1000 / this.cachePanel.Height);
+
                 query.Value(o => o.RecentPublishers, this.RecentPublishers.Take(10).Select(o => o.ToString()).Aggregate("", (a,b) => a + ',' + b));
                 query.Execute();
 
