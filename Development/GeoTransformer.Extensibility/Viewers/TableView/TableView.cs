@@ -146,7 +146,7 @@ namespace GeoTransformer.Viewers.TableView
             var handler = this.SelectedCacheChanged;
             if (this.SelectedCacheChanged != null)
             {
-                var selected = this._control.SelectedObject as Gpx.GpxWaypoint;
+                var selected = this._control.SelectedObjects.Cast<Gpx.GpxWaypoint>();
                 this.SelectedCacheChanged(this, new SelectedWaypointsChangedEventArgs(selected));
             }
         }
@@ -238,9 +238,7 @@ namespace GeoTransformer.Viewers.TableView
 
         void SearchButton_Click(object sender, EventArgs e)
         {
-            var filteredItems = this._originialItemsList
-                .Where(a => a.Name.ToUpper().Contains(this._searchBox.Text.ToUpper()) || a.Description.ToUpper().Contains(this._searchBox.Text.ToUpper()));
-            this._control.Invoke(o => o.SetObjects(filteredItems));
+            this._control.AdditionalFilter = new SearchFilter(this._searchBox.Text);
         }
 
         void Panel_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -257,13 +255,36 @@ namespace GeoTransformer.Viewers.TableView
 
         void ClearButton_Click(object sender, EventArgs e)
         {
-            this._control.Invoke(o => o.SetObjects(this._originialItemsList));
+            this._control.AdditionalFilter = null;
             this._searchBox.Text = string.Empty;
             _searchPanel.Height = 0;
             _searchPanel.Visible = false;
             _listViewPanel.Top = 0;
             _listViewPanel.Height += searchPanelSize;
             this._control.Focus();
+        }
+
+        private class SearchFilter : BrightIdeasSoftware.IModelFilter
+        {
+            private string _value;
+
+            public SearchFilter(string value)
+            {
+                this._value = value;
+            }
+
+            public bool Filter(object modelObject)
+            {
+                var gpx = modelObject as Gpx.GpxWaypoint;
+                if (gpx == null)
+                    return true;
+
+                return (gpx.Name != null && gpx.Name.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
+                    || (gpx.Description != null && gpx.Description.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
+                    || (gpx.Comment != null && gpx.Comment.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
+                    || (gpx.Geocache.ShortDescription.Text != null && gpx.Geocache.ShortDescription.Text.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
+                    || (gpx.Geocache.LongDescription.Text != null && gpx.Geocache.LongDescription.Text.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1);
+            }
         }
 
         #endregion

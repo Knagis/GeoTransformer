@@ -16,7 +16,7 @@ namespace GeoTransformer.Viewers.CacheEditor
 {
     internal partial class EditorControl : UserControl
     {
-        private Gpx.GpxWaypoint _element;
+        private System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> _elements;
         private CacheEditor _editor;
 
         public EditorControl(CacheEditor editor)
@@ -29,19 +29,26 @@ namespace GeoTransformer.Viewers.CacheEditor
             this.toolStripButtonRemove.Image = global::GeoTransformer.Viewers.CacheEditor.Resources.Remove;
         }
 
-        public void BindElement(Gpx.GpxWaypoint waypoint)
+        public void BindElements(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            this._element = waypoint;
+            var single = (waypoints == null || waypoints.Count != 1) ? null : waypoints[0];
 
-            if (waypoint == null)
+            this._elements = waypoints;
+
+            if (waypoints == null || waypoints.Count == 0)
             {
                 this.toolStripButtonRemove.Enabled = false;
                 this.SetTitle(null);
             }
+            else if (single == null)
+            {
+                this.toolStripButtonRemove.Enabled = true;
+                this.SetTitle(waypoints.Count + " geocache" + ((waypoints.Count % 10 == 1 && waypoints.Count % 100 != 11) ? string.Empty : "s") + " selected");
+            }
             else
             {
                 this.toolStripButtonRemove.Enabled = true;
-                this.SetTitle(waypoint.Description ?? waypoint.Name);
+                this.SetTitle(single.Description ?? single.Name);
             }
         }
 
@@ -55,27 +62,43 @@ namespace GeoTransformer.Viewers.CacheEditor
 
         private void toolStripButtonRemove_Click(object sender, EventArgs e)
         {
-            var res = MessageBox.Show("Do you really want to remove all of the custom data for this cache? This cannot be undone!", "Remove customizations", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            string msg;
+
+            if (this._elements.Count == 1)
+                msg = "Do you really want to remove all of the custom data for this cache? This cannot be undone!";
+            else
+                msg = "Do you really want to remove all of the custom data for " + this._elements.Count + " geocache" + ((this._elements.Count % 10 == 1 && this._elements.Count % 100 != 11) ? string.Empty : "s") + "? This cannot be undone!";
+            
+            var res = MessageBox.Show(msg, "Remove customizations", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (res != DialogResult.Yes)
                 return;
 
-            var extelems = this._element.ExtensionElements;
-            for (int i = extelems.Count - 1; i >= 0; i--)
-                if (extelems[i].Name.Namespace == XmlExtensions.GeoTransformerSchema)
-                    extelems.RemoveAt(i);
+            var remaining = new List<Gpx.GpxWaypoint>();
 
-            if (string.Equals(this._element.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
+            foreach (var el in this._elements)
             {
-                // find the document that contains the waypoint and remove the waypoint from it
-                foreach (var doc in Extensions.ExtensionLoader.ApplicationService.RetrieveDisplayedCaches())
-                    if (doc.Waypoints.Remove(this._element))
-                        break;
+                var extelems = el.ExtensionElements;
+                for (int i = extelems.Count - 1; i >= 0; i--)
+                    if (extelems[i].Name.Namespace == XmlExtensions.GeoTransformerSchema)
+                        extelems.RemoveAt(i);
 
-                // clear the selection as the waypoint no longer exists
-                this.BindElement(null);
+                if (string.Equals(el.FindExtensionAttributeValue("EditorOnly"), bool.TrueString, StringComparison.OrdinalIgnoreCase))
+                {
+                    // find the document that contains the waypoint and remove the waypoint from it
+                    foreach (var doc in Extensions.ExtensionLoader.ApplicationService.RetrieveDisplayedCaches())
+                        if (doc.Waypoints.Remove(el))
+                            break;
+                }
+                else
+                {
+                    remaining.Add(el);
+                }
             }
 
-            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(this._element == null ? null : this._element.Name);
+            // reset the selection as some waypoints may no longer exist
+            this.BindElements(remaining.AsReadOnly());
+
+            Extensions.ExtensionLoader.ApplicationService.SelectWaypoint(remaining.Count == 1 ? remaining[0].Name : null);
         }
 
         private void toolStripButtonEditAnother_Click(object sender, EventArgs e)
