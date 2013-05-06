@@ -64,10 +64,9 @@ namespace GeoTransformer.Viewers.CacheEditor
         /// <param name="waypoints">An array of GPX elements containing the waypoint information (can be empty array).</param>
         public void DisplayWaypoints(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            var wpt = waypoints.FirstOrDefault();
+            var wpt = (waypoints == null || waypoints.Count != 1) ? null : waypoints[0];
 
-            this._container.BindElement(wpt);
-
+            this._container.BindElements(waypoints);
             this._container.flowLayoutPanel.Enabled = wpt != null;
 
             foreach (var editor in this._editors)
@@ -85,10 +84,7 @@ namespace GeoTransformer.Viewers.CacheEditor
         /// </returns>
         public bool IsEnabled(System.Collections.ObjectModel.ReadOnlyCollection<Gpx.GpxWaypoint> waypoints)
         {
-            if (waypoints == null)
-                return true;
-
-            return waypoints.Count <= 1;
+            return true;
         }
     }
 }

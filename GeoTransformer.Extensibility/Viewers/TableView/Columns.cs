@@ -35,7 +35,7 @@ namespace GeoTransformer.Viewers.TableView
             olv.ShowImagesOnSubItems = true;
             olv.ShowCommandMenuOnRightClick = true;
             olv.SortGroupItemsByPrimaryColumn = false;
-            olv.MultiSelect = false;
+            olv.MultiSelect = true;
             olv.AllowColumnReorder = true;
             olv.HeaderUsesThemes = false;
             olv.HideSelection = false;
