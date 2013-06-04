@@ -286,7 +286,6 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.CacheFindsInCountry)%>
                 <%= this.CreateHeader(o => o.CountryCount)%>
                 <%= this.CreateHeader(o => o.CachesHidden)%>
-                <%= this.CreateHeader(o => o.ChallengesCompleted)%>
                 <%= this.CreateHeader(o => o.TrackablesLogged)%>
                 <%= this.CreateHeader(o => o.FindRate)%>
                 <%= this.CreateHeader(o => o.CurrentYearFindRate)%>
@@ -318,7 +317,6 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.CacheFindsInCountry)%>
                 <%= this.CreateHeader(o => o.CountryCount)%>
                 <%= this.CreateHeader(o => o.CachesHidden)%>
-                <%= this.CreateHeader(o => o.ChallengesCompleted)%>
                 <%= this.CreateHeader(o => o.TrackablesLogged)%>
                 <%= this.CreateHeader(o => o.FindRate)%>
                 <%= this.CreateHeader(o => o.CurrentYearFindRate)%>
@@ -350,7 +348,6 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             <td><%#Container.Value(o => o.CacheFindsInCountry)%></td>
             <td><%#Container.Value(o => o.CountryCount)%></td>
             <td><%#Container.Value(o => o.CachesHidden)%></td>
-            <td><%#Container.Value(o => o.ChallengesCompleted)%></td>
             <td><%#Container.Value(o => o.TrackablesLogged)%></td>
             <td><%#Container.Value(o => o.FindRate)%></td>
             <td><%#Container.Value(o => o.CurrentYearFindRate)%></td>
