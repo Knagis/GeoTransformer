@@ -52,6 +52,7 @@ namespace FetchStatistics
 
         [DataMember]
         [UISettings("Izpildīti izaicinājumi", OrderByDescendingFirst = true)]
+        [Obsolete]
         public int ChallengesCompleted { get; set; }
 
         [DataMember]
