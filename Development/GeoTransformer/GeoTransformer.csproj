@@ -67,8 +67,8 @@
     <Reference Include="ObjectListView" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.72.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>Binaries\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -147,11 +147,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Binaries\ARM\System.Data.SQLite.dll" />
-    <Content Include="Binaries\ICSharpCode.SharpZipLib.dll" />
-    <Content Include="Binaries\ObjectListView.dll" />
-    <Content Include="Binaries\ObjectListView.XML" />
-    <Content Include="Binaries\System.Data.SQLite.dll" />
+    <None Include="Binaries\ICSharpCode.SharpZipLib.dll" />
+    <None Include="Binaries\ObjectListView.dll" />
+    <None Include="Binaries\ObjectListView.XML" />
+    <None Include="Binaries\System.Data.SQLite.dll" />
     <Content Include="Icons\accept-icon.png" />
     <None Include="..\GeoTransformer.licenseheader">
       <Link>GeoTransformer.licenseheader</Link>

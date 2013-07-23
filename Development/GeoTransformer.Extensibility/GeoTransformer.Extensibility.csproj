@@ -116,6 +116,13 @@
     <Compile Include="Coordinates\Wgs84Point.cs" />
     <Compile Include="Data\TableVersionTable.cs" />
     <Compile Include="Extensions\Category.cs" />
+    <Compile Include="Extensions\ExtensionManager\ExtensionData.cs" />
+    <Compile Include="Extensions\ExtensionManager\ExtensionManager.cs" />
+    <Compile Include="Extensions\ExtensionManager\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Extensions\GeocachingService\Configuration.cs" />
     <Compile Include="Extensions\GeocachingService\ConfigurationControl.cs">
       <SubType>UserControl</SubType>
@@ -449,6 +456,11 @@
     <Compile Include="Gpx\XmlExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Extensions\ExtensionManager\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Extensions\GeocachingService\AuthenticationForm.resx">
       <DependentUpon>AuthenticationForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -791,6 +803,8 @@
     <None Include="Transformers\LoadFromLiveApi\delete.png" />
     <None Include="Transformers\LoadFromLiveApi\edit.png" />
     <None Include="Transformers\LoadFromLiveApi\create.png" />
+    <Content Include="Extensions\ExtensionManager\icon.png" />
+    <Content Include="Extensions\ExtensionManager\Template.html" />
     <Content Include="Publishers\ExportGpx\Icon.png" />
     <Content Include="Transformers\LoadLocalFiles\gpx.png" />
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
