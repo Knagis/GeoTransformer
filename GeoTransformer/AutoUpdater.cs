@@ -80,7 +80,7 @@ namespace GeoTransformer
                 {
                     foreach (var f in Directory.EnumerateFiles("PendingUpdate"))
                         File.Delete(f);
-                    Directory.Delete("PendingUpdate");
+                    Directory.Delete("PendingUpdate", true);
                 }
                 catch
                 {
@@ -122,9 +122,20 @@ namespace GeoTransformer
                 BackupDataFile();
 
                 var fz = new ICSharpCode.SharpZipLib.Zip.FastZip();
-                fz.ExtractZip("Update.zip", @"..\", ICSharpCode.SharpZipLib.Zip.FastZip.Overwrite.Always, null, null, null, false);
 
-                // remove csExWB.dll and related files as it is only needed up to version 3.1
+                if (System.IO.File.Exists("Update.zip"))
+                    fz.ExtractZip("Update.zip", @"..\", ICSharpCode.SharpZipLib.Zip.FastZip.Overwrite.Always, null, null, null, false);
+
+                foreach (var x in System.IO.Directory.EnumerateFiles(".", "Update.*.zip"))
+                {
+                    var ass = System.IO.Path.GetFileNameWithoutExtension(x).Substring(7);
+                    var path = System.IO.Path.Combine("..", "Extensions", ass);
+                    System.IO.Directory.Delete(path, true);
+                    System.IO.Directory.CreateDirectory(path);
+                    fz.ExtractZip(x, path, ICSharpCode.SharpZipLib.Zip.FastZip.Overwrite.Always, null, null, null, false);
+                }
+
+                // remove csExWB.dll and related files as they are only needed up to version 3.1
                 if (File.Exists(@"..\csExWB.dll"))
                 {
                     File.Delete(@"..\csExWB.dll");
@@ -167,31 +178,42 @@ namespace GeoTransformer
                 using (var wc = new System.Net.WebClient())
                 {
                     wc.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
+
+                    try
+                    {
+                        Directory.Delete("PendingUpdate", true);
+                    }
+                    catch (IOException)
+                    {
+                    }
+
+                    var extensionsNeedUpdate = DownloadExtensionUpdates(wc);
+                    bool applicationNeedsUpdate = false;
+
                     var parts = wc.DownloadString("http://knagis.miga.lv/GeoTransformer/version.txt").Split('|');
                     var newver = Version.Parse(parts[0]);
                     var link = parts[1];
                     var updater = parts[2];
-
                     if (force || newver.CompareTo(current) == 1)
                     {
                         Directory.CreateDirectory("PendingUpdate");
                         File.Delete(@"PendingUpdate\Update.Complete");
                         File.Delete(@"PendingUpdate\Update.zip");
 
+                        wc.DownloadFile(link, @"PendingUpdate\Update.temp");
+                        File.Move(@"PendingUpdate\Update.temp", @"PendingUpdate\Update.zip");
+
+                        applicationNeedsUpdate = true;
+                    }
+
+                    if (applicationNeedsUpdate || extensionsNeedUpdate)
+                    {
                         wc.DownloadFile(updater, @"PendingUpdate\Updater.zip");
                         new ICSharpCode.SharpZipLib.Zip.FastZip()
                             .ExtractZip(@"PendingUpdate\Updater.zip",
-                                        @"PendingUpdate\", 
+                                        @"PendingUpdate\",
                                         ICSharpCode.SharpZipLib.Zip.FastZip.Overwrite.Always, null, null, null, false);
                         System.IO.File.Delete(@"PendingUpdate\Updater.zip");
-
-                        ////The old style updater
-                        //File.Copy("GeoTransformer.exe", @"PendingUpdate\GeoTransformer.exe", true);
-                        //File.Copy("ICSharpCode.SharpZipLib.dll", @"PendingUpdate\ICSharpCode.SharpZipLib.dll", true);
-                        //File.Copy("GeoTransformer.Extensibility.dll", @"PendingUpdate\GeoTransformer.Extensibility.dll", true);
-
-                        wc.DownloadFile(link, @"PendingUpdate\Update.temp");
-                        File.Move(@"PendingUpdate\Update.temp", @"PendingUpdate\Update.zip");
 
                         var psi = new ProcessStartInfo(@"GeoTransformer.exe", "update");
                         psi.WorkingDirectory = @"PendingUpdate\";
@@ -202,6 +224,33 @@ namespace GeoTransformer
             catch (Exception)
             {
             }
+        }
+
+        /// <summary>
+        /// Downloads any new extensions.
+        /// </summary>
+        /// <param name="wc">The webclient used to download data.</param>
+        private static bool DownloadExtensionUpdates(System.Net.WebClient wc)
+        {
+            var fresh = Extensions.ExtensionManager.ExtensionManager.Extensions.ToDictionary(o => o.AssemblyName);
+            var needsUpdate = Extensions.ExtensionLoader.Extensions
+                    .Select(o => o.GetType().Assembly.GetName())
+                    .Distinct()
+                    .Select(o => new { o.Version, o.Name, Data = fresh.ContainsKey(o.Name) ? fresh[o.Name] : null })
+                    .Where(o => o.Data != null && o.Version < o.Data.Version);
+
+            int i = 0;
+            foreach (var ext in needsUpdate)
+            {
+                if (i == 0)
+                    System.IO.Directory.CreateDirectory(@"PendingUpdate");
+
+                wc.DownloadFile(ext.Data.DownloadUri, @"PendingUpdate\Update.temp");
+                File.Move(@"PendingUpdate\Update.temp", @"PendingUpdate\Update." + ext.Data.AssemblyName + @".zip");
+                i++;
+            }
+
+            return i > 0;
         }
     }
 }

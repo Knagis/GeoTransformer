@@ -361,7 +361,10 @@ namespace GeoTransformer
             {
                 var tp = new TabPage(tabPage.TabPageTitle);
                 if (tabPage.TabPageImage != null)
-                    this.imageList.Images.Add(tp.ImageKey = tabPage.GetType().AssemblyQualifiedName, tabPage.TabPageImage);
+                {
+                    this.imageList.Images.Add(tabPage.TabPageImage);
+                    tp.ImageIndex = this.imageList.Images.Count - 1;
+                }
 
                 tp.Tag = tabPage;
                 tp.Enter += this.CustomTabPageEntered;
@@ -400,6 +403,8 @@ namespace GeoTransformer
                 var c = tabPage.Initialize();
                 c.Dock = DockStyle.Fill;
                 tp.Controls.Add(c);
+
+                tp.Enter -= this.CustomTabPageEntered;
             }
             catch (Exception ex)
             {

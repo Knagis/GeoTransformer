@@ -1,0 +1,154 @@
+﻿<!--
+ This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
+ It is licensed under Microsoft Reciprocal License (Ms-RL).
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoTransformer Bing Maps</title>
+    <meta http-equiv="Content-type"" content="text/html; charset=UTF-8" /> 
+    <meta http-equiv="X-UA-Compatible"" content="IE=edge" /> 
+    <script type="text/javascript">
+    </script>
+    <style type="text/css">
+        body {
+            background-color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        h1 {
+            margin: 5px;
+            font-size: 150%;
+            background: url("data:image/png;base64,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");
+            height: 64px;
+            background-repeat: no-repeat;
+            padding-top: 15px;
+            padding-left: 70px;
+        }
+        h2 {
+            margin: 2px;
+            font-size: 110%;
+        }
+        .ext {
+            border: 1px solid #ccc;
+            border-left: 3px solid #ccc;
+            margin: 3px;
+            padding: 5px;
+        }
+        a.button {
+            float:right;
+            padding: 2px 4px 2px 4px;
+            min-width: 120px; 
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            color: black;
+        }
+
+        a.button span.hover {
+            display: none;
+        }
+        a.button:hover span.normal {
+            display: none;
+        }
+        a.button:hover span.hover {
+            display: inline;
+        }
+
+        a.installed {
+            background-color: #5bce2d;
+            border: 1px solid #267c04;
+        }
+        a.installed:hover {
+            background-color: #ce412d;
+            border: 1px solid #7c2104;
+        }
+        a.available {
+            background-color: #ddd;
+            border: 1px solid #808080;
+        }
+        a.available:hover {
+            background-color: #5bce2d;
+            border: 1px solid #267c04;
+        }
+        a.pending-uninstall {
+            background-color: #ce412d;
+            border: 1px solid #7c2104;
+        }
+        a.pending-uninstall:hover {
+            background-color: #5bce2d;
+            border: 1px solid #267c04;
+        }
+        a.pending-install {
+            background-color: #e5cb00;
+            border: 1px solid #b7a300;
+        }
+    </style>
+</head>
+<body>
+    <h1>GeoTransformer extensions</h1>
+
+    <script type="text/html" id="template">
+        <div class="ext">
+            <a class="button installed" id="btn_u_[id]" style="[installed]" onclick="uninstall([id])" href="#"><span class="normal">Already installed</span><span class="hover">Uninstall</span></a>
+            <a class="button pending-uninstall" id="btn_cu_[id]" style="display:none" onclick="cancelUninstall([id])" href="#"><span class="normal">Pending uninstall</span><span class="hover">Cancel</span></a>
+            <a class="button available" id="btn_i_[id]" style="[available]" onclick="install([id])" href="#"><span class="normal">Available</span><span class="hover">Install</span></a>
+            <a class="button pending-install" id="btn_pi_[id]" style="display:none" href="#"><span>Installing...</span></a>
+            <h2>[title]</h2>
+            <div class="desc">
+                [description]
+            </div>
+        </div>
+    </script>
+
+    <div id="loading">Loading data. Please wait...</div>
+
+    <script type="text/javascript">
+        window.extensionElements = {};
+
+        function uninstall(id) {
+            if (!confirm('Do you really want to uninstall this extension? This will also remove all data created by this extension.'))
+                return;
+
+            if (!window.external.UninstallExtension(id))
+                return;
+
+            document.getElementById("btn_u_" + id).style.display = "none";
+            document.getElementById("btn_cu_" + id).style.display = "";
+        }
+
+        function install(id) {
+            if (!window.external.InstallExtension(id))
+                return;
+
+            document.getElementById("btn_i_" + id).style.display = "none";
+            document.getElementById("btn_pi_" + id).style.display = "";
+        }
+
+        function installComplete(id) {
+            document.getElementById("btn_pi_" + id).innerHTML = "<span>Installed, pending restart...</span>";
+        }
+
+        function cancelUninstall(id) {
+            if (!window.external.CancelUninstallExtension(id))
+                return;
+
+            document.getElementById("btn_u_" + id).style.display = "";
+            document.getElementById("btn_cu_" + id).style.display = "none";
+        }
+
+        function displayExtension(id, title, description, isInstalled) {
+            var template = document.getElementById("template").innerHTML;
+            template = template.replace(/\[installed\]/g, isInstalled ? "" : "display:none");
+            template = template.replace(/\[available\]/g, isInstalled ? "display:none" : "");
+            template = template.replace(/\[title\]/g, title);
+            template = template.replace(/\[description\]/g, description);
+            template = template.replace(/\[id\]/g, id);
+            
+            var e = document.createElement("div");
+            e.innerHTML = template;
+            document.body.appendChild(e);
+        }
+    </script>
+</body>
+</html>
