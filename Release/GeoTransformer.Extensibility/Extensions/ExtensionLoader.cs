@@ -61,21 +61,38 @@ namespace GeoTransformer.Extensions
             if (!System.IO.Directory.Exists(path))
                 yield break;
 
-            var dlls = System.IO.Directory.EnumerateFiles(path, "*.dll", System.IO.SearchOption.AllDirectories);
-            foreach (var dll in dlls)
+            foreach (var folder in System.IO.Directory.EnumerateDirectories(path, "*", System.IO.SearchOption.TopDirectoryOnly))
             {
-                System.Reflection.Assembly assembly = null;
-                try
+                if (System.IO.File.Exists(System.IO.Path.Combine(folder, "pending_uninstall")))
                 {
-                    assembly = AppDomain.CurrentDomain.Load(System.Reflection.AssemblyName.GetAssemblyName(dll));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Unable to load the extension from " + System.IO.Path.GetFileName(dll) + "." + Environment.NewLine + Environment.NewLine + ex.Message);
+                    try
+                    {
+                        System.IO.Directory.Delete(folder, true);
+                    }
+                    catch (System.IO.IOException)
+                    {
+                    }
+
+                    continue;
                 }
 
-                if (assembly != null)
-                    yield return assembly;
+                foreach (var dll in System.IO.Directory.EnumerateFiles(folder, "*.dll", System.IO.SearchOption.TopDirectoryOnly))
+                {
+                    System.Reflection.Assembly assembly = null;
+                    try
+                    {
+                        assembly = AppDomain.CurrentDomain.Load(System.Reflection.AssemblyName.GetAssemblyName(dll));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Unable to load the extension from " + System.IO.Path.GetFileName(dll) + "." + Environment.NewLine + Environment.NewLine + ex.Message);
+                    }
+
+                    if (assembly != null)
+                    {
+                        yield return assembly;
+                    }
+                }
             }
         }
 

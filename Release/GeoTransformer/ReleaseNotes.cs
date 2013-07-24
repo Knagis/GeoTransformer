@@ -20,6 +20,9 @@ namespace GeoTransformer
         /// </summary>
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
+            { Version.Parse("4.5.0.0"), "Extensions can now be installed and uninstalled from the application." + Environment.NewLine + 
+                                        "Added ability to search for caches by pressing CTRL+F in the table views." + Environment.NewLine +
+                                        "Added ability to remove edited customizations for multiple caches at once (use SHIFT or CTRL to select multiple lines in the table)." },
             { Version.Parse("4.4.0.0"), "It is now possible to download pocket query data with favorite points, images etc." + Environment.NewLine +
                                         "Added transformer that adds [DNF] in the cache title when the last logs are negative." + Environment.NewLine +
                                         "Updated coordinates automatically show up in the maps view." + Environment.NewLine +

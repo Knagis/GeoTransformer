@@ -247,6 +247,8 @@ namespace GeoTransformer.Transformers.PocketQueryDownload
 
                 foreach (var g in this._options.CheckedQueries)
                 {
+                    this.ExecutionContext.ThrowIfCancellationPending();
+
                     var x = new DownloadInfo(this.LocalStoragePath, this._options.DownloadFullData) { Id = g.Key, Title = g.Value };
                     downloadList.Add(x);
                     var actualPq = pqList.PocketQueryList.FirstOrDefault(o => o.GUID == x.Id || o.Name == x.Title);
