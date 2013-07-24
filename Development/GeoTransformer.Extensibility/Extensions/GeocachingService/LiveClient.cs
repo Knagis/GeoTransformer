@@ -146,17 +146,31 @@ namespace GeoTransformer.GeocachingService
         }
 
         /// <summary>
-        /// Gets the access token that can be used to call the Live service. Returns <c>null</c> if the extension is not enabled.
+        /// Holds the custom access token set by the code.
+        /// </summary>
+        private string _accessToken;
+
+        /// <summary>
+        /// Gets or sets the access token that can be used to call the Live service. Returns <c>null</c> if the extension is not enabled.
+        /// If the property setter is called, the default access code entered in GeoTransformer will be overriden with the new value.
         /// </summary>
         public string AccessToken
         {
             get
             {
+                if (this._accessToken != null)
+                    return this._accessToken;
+
                 var ext = Extensions.ExtensionLoader.RetrieveExtensions<Extensions.GeocachingService.GeocachingService>().FirstOrDefault();
                 if (ext == null)
                     return null;
 
                 return ext.ConfigurationControl.AccessToken;
+            }
+
+            set
+            {
+                this._accessToken = value;
             }
         }
 
