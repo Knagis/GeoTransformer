@@ -315,7 +315,7 @@ namespace GeoTransformer.GeocachingService
         /// <returns>The <see cref="Geocache"/> objects for all loaded caches. If the service is disabled returns an empty list. All caches that cannot be loaded are not returned in the result set.</returns>
         public IEnumerable<Geocache> GetGeocachesByCode(IEnumerable<string> codes, bool? liteVersion = null, Action<string> errorHandler = null)
         {
-            if (!IsEnabled || codes == null)
+            if ((!IsEnabled && this._accessToken == null) || codes == null)
                 yield break;
 
             bool useLite;
