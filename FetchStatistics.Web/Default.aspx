@@ -42,7 +42,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             table-layout: fixed;
             border-collapse: collapse;
             position: absolute;
-            width: 2530px;
+            width: 2630px;
             z-index: 100;
         }
         
@@ -50,7 +50,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
         {
             table-layout: fixed;
             border-collapse: collapse;
-            width: 2530px;
+            width: 2630px;
         }
 
         table#table-left-header
@@ -281,6 +281,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.FirstCacheDate)%>
                 <%= this.CreateHeader(o => o.LastVisit)%>
                 <%= this.CreateHeader(o => o.Updated)%>
+                <%= this.CreateHeader(o => o.UpdatedBy)%>
                 <%= this.CreateHeader(o => o.CacheFinds)%>
                 <%= this.CreateHeader(o => o.DistinctCacheFinds)%>
                 <%= this.CreateHeader(o => o.CacheFindsInCountry)%>
@@ -312,6 +313,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.FirstCacheDate)%>
                 <%= this.CreateHeader(o => o.LastVisit)%>
                 <%= this.CreateHeader(o => o.Updated)%>
+                <%= this.CreateHeader(o => o.UpdatedBy)%>
                 <%= this.CreateHeader(o => o.CacheFinds)%>
                 <%= this.CreateHeader(o => o.DistinctCacheFinds)%>
                 <%= this.CreateHeader(o => o.CacheFindsInCountry)%>
@@ -343,6 +345,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             <td><%#Container.Value(o => o.FirstCacheDate)%></td>
             <td><%#Container.Value(o => o.LastVisit)%></td>
             <td><%#Container.Value(o => o.Updated)%></td>
+            <td><%#Container.Value(o => o.UpdatedBy)%></td>
             <td><%#Container.Value(o => o.CacheFinds)%></td>
             <td><%#Container.Value(o => o.DistinctCacheFinds)%></td>
             <td><%#Container.Value(o => o.CacheFindsInCountry)%></td>

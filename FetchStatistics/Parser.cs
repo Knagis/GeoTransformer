@@ -79,6 +79,7 @@ namespace FetchStatistics
             if (data == null)
                 throw new ArgumentNullException("data");
 
+            data.UpdatedBy = doc.GetElementById("ctl00_divSignedIn").GetElementsByTagName("a").OfType<HtmlElement>().Skip(1).First().InnerText;
             data.UserName = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_lblMemberName").InnerText;
 
             try
@@ -94,14 +95,6 @@ namespace FetchStatistics
                 if (box != null) data.TrackablesLogged = int.Parse(box.GetElementsByTagName("span").Cast<HtmlElement>().First().InnerText.Trim(), System.Globalization.NumberStyles.Integer | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
             }
             catch { }
-
-            try
-            {
-                var box = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_Panel_ChallengesStatBox");
-                if (box != null) data.ChallengesCompleted = int.Parse(box.GetElementsByTagName("span").Cast<HtmlElement>().First().InnerText.Trim(), System.Globalization.NumberStyles.Integer | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
-            }
-            catch { }
-
 
             data.MemberSince = DateTime.ParseExact(doc.GetElementById("ctl00_ContentBody_ProfilePanel1_lblMemberSinceDate").InnerText,
                                     new string[] { "dddd, MMMM dd, yyyy", "dddd, dd MMMM yyyy" }, System.Globalization.CultureInfo.GetCultureInfo("en-US"), System.Globalization.DateTimeStyles.AllowWhiteSpaces);

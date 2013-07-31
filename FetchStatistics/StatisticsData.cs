@@ -68,6 +68,10 @@ namespace FetchStatistics
         public DateTime Updated { get; set; }
 
         [DataMember]
+        [UISettings("Atjaunotājs")]
+        public string UpdatedBy { get; set; }
+
+        [DataMember]
         [UISettings("Noslēpti slēpņi", OrderByDescendingFirst = true)]
         public int CachesHidden { get; set; }
 
