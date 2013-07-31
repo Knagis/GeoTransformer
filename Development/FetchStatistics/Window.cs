@@ -39,10 +39,31 @@ namespace FetchStatistics
             try
             {
                 var doc = this.webBrowser1.Document;
-                var links = doc.GetElementById("ProfileTabs").GetElementsByTagName("a").Cast<HtmlElement>();
 
                 var id = Guid.Parse(url.Substring(url.IndexOf("?guid=") + 6));
+                if (!this._data.ContainsKey(id))
+                    return;
+
                 var obj = this._data[id];
+
+                if (doc.GetElementById("ctl00_divSignedIn") == null)
+                {
+                    MessageBox.Show("Nepieciešams ielogoties pirms statistikas lejupielādes sākšanas!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.EnableButtons(true);
+                    return;
+                }
+
+                // if needed, switch to English
+                var currentLanguage = doc.GetElementsByTagName("div")
+                                        .OfType<HtmlElement>()
+                                        .FirstOrDefault(o => string.Equals(o.GetAttribute("className"), "LocaleList", StringComparison.Ordinal));
+                if (!currentLanguage.InnerText.StartsWith("English", StringComparison.Ordinal))
+                {
+                    doc.GetElementById("ctl00_uxLocaleList_uxLocaleList_ctl00_uxLocaleItem").InvokeMember("click");
+                    return;
+                }
+                
+                var links = doc.GetElementById("ProfileTabs").GetElementsByTagName("a").Cast<HtmlElement>();
 
                 if (doc.GetElementById("ctl00_ContentBody_ProfilePanel1_pnlProfile") != null)
                 {
@@ -117,6 +138,12 @@ namespace FetchStatistics
 
         private void EnableButtons(bool enabled)
         {
+            if (enabled)
+            {
+                this._toDo.Clear();
+                this._data.Clear();
+            }
+
             this.btnRun.Enabled = enabled;
             this.btnRunSpecifics.Enabled = enabled;
             this.textBoxIDs.Enabled = enabled;
