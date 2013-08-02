@@ -137,7 +137,7 @@ namespace FetchStatistics
                 var basicInfo = doc.GetElementById("BasicFinds").InnerHtml;
                 TextAfter(ref basicInfo, "</strong>");
                 data.DistinctCacheFinds = int.Parse(TextBetween(ref basicInfo, "(", " "), System.Globalization.CultureInfo.InvariantCulture);
-                data.FirstCacheDate = DateTime.ParseExact(TextBetween(ref basicInfo, "<strong>", "</strong>"), "dd/MMM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                data.FirstCacheDate = DateTime.ParseExact(TextBetween(ref basicInfo, "<strong>", "</strong>"), new [] { "dd/MMM/yyyy", "yyyy-MM-dd" }, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None);
             }
             catch { }
 
