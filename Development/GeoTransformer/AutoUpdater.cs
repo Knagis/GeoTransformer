@@ -162,6 +162,7 @@ namespace GeoTransformer
         private static void StartUpdateDownload(bool force)
         {
             var thread = new System.Threading.Thread(DownloadUpdateInner);
+            thread.Priority = System.Threading.ThreadPriority.BelowNormal;
             thread.Name = "AutoUpdater";
             thread.Start(force);
         }
@@ -171,6 +172,9 @@ namespace GeoTransformer
         /// </summary>
         private static void DownloadUpdateInner(object state)
         {
+            // sleep so that the updater does not impact application startup
+            System.Threading.Thread.Sleep(3000);
+
             bool force = (bool)state;
             try
             {
