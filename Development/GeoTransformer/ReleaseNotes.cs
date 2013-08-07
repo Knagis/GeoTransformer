@@ -20,6 +20,8 @@ namespace GeoTransformer
         /// </summary>
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
+            { Version.Parse("4.6.0.0"), "'Loading edited caches from Live API' now works much faster." + Environment.NewLine + 
+                                        "" },
             { Version.Parse("4.5.0.0"), "Extensions can now be installed and uninstalled from the application." + Environment.NewLine + 
                                         "Added ability to search for caches by pressing CTRL+F in the table views." + Environment.NewLine +
                                         "Added ability to remove edited customizations for multiple caches at once (use SHIFT or CTRL to select multiple lines in the table)." },
