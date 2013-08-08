@@ -17,6 +17,9 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
 {
     internal partial class Options : UI.UserControlBase
     {
+        private static HashSet<string> ZipExtensions = new HashSet<string>(new[] { ".zip", ".ggz" }, StringComparer.OrdinalIgnoreCase);
+        private static HashSet<string> GpxExtensions = new HashSet<string>(new[] { ".gpx" }, StringComparer.OrdinalIgnoreCase);
+
         public Options(byte[] configuration)
         {
             InitializeComponent();
@@ -132,7 +135,8 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
 
         private void fileSystemWatcher_Changed(object sender, System.IO.FileSystemEventArgs e)
         {
-            if (!e.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) && !e.Name.EndsWith(".gpx", StringComparison.OrdinalIgnoreCase))
+            var ext = System.IO.Path.GetExtension(e.Name);
+            if (!ZipExtensions.Contains(ext) && !GpxExtensions.Contains(ext))
                 return;
 
             this.PrepareTreeView();
@@ -140,8 +144,9 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
 
         private void fileSystemWatcher_Renamed(object sender, System.IO.RenamedEventArgs e)
         {
-            if (!e.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) && !e.Name.EndsWith(".gpx", StringComparison.OrdinalIgnoreCase) &&
-                !e.OldName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) && !e.OldName.EndsWith(".gpx", StringComparison.OrdinalIgnoreCase))
+            var ext = System.IO.Path.GetExtension(e.Name);
+            var ext2 = System.IO.Path.GetExtension(e.OldName);
+            if (!ZipExtensions.Contains(ext) && !GpxExtensions.Contains(ext) && !ZipExtensions.Contains(ext2) && !GpxExtensions.Contains(ext2))
                 return;
 
             this.PrepareTreeView(e);
@@ -250,42 +255,61 @@ namespace GeoTransformer.Transformers.LoadLocalFiles
                 return;
 
             NodeTag tag, parentTag = null;
-            foreach (var fi in di.GetFiles("*.gpx", System.IO.SearchOption.TopDirectoryOnly))
-            {
-                var node = new TreeNode(fi.Name);
-                node.Tag = tag = new NodeTag() { File = fi };
-                node.ImageKey = node.SelectedImageKey = node.StateImageKey = "gpx";
-                node.Checked = !unselectedNodes.Contains(tag.FullName);
-                treeView.Nodes.Add(node);
-            }
-            foreach (var fi in di.GetFiles("*.zip", System.IO.SearchOption.TopDirectoryOnly))
-            {
-                TreeNode parent = null;
-                using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fi.FullName))
+            foreach (var ext in GpxExtensions)
+                foreach (var fi in di.GetFiles("*" + ext, System.IO.SearchOption.TopDirectoryOnly))
                 {
-                    foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry zipe in zip)
+                    var node = new TreeNode(fi.Name);
+                    node.Tag = tag = new NodeTag() { File = fi };
+                    node.ImageKey = node.SelectedImageKey = node.StateImageKey = "gpx";
+                    node.Checked = !unselectedNodes.Contains(tag.FullName);
+                    treeView.Nodes.Add(node);
+                }
+
+            foreach (var ext in ZipExtensions)
+                foreach (var fi in di.GetFiles("*" + ext, System.IO.SearchOption.TopDirectoryOnly))
+                {
+                    TreeNode parent = null;
+                    for (int retry = 0; retry < 5; retry++)
                     {
-                        if (zipe.CanDecompress && zipe.IsFile && zipe.Name.EndsWith(".gpx", StringComparison.OrdinalIgnoreCase))
+                        try
                         {
-                            if (parent == null)
+                            using (var zip = new ICSharpCode.SharpZipLib.Zip.ZipFile(fi.FullName))
                             {
-                                parent = new TreeNode(fi.Name);
+                                foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry zipe in zip)
+                                {
+                                    if (zipe.CanDecompress && zipe.IsFile && GpxExtensions.Contains(System.IO.Path.GetExtension(zipe.Name)))
+                                    {
+                                        if (parent == null)
+                                        {
+                                            parent = new TreeNode(fi.Name);
 
-                                parent.Tag = tag = parentTag = new NodeTag() { ZipContainer = true, File = fi };
-                                parent.ImageKey = parent.SelectedImageKey = parent.StateImageKey = "zip";
-                                parent.Checked = !unselectedNodes.Contains(tag.FullName);
+                                            parent.Tag = tag = parentTag = new NodeTag() { ZipContainer = true, File = fi };
+                                            parent.ImageKey = parent.SelectedImageKey = parent.StateImageKey = "zip";
+                                            parent.Checked = !unselectedNodes.Contains(tag.FullName);
 
-                                treeView.Nodes.Add(parent);
+                                            treeView.Nodes.Add(parent);
+                                        }
+
+                                        var node = new TreeNode(zipe.Name);
+                                        node.Tag = tag = new NodeTag() { File = fi, WithinZip = true, ZipEntry = zipe.Name };
+                                        node.ImageKey = node.SelectedImageKey = node.StateImageKey = "gpx";
+                                        node.Checked = !unselectedNodes.Contains(tag.FullName);
+                                        parent.Nodes.Add(node);
+                                    }
+                                }
                             }
 
-                            var node = new TreeNode(zipe.Name);
-                            node.Tag = tag = new NodeTag() { File = fi, WithinZip = true, ZipEntry = zipe.Name };
-                            node.ImageKey = node.SelectedImageKey = node.StateImageKey = "gpx";
-                            node.Checked = !unselectedNodes.Contains(tag.FullName);
-                            parent.Nodes.Add(node);
+                            break;
+                        }
+                        catch
+                        {
+                            if (retry == 5)
+                                throw;
+
+                            System.Threading.Thread.Sleep(500);
                         }
                     }
-                }
+
                 if (parent != null && !collapsedNodes.Contains(parentTag.FullName))
                     parent.Expand();
             }
