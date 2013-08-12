@@ -162,6 +162,7 @@
     <Compile Include="Extensions\ILocalStorage.cs" />
     <Compile Include="Extensions\ISaveData.cs" />
     <Compile Include="Extensions\ITransformer.cs" />
+    <Compile Include="Gpx\GarminZipWriter.cs" />
     <Compile Include="Gpx\GeocacheTrackable.cs" />
     <Compile Include="Gpx\GeocacheImage.cs" />
     <Compile Include="Gpx\GeocacheLogText.cs" />
@@ -188,6 +189,12 @@
     <Compile Include="Gpx\ObservableCollection.cs" />
     <Compile Include="Gpx\ObservableElement.cs" />
     <Compile Include="Gpx\ObservableElementChangedEventArgs.cs" />
+    <Compile Include="Publishers\ExportGarminZip\ExportGarminZip.cs" />
+    <Compile Include="Publishers\ExportGarminZip\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Publishers\ExportGpx\ExportGpx.cs" />
     <Compile Include="Publishers\ExportGpx\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -304,6 +311,7 @@
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Native.cs" />
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\Volume.cs" />
     <Compile Include="Transformers\SafelyRemoveGps\UsbEject\VolumeDeviceClass.cs" />
+    <Compile Include="Transformers\SaveFiles\SaveGarminZip.cs" />
     <Compile Include="Transformers\SaveFiles\SaveImagesCacheSchema.cs" />
     <Compile Include="Transformers\SaveFiles\SaveFiles.cs" />
     <Compile Include="Transformers\SaveFiles\SaveImages.cs" />
@@ -477,6 +485,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Extensions\GeocachingService\WizardControl.resx">
       <DependentUpon>WizardControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Publishers\ExportGarminZip\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Publishers\ExportGpx\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -808,6 +821,7 @@
     <None Include="Transformers\LoadFromLiveApi\create.png" />
     <Content Include="Extensions\ExtensionManager\icon.png" />
     <Content Include="Extensions\ExtensionManager\Template.html" />
+    <Content Include="Publishers\ExportGarminZip\Icon.png" />
     <Content Include="Publishers\ExportGpx\Icon.png" />
     <Content Include="Transformers\LoadLocalFiles\gpx.png" />
     <Content Include="Transformers\LoadLocalFiles\zip.png" />

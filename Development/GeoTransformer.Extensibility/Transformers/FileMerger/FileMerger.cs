@@ -15,7 +15,7 @@ namespace GeoTransformer.Transformers.FileMerger
     /// <summary>
     /// Transformer that merges all loaded <see cref="Gpx.GpxDocument"/> in two files - one for geocaches and one for additional waypoints.
     /// </summary>
-    public class FileMerger : TransformerBase, IConfigurable
+    public class FileMerger : TransformerBase, IConfigurable, IRelatedConditional
     {
         private SimpleConfigurationControl Configuration;
 
@@ -122,5 +122,20 @@ geocaches or waypoints loaded.");
         /// Gets the category of the extension.
         /// </summary>
         Category IHasCategory.Category { get { return Category.Transformers; } }
+
+        /// <summary>
+        /// Determines whether the transformer is enabled by reviewing the current list of transformers that will be executed for any relations.
+        /// The transformer list includes also the transformers that have <see cref="IConditional.IsEnabled" /> set to <c>false</c>.
+        /// </summary>
+        /// <param name="transformers">The transformers that are pending execution.</param>
+        /// <returns><c>true</c> if the current transformer is enabled; otherwise, <c>false</c>.</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        bool IRelatedConditional.IsEnabled(IEnumerable<ITransformer> transformers)
+        {
+            if (transformers.Any(o => o is Transformers.SaveFiles.SaveGarminZip))
+                return false;
+
+            return true;
+        }
     }
 }
