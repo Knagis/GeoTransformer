@@ -82,5 +82,36 @@ namespace GeoTransformer.Gpx
             get { return this.GetValue<string>("Name"); }
             set { this.SetValue("Name", value); }
         }
+
+        /// <summary>
+        /// Gets the numeric value of this container size.
+        /// Used for OpenCaching and Garmin compatibility (http://www.opencaching.com/api_doc/concepts/ratings.html).
+        /// </summary>
+        public decimal? NumericValue
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.Name))
+                    return null;
+
+                switch (this.Name.ToUpperInvariant())
+                {
+                    case "MICRO":
+                        return 2;
+
+                    case "SMALL":
+                        return 3;
+
+                    case "REGULAR":
+                        return 4;
+
+                    case "LARGE":
+                        return 5;
+
+                    default:
+                        return null;
+                }
+            }
+        }
     }
 }
