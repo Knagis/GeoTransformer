@@ -20,7 +20,7 @@ namespace FieldNoteManager
     /// </summary>
     internal partial class Window : UserControl
     {
-        private Dictionary<string, string> LogTypeMapping = new Dictionary<string, string> { { "Needs repair", "Needs Maintenance" } };
+        private Dictionary<string, string> LogTypeMapping = new Dictionary<string, string> { { "Needs repair", "Needs Maintenance" }, { "Unattempted", "Write note" } };
 
         private string MapLogType(string fieldNoteLogType)
         {
@@ -297,6 +297,11 @@ namespace FieldNoteManager
                     foreach (var cell in selected)
                         cell.Value = textBox.Text;
                 };
+        }
+
+        private void dataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
         }
     }
 }

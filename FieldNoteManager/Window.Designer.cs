@@ -28,10 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Window));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Window));
             this.dataGrid = new System.Windows.Forms.DataGridView();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.btnLoad = new System.Windows.Forms.ToolStripButton();
+            this.btnPublish = new System.Windows.Forms.ToolStripButton();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.colLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCacheCode = new System.Windows.Forms.DataGridViewLinkColumn();
             this.colCacheTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,11 +44,6 @@
             this.colLogText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPublish = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colResult = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStrip = new System.Windows.Forms.ToolStrip();
-            this.btnLoad = new System.Windows.Forms.ToolStripButton();
-            this.btnPublish = new System.Windows.Forms.ToolStripButton();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -65,14 +65,64 @@
             this.colResult});
             this.dataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dataGrid.Location = new System.Drawing.Point(0, 27);
+            this.dataGrid.Location = new System.Drawing.Point(0, 25);
+            this.dataGrid.Margin = new System.Windows.Forms.Padding(2);
             this.dataGrid.Name = "dataGrid";
             this.dataGrid.RowTemplate.Height = 24;
-            this.dataGrid.Size = new System.Drawing.Size(637, 285);
+            this.dataGrid.Size = new System.Drawing.Size(478, 227);
             this.dataGrid.TabIndex = 0;
             this.dataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellContentClick);
             this.dataGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellValueChanged);
+            this.dataGrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGrid_DataError);
             this.dataGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGrid_EditingControlShowing);
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnLoad,
+            this.btnPublish});
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(478, 25);
+            this.toolStrip.TabIndex = 1;
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnLoad.Image = ((System.Drawing.Image)(resources.GetObject("btnLoad.Image")));
+            this.btnLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(119, 22);
+            this.btnLoad.Text = "Load visits from GPS";
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
+            // btnPublish
+            // 
+            this.btnPublish.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnPublish.Image = ((System.Drawing.Image)(resources.GetObject("btnPublish.Image")));
+            this.btnPublish.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPublish.Name = "btnPublish";
+            this.btnPublish.Size = new System.Drawing.Size(75, 22);
+            this.btnPublish.Text = "Publish logs";
+            this.btnPublish.ToolTipText = "Publish the logs to geocaching.com.";
+            this.btnPublish.Click += new System.EventHandler(this.btnPublish_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 252);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(478, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(80, 17);
+            this.toolStripStatusLabel.Text = "Import a file...";
             // 
             // colLogTime
             // 
@@ -105,7 +155,9 @@
             this.colLogType.Items.AddRange(new object[] {
             "Found it",
             "Didn\'t find it",
-            "Needs repair"});
+            "Needs repair",
+            "Needs Maintenance",
+            "Unattempted"});
             this.colLogType.Name = "colLogType";
             this.colLogType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colLogType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
@@ -135,63 +187,18 @@
             this.colResult.Name = "colResult";
             this.colResult.ReadOnly = true;
             this.colResult.Visible = false;
-            // 
-            // toolStrip
-            // 
-            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnLoad,
-            this.btnPublish});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(637, 27);
-            this.toolStrip.TabIndex = 1;
-            // 
-            // btnLoad
-            // 
-            this.btnLoad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnLoad.Image = ((System.Drawing.Image)(resources.GetObject("btnLoad.Image")));
-            this.btnLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(148, 24);
-            this.btnLoad.Text = "Load visits from GPS";
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
-            // 
-            // btnPublish
-            // 
-            this.btnPublish.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnPublish.Image = ((System.Drawing.Image)(resources.GetObject("btnPublish.Image")));
-            this.btnPublish.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnPublish.Name = "btnPublish";
-            this.btnPublish.Size = new System.Drawing.Size(92, 24);
-            this.btnPublish.Text = "Publish logs";
-            this.btnPublish.ToolTipText = "Publish the logs to geocaching.com.";
-            this.btnPublish.Click += new System.EventHandler(this.btnPublish_Click);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 312);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(637, 25);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel
-            // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(100, 20);
-            this.toolStripStatusLabel.Text = "Import a file...";
+            this.colResult.Width = 62;
             // 
             // Window
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dataGrid);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Window";
-            this.Size = new System.Drawing.Size(637, 337);
+            this.Size = new System.Drawing.Size(478, 274);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
