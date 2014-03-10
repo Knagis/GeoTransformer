@@ -19,6 +19,7 @@ namespace FetchStatistics
         private Queue<Guid> _toDo = new Queue<Guid>();
         private Dictionary<Guid, StatisticsData> _data = new Dictionary<Guid, StatisticsData>();
         private Random _random = new Random();
+        private int _counter = 0;
 
         public Window()
         {
@@ -30,11 +31,11 @@ namespace FetchStatistics
 
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            var url = e.Url.ToString();
+            var url = e.Url.ToString(); //this.webBrowser1.Url.ToString();
             if (!url.Contains("/profile/"))
                 return;
 
-            System.Threading.Thread.Sleep(_random.Next(1000, 5000));
+            System.Threading.Thread.Sleep(_random.Next(500, 2500));
 
             try
             {
@@ -57,7 +58,7 @@ namespace FetchStatistics
                 var currentLanguage = doc.GetElementsByTagName("div")
                                         .OfType<HtmlElement>()
                                         .FirstOrDefault(o => string.Equals(o.GetAttribute("className"), "LocaleList", StringComparison.Ordinal));
-                if (!currentLanguage.InnerText.StartsWith("English", StringComparison.Ordinal))
+                if (!currentLanguage.InnerText.Trim().StartsWith("English", StringComparison.Ordinal))
                 {
                     doc.GetElementById("ctl00_uxLocaleList_uxLocaleList_ctl00_uxLocaleItem").InvokeMember("click");
                     return;
@@ -93,9 +94,28 @@ namespace FetchStatistics
 
         private void btnRun_Click(object sender, EventArgs e)
         {
+            StartBulk();
+        }
+
+        private void StartBulk(bool continuing = false)
+        {
             this.EnableButtons(false);
             this._toDo.Clear();
             this._data.Clear();
+
+            if (!continuing)
+            {
+                this._counter = 0;
+            }
+            else
+            {
+                if (++this._counter > 1)
+                {
+                    MessageBox.Show("Labs darbs padarīts!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.EnableButtons(true);
+                    return;
+                }
+            }
 
             using (var service = ServiceProxy.CreateServiceClient())
             {
@@ -105,8 +125,12 @@ namespace FetchStatistics
 
             if (this._toDo.Count == 0)
             {
+                if (continuing)
+                    MessageBox.Show("Labs darbs padarīts!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show("Šobrīd nav nepieciešama statistikas lejupielāde, bet paldies par piedāvājumu!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 this.EnableButtons(true);
-                MessageBox.Show("Šobrīd nav nepieciešama statistikas lejupielāde, bet paldies par piedāvājumu!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -125,8 +149,7 @@ namespace FetchStatistics
         {
             if (this._toDo.Count == 0)
             {
-                MessageBox.Show("Labs darbs padarīts!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.EnableButtons(true);
+                this.StartBulk(true);
                 return;
             }
 
