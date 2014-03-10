@@ -109,7 +109,7 @@ namespace FetchStatistics
             }
             else
             {
-                if (++this._counter > 1)
+                if (++this._counter > 4)
                 {
                     MessageBox.Show("Labs darbs padarīts!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.EnableButtons(true);
