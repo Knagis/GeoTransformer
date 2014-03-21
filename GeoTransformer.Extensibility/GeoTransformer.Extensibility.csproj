@@ -273,6 +273,7 @@
       <DependentUpon>EditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Transformers\MarkSolved\MarkSolved.cs" />
+    <Compile Include="Transformers\PersonalNoteLog\PersonalNoteLog.cs" />
     <Compile Include="Transformers\PocketQueryDownload\PocketQueryDownload.cs" />
     <Compile Include="Transformers\PocketQueryDownload\PocketQueryDownloadOptions.cs">
       <SubType>UserControl</SubType>

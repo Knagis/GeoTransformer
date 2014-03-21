@@ -14,7 +14,7 @@ namespace GeoTransformer.Transformers.RefreshFromLiveApi
     /// Transformer that will automatically refresh geocache information from Live API or 
     /// merge information missing in GPX if the GPX file is newer.
     /// </summary>
-    internal class RefreshFromLiveApi : TransformerBase, Extensions.IConfigurable, Extensions.ILocalStorage
+    public class RefreshFromLiveApi : TransformerBase, Extensions.IConfigurable, Extensions.ILocalStorage
     {
         /// <summary>
         /// Gets the title of the transformer to display to the user.
