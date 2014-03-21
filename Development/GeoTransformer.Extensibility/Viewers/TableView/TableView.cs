@@ -270,7 +270,7 @@ namespace GeoTransformer.Viewers.TableView
 
             public SearchFilter(string value)
             {
-                this._value = value;
+                this._value = LatinToAscii(value);
             }
 
             public bool Filter(object modelObject)
@@ -279,11 +279,32 @@ namespace GeoTransformer.Viewers.TableView
                 if (gpx == null)
                     return true;
 
-                return (gpx.Name != null && gpx.Name.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
-                    || (gpx.Description != null && gpx.Description.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
-                    || (gpx.Comment != null && gpx.Comment.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
-                    || (gpx.Geocache.ShortDescription.Text != null && gpx.Geocache.ShortDescription.Text.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1)
-                    || (gpx.Geocache.LongDescription.Text != null && gpx.Geocache.LongDescription.Text.IndexOf(this._value, StringComparison.OrdinalIgnoreCase) > -1);
+                return this.Compare(gpx.Name, gpx.Description, gpx.Comment, gpx.Geocache.ShortDescription.Text, gpx.Geocache.LongDescription.Text);
+            }
+
+            private bool Compare(params string[] values)
+            {
+                foreach (var value in values)
+                    if (value != null && LatinToAscii(value).Contains(this._value))
+                        return true;
+
+                return false;
+            }
+
+            /// <summary>
+            /// Converts unicode special symbols to their ascii versions (e.g. <c>Ā</c> to <c>A</c>) so that search is done without accent sensitivity.
+            /// </summary>
+            private static string LatinToAscii(string inString)
+            {
+                var newStringBuilder = new StringBuilder(inString.Length);
+
+                foreach (var c in inString.Normalize(NormalizationForm.FormKD))
+                {
+                    if (c < 128)
+                        newStringBuilder.Append(char.ToUpperInvariant(c));
+                }
+
+                return newStringBuilder.ToString();
             }
         }
 
