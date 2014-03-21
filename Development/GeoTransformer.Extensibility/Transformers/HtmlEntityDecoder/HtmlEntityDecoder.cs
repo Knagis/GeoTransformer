@@ -83,9 +83,9 @@ namespace GeoTransformer.Transformers.HtmlEntityDecoder
         {
             this.Configuration = new SimpleConfigurationControl(this.Title,
 @"Garmin GPS devices cannot display HTML entities (such as &#039;) 
-but these entities are used by lots of people to write the cache 
+but these entities were used by lots of people to write the cache 
 descriptions and logs in their own language (such as Russian, 
-Chinese etc.). 
+Chinese etc.) before geocaching.com supported UTF-8. 
 
 This option enables decoding these entities so that the symbols 
 are not missing on any device. 
