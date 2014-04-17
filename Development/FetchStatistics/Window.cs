@@ -32,7 +32,7 @@ namespace FetchStatistics
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             var url = e.Url.ToString(); //this.webBrowser1.Url.ToString();
-            if (!url.Contains("/profile/"))
+            if (!url.StartsWith("http://www.geocaching.com/profile/"))
                 return;
 
             System.Threading.Thread.Sleep(_random.Next(500, 2500));
