@@ -84,7 +84,8 @@ namespace GeoTransformer.Transformers.EditorExtensions
                 var wpt = tempResult.LastOrDefault(o => o.Xml.Name == XmlExtensions.GeoTransformerSchema + "CachedCopy");
                 if (wpt != null)
                 {
-                    gpx = new Gpx.GpxWaypoint(wpt.Xml.Elements().FirstOrDefault());
+                    var xml = wpt.Xml.Elements().FirstOrDefault();
+                    gpx = new Gpx.GpxWaypoint(xml);
 
                     // ignore situations when the cached copy is empty copy from the previous versions.
                     if (gpx.Description == null)
@@ -92,7 +93,7 @@ namespace GeoTransformer.Transformers.EditorExtensions
                 }
 
                 // refresh the cached copy if it is older than 7 days
-                if ((gpx == null || gpx.LastRefresh.GetValueOrDefault() < DateTime.Now.AddDays(-7))
+                if ((gpx == null || gpx.LastRefresh.GetValueOrDefault() < DateTime.Now.AddDays(-7) || wpt.Xml.GetAttributeValue("cacheVersion") == null)
                     && tempResult.Key.StartsWith("GC", StringComparison.OrdinalIgnoreCase)
                     && (options & TransformerOptions.UseLocalStorage) == 0
                     && GeocachingService.LiveClient.IsEnabled)
@@ -102,7 +103,10 @@ namespace GeoTransformer.Transformers.EditorExtensions
                 }
 
                 if (gpx == null)
+                {
                     gpx = new Gpx.GpxWaypoint();
+                    gpx.Name = tempResult.Key;
+                }
 
                 gpx.ExtensionAttributes.Add(new XAttribute(XmlExtensions.GeoTransformerSchema + "EditorOnly", true));
 
@@ -147,6 +151,7 @@ namespace GeoTransformer.Transformers.EditorExtensions
                         var iq = table.Insert();
                         iq.Value(o => o.CacheCode, online.Code);
                         var copy = new XElement(XmlExtensions.GeoTransformerSchema + "CachedCopy");
+                        copy.SetAttributeValue("cacheVersion", "1");
                         copy.Add(gpx.Serialize(Gpx.GpxSerializationOptions.Roundtrip));
                         iq.Value(o => o.Data, copy.ToString());
                         iq.Execute();

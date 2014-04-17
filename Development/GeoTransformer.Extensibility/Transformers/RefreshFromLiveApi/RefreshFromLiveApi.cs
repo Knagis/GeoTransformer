@@ -108,7 +108,7 @@ per day.");
         /// </returns>
         private static bool ShouldRefresh(Gpx.GpxWaypoint waypoint)
         {
-            if (!waypoint.Name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
+            if (waypoint.Name == null || !waypoint.Name.StartsWith("GC", StringComparison.OrdinalIgnoreCase))
                 return false;
 
             var gc = waypoint.Geocache;
