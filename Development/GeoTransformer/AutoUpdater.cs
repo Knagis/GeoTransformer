@@ -185,7 +185,8 @@ namespace GeoTransformer
 
                     try
                     {
-                        Directory.Delete("PendingUpdate", true);
+                        if (System.IO.Directory.Exists("PendingUpdate"))
+                            Directory.Delete("PendingUpdate", true);
                     }
                     catch (IOException)
                     {
