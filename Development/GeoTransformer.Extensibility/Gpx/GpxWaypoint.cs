@@ -159,7 +159,7 @@ namespace GeoTransformer.Gpx
                 "{0} by {1}, {2} ({3}/{4})", cache.Name, cache.PlacedBy, gc.CacheType.Name, cache.Difficulty, cache.Terrain);
             this.Links.Add(new GpxLink() { Text = cache.Name, Href = new Uri(cache.Url) });
             this.Name = cache.Code;
-            this.Symbol = "Geocache";
+            this.Symbol = cache.HasbeenFoundbyUser.GetValueOrDefault() ? "Geocache Found" : "Geocache";
             this.WaypointType = "Geocache|" + gc.CacheType.Name;
 
             gc.Archived = cache.Archived.GetValueOrDefault();
