@@ -200,6 +200,11 @@ namespace GeoTransformer.Viewers.TableView
                 Text = "Status",
                 AspectGetter = StatusAspect
             });
+            olv.AllColumns.Add(new BrightIdeasSoftware.OLVColumn()
+            {
+                Text = "Found",
+                AspectGetter = w => string.Equals(((GpxWaypoint)w).Symbol, "Geocache Found", StringComparison.OrdinalIgnoreCase) ? "Yes" : string.Empty
+            });
             olv.AllColumns.Add(new BrightIdeasSoftware.OLVColumn() 
             {
                 Text = "Container size",
