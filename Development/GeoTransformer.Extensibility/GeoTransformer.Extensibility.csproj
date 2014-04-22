@@ -563,6 +563,7 @@
     <EmbeddedResource Include="UI\CacheTypeIcons.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CacheTypeIcons.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\CoordinateEditor.resx">
       <DependentUpon>CoordinateEditor.cs</DependentUpon>
@@ -826,6 +827,7 @@
     <Content Include="Publishers\ExportGpx\Icon.png" />
     <Content Include="Transformers\LoadLocalFiles\gpx.png" />
     <Content Include="Transformers\LoadLocalFiles\zip.png" />
+    <Content Include="UI\CacheTypeIcons\MegaEvent.gif" />
     <Content Include="UI\CacheTypeIcons\VirtualCache.gif" />
     <Content Include="Viewers\BingMaps\MapTemplate.html" />
     <None Include="Viewers\GeoHack\Web.png" />
