@@ -148,7 +148,10 @@
   <data name="VirtualCache" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>CacheTypeIcons\VirtualCache.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="WherigoCache" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="WherigoCaches" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>CacheTypeIcons\Wherigo.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MegaEventCache" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>CacheTypeIcons\MegaEvent.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

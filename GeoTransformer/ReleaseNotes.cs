@@ -23,7 +23,8 @@ namespace GeoTransformer
             { Version.Parse("4.6.0.0"), "'Loading edited caches from Live API' now works much faster." + Environment.NewLine + 
                                         "Personal notes are now added as a log entry ('Refresh from Live API' must be enabled for this to work)." + Environment.NewLine +
                                         "Bugfix for refreshing found caches from Live API." + Environment.NewLine +
-                                        "Table view now shows if the cache has been found." },
+                                        "Table view now shows if the cache has been found." + Environment.NewLine +
+                                        "Fixed Wherigo and Mega-Event cache icons." },
             { Version.Parse("4.5.0.0"), "Extensions can now be installed and uninstalled from the application." + Environment.NewLine + 
                                         "Added ability to search for caches by pressing CTRL+F in the table views." + Environment.NewLine +
                                         "Added ability to remove edited customizations for multiple caches at once (use SHIFT or CTRL to select multiple lines in the table)." },
