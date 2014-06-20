@@ -303,28 +303,38 @@ namespace GeoTransformer.Transformers.SaveFiles
         {
             var convertedFilePath = filePath.Substring(0, filePath.Length - System.IO.Path.GetExtension(filePath).Length) + ".converted" + this._defaultExtension;
 
-            using (var bitmap = System.Drawing.Bitmap.FromFile(filePath))
+            try
             {
-                if (!this.EncodeEverything && !this.ConvertNeeded(bitmap))
-                    return filePath;
-
-                if (System.IO.File.Exists(convertedFilePath))
+                using (var bitmap = System.Drawing.Bitmap.FromFile(filePath))
                 {
-                    using (var convertedBitmap = System.Drawing.Bitmap.FromFile(convertedFilePath))
-                    {
-                        if (!this.ConvertNeeded(convertedBitmap) && !this.ReconvertNeeded(bitmap, convertedBitmap))
-                            return convertedFilePath;
-                    }
-                }
+                    if (!this.EncodeEverything && !this.ConvertNeeded(bitmap))
+                        return filePath;
 
-                this.ConvertImage(bitmap, convertedFilePath);
-                return convertedFilePath;
+                    if (System.IO.File.Exists(convertedFilePath))
+                    {
+                        using (var convertedBitmap = System.Drawing.Bitmap.FromFile(convertedFilePath))
+                        {
+                            if (!this.ConvertNeeded(convertedBitmap) && !this.ReconvertNeeded(bitmap, convertedBitmap))
+                                return convertedFilePath;
+                        }
+                    }
+
+                    this.ConvertImage(bitmap, convertedFilePath);
+                    return convertedFilePath;
+                }
+            }
+            catch (OutOfMemoryException)
+            {
+                // the most common reason for OutOfMemoryException during image processing is that the image file is corrupted
+                System.IO.File.Delete(filePath);
+                System.IO.File.Delete(convertedFilePath);
+                return null;
             }
         }
 
         /// <summary>
         /// Processes the specified GPX documents. If the method is not overriden in the derived class,
-        /// calls <see cref="Process(Gpx.GpxDocument, Transformers.TransformerOptions)"/> for each document in the list.
+        /// calls <see cref="Process(Gpx.GpxDocument, TransformerOptions)"/> for each document in the list.
         /// </summary>
         /// <param name="documents">A list of GPX documents. The list may be modified as a result of the execution.</param>
         /// <param name="options">The options that instruct how the transformer should proceed.</param>
@@ -554,7 +564,18 @@ namespace GeoTransformer.Transformers.SaveFiles
 
                 var imagePath = this.DownloadImage(waypoint, image);
                 var convertedPath = this.ConvertImage(imagePath);
-                System.IO.File.Copy(convertedPath, targetPath);
+
+                if (convertedPath == null)
+                {
+                    // there was an error during processing, try re-download
+                    imagePath = this.DownloadImage(waypoint, image);
+                    convertedPath = this.ConvertImage(imagePath);
+                }
+
+                if (convertedPath != null)
+                {
+                    System.IO.File.Copy(convertedPath, targetPath);
+                }
             }
             catch (Exception ex)
             {
