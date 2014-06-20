@@ -17,6 +17,19 @@ namespace GeoTransformer.Transformers.WaypointEnhancer
     internal class WaypointEnhancer : TransformerBase, Extensions.IConfigurable
     {
         /// <summary>
+        /// Lists the waypoint symbols that are converted to the Navaid symbols.
+        /// </summary>
+        private static readonly HashSet<string> _waypointSymbols = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+        {
+            "Final Location",
+            "Stages of a Multicache",
+            "Question to Answer",
+            "Reference Point",
+            "Physical Stage",
+            "Virtual Stage"
+        };
+
+        /// <summary>
         /// Gets the title of the transformer to display to the user.
         /// </summary>
         public override string Title
@@ -62,7 +75,7 @@ namespace GeoTransformer.Transformers.WaypointEnhancer
             }
 
             // these are the navaid colors as supported by Garmin GPS units
-            var colors = new List<string> { "Blue", "Green", "Red", "White", "Amber", "Black", "Orange", "Violet" };
+            var colors = new List<string> { "Blue", "Green", "Red", "White", "Amber", "Black", "Orange", "Violet", "Green/White", "Green/Red", "Red/White", "Red/Green", "White/Green", "White/Red" };
             foreach (var wpt in waypoints)
             {
                 // copy the name of the waypoint in the description
@@ -84,10 +97,7 @@ namespace GeoTransformer.Transformers.WaypointEnhancer
                 var curSym = wpt.Symbol;
                 if (string.Equals(curSym, "Trailhead", StringComparison.OrdinalIgnoreCase))
                     wpt.Symbol = "Trail Head";
-                else if (string.Equals(curSym, "Final Location", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(curSym, "Stages of a Multicache", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(curSym, "Question to Answer", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(curSym, "Reference Point", StringComparison.OrdinalIgnoreCase))
+                else if (_waypointSymbols.Contains(curSym))
                 {
                     // randomize the color - use the GetHashCode so that the color persists during multiple
                     // updates.
