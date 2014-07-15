@@ -331,6 +331,7 @@ namespace GeoTransformer
 
                 try
                 {
+                    context.ThrowIfCancellationPending();
                     task.Process(data, context);
                 }
                 catch (Transformers.TransformerCancelledException ex)
