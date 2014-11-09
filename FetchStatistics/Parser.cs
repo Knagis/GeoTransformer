@@ -85,14 +85,18 @@ namespace FetchStatistics
             try
             {
                 var box = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_Panel_CachesFound");
-                if (box != null) data.CacheFinds = int.Parse(box.GetElementsByTagName("span").Cast<HtmlElement>().First().InnerText.Trim(), System.Globalization.NumberStyles.Integer | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+                var t = box.InnerText.Trim();
+                t = t.Substring(0, t.IndexOf(' '));
+                data.CacheFinds = int.Parse(t, System.Globalization.NumberStyles.Integer | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
             }
             catch { }
 
             try
             {
                 var box = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_Panel_TrackableStats");
-                if (box != null) data.TrackablesLogged = int.Parse(box.GetElementsByTagName("span").Cast<HtmlElement>().First().InnerText.Trim(), System.Globalization.NumberStyles.Integer | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+                var t = box.InnerText.Trim();
+                t = t.Substring(0, t.IndexOf(' '));
+                data.TrackablesLogged = int.Parse(t, System.Globalization.NumberStyles.Integer | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
             }
             catch { }
 
@@ -136,7 +140,7 @@ namespace FetchStatistics
             {
                 var basicInfo = doc.GetElementById("BasicFinds").InnerHtml;
                 TextAfter(ref basicInfo, "</strong>");
-                data.DistinctCacheFinds = int.Parse(TextBetween(ref basicInfo, "(", " "), System.Globalization.CultureInfo.InvariantCulture);
+                //data.DistinctCacheFinds = int.Parse(TextBetween(ref basicInfo, "(", " "), System.Globalization.CultureInfo.InvariantCulture);
                 data.FirstCacheDate = DateTime.ParseExact(TextBetween(ref basicInfo, "<strong>", "</strong>"), new [] { "dd/MMM/yyyy", "yyyy-MM-dd", "MM/dd/yyyy" }, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None);
             }
             catch { }
@@ -153,6 +157,12 @@ namespace FetchStatistics
 
                 simpleStats.MoveNext();
                 data.LongestSlump = int.Parse(TextBetween(simpleStats.Current.InnerHtml, "<strong>", "</strong>"), System.Globalization.CultureInfo.InvariantCulture);
+
+                // current streak
+                simpleStats.MoveNext();
+
+                // current slump
+                simpleStats.MoveNext();
 
                 simpleStats.MoveNext();
                 data.BestDay = int.Parse(TextBetween(simpleStats.Current.InnerHtml, "<strong>", "</strong>"), System.Globalization.CultureInfo.InvariantCulture);
