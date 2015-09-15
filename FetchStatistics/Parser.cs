@@ -30,7 +30,7 @@ namespace FetchStatistics
             return true;
         }
 
-        private static string TextBetween(string text, string before, string after)
+        private static string TextBetween(this string text, string before, string after)
         {
             return TextBetween(ref text, before, after);
         }
@@ -50,6 +50,9 @@ namespace FetchStatistics
 
             // remove the text before the first delimiter
             text = text.Substring(i);
+
+            if (after == null)
+                return text;
 
             i = text.IndexOf(after, StringComparison.OrdinalIgnoreCase);
             if (i == -1)
@@ -79,7 +82,10 @@ namespace FetchStatistics
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            data.UpdatedBy = doc.GetElementById("ctl00_divSignedIn").GetElementsByTagName("a").OfType<HtmlElement>().Skip(1).First().InnerText;
+            data.UpdatedBy = doc.GetElementById("ctl00_divSignedIn")
+                .GetElementsByTagName("a").OfType<HtmlElement>().First()
+                .GetElementsByTagName("span").OfType<HtmlElement>().Skip(2).First().InnerText;
+
             data.UserName = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_lblMemberName").InnerText;
 
             try
