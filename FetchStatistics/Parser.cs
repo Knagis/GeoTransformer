@@ -82,8 +82,8 @@ namespace FetchStatistics
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            data.UpdatedBy = doc.GetElementById("ctl00_divSignedIn")
-                .GetElementsByTagName("a").OfType<HtmlElement>().First()
+            data.UpdatedBy = doc.GetElementsByClassName("a", "SignedInProfileLink")
+                .First()
                 .GetElementsByTagName("span").OfType<HtmlElement>().Skip(2).First().InnerText;
 
             data.UserName = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_lblMemberName").InnerText;

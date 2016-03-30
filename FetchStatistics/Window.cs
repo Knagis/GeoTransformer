@@ -32,8 +32,11 @@ namespace FetchStatistics
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             var url = e.Url.ToString(); //this.webBrowser1.Url.ToString();
-            if (!url.StartsWith("http://www.geocaching.com/profile/"))
+            if (!url.StartsWith("http://www.geocaching.com/profile/")
+                && !url.StartsWith("javascript:\"<html><body"))
                 return;
+
+            url = this.webBrowser1.Url.ToString();
 
             System.Threading.Thread.Sleep(_random.Next(500, 2500));
 
@@ -47,7 +50,7 @@ namespace FetchStatistics
 
                 var obj = this._data[id];
 
-                if (doc.GetElementById("ctl00_divSignedIn") == null)
+                if (!doc.GetElementsByClassName("a", "SignedInProfileLink").Any())
                 {
                     MessageBox.Show("Nepieciešams ielogoties pirms statistikas lejupielādes sākšanas!", "LV statistika", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.EnableButtons(true);
@@ -55,10 +58,8 @@ namespace FetchStatistics
                 }
 
                 // if needed, switch to English
-                var currentLanguage = doc.GetElementsByTagName("div")
-                                        .OfType<HtmlElement>()
-                                        .FirstOrDefault(o => string.Equals(o.GetAttribute("className"), "LocaleList", StringComparison.Ordinal));
-                if (!currentLanguage.InnerText.Trim().StartsWith("English", StringComparison.Ordinal))
+                var currentLanguage = doc.GetElementsByClassName("div", "LocaleList").FirstOrDefault();
+                if (currentLanguage == null || !currentLanguage.InnerText.Trim().StartsWith("English", StringComparison.Ordinal))
                 {
                     doc.GetElementById("ctl00_uxLocaleList_uxLocaleList_ctl00_uxLocaleItem").InvokeMember("click");
                     return;
