@@ -196,5 +196,18 @@ namespace FetchStatistics.Web
 
             return res;
         }
+
+        public static Nullable<TValue> TryGetValue<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key)
+            where TValue: struct
+        {
+            if (source == null)
+                return null;
+
+            TValue res;
+            if (!source.TryGetValue(key, out res))
+                return null;
+
+            return res;
+        }
     }
 }

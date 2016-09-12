@@ -411,26 +411,26 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             <td><%#Container.Value(o => o.DifficultyTerrainCombinations)%></td>
             <td><%#Container.Value(o => o.Difficulty5Caches)%></td>
             <td><%#Container.Value(o => o.Terrain5Caches)%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Traditional Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Multi-cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Unknown Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Earthcache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Virtual Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Letterbox Hybrid", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Event Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Cache In Trash Out Event", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Mega-Event Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Giga-Event Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Wherigo Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Webcam Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("GPS Adventures Exhibit", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak Block Party", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak HQ", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak Lost and Found Celebration", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Locationless (Reverse) Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Lost and Found Event Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Project APE Cache", 0))%></td>
-            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Lab Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Traditional Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Multi-cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Unknown Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Earthcache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Virtual Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Letterbox Hybrid"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Event Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Cache In Trash Out Event"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Mega-Event Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Giga-Event Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Wherigo Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Webcam Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("GPS Adventures Exhibit"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak Block Party"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak HQ"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak Lost and Found Celebration"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Locationless (Reverse) Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Lost and Found Event Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Project APE Cache"))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Lab Cache"))%></td>
         </tr>
         </ItemTemplate>
         <FooterTemplate>
