@@ -203,9 +203,11 @@ namespace FetchStatistics
 
             try
             {
-                var dtImg = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_StatsDifficultyTerrainControl1_uxAverageDifficultyTerrain");
-                data.AverageDifficulty = decimal.Parse(TextBetween(dtImg.GetAttribute("src") + "&", "d=", "&"), System.Globalization.CultureInfo.InvariantCulture);
-                data.AverageTerrain = decimal.Parse(TextBetween(dtImg.GetAttribute("src") + "&", "t=", "&"), System.Globalization.CultureInfo.InvariantCulture);
+                var difElem = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_StatsDifficultyTerrainControl1_uxAverageDifficultyValueLabel");
+                data.AverageDifficulty = decimal.Parse(difElem.InnerHtml, System.Globalization.CultureInfo.InvariantCulture);
+
+                var terElem = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_StatsDifficultyTerrainControl1_uxAverageTerrainValueLabel");
+                data.AverageTerrain = decimal.Parse(terElem.InnerHtml, System.Globalization.CultureInfo.InvariantCulture);
             }
             catch { }
 
