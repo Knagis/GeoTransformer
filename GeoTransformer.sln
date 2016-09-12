@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0EBCD3DE-CA2C-4958-A692-DC1B90633965}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		GeoTransformer.licenseheader = GeoTransformer.licenseheader
 		GeoTransformer.vsmdi = GeoTransformer.vsmdi
 		Local.testsettings = Local.testsettings
+		readme.md = readme.md
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
@@ -33,44 +37,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalNoteManager", "PersonalNoteManager\PersonalNoteManager.csproj", "{C8C63FA3-C87A-4C78-A338-1709054117EC}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 9
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs19
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = FetchStatistics.Web\\FetchStatistics.Web.csproj
-		SccProjectTopLevelParentUniqueName1 = GeoTransformer.sln
-		SccProjectName1 = FetchStatistics.Web
-		SccLocalPath1 = FetchStatistics.Web
-		SccProjectUniqueName2 = FetchStatistics\\FetchStatistics.csproj
-		SccProjectTopLevelParentUniqueName2 = GeoTransformer.sln
-		SccProjectName2 = FetchStatistics
-		SccLocalPath2 = FetchStatistics
-		SccProjectUniqueName3 = GeocachingService.OAuth\\GeocachingService.OAuth.csproj
-		SccProjectTopLevelParentUniqueName3 = GeoTransformer.sln
-		SccProjectName3 = GeocachingService.OAuth
-		SccLocalPath3 = GeocachingService.OAuth
-		SccProjectUniqueName4 = GeoTransformer.Extensibility\\GeoTransformer.Extensibility.csproj
-		SccProjectName4 = GeoTransformer.Extensibility
-		SccLocalPath4 = GeoTransformer.Extensibility
-		SccProjectUniqueName5 = GeoTransformer.UnitTests\\GeoTransformer.UnitTests.csproj
-		SccProjectName5 = GeoTransformer.UnitTests
-		SccLocalPath5 = GeoTransformer.UnitTests
-		SccProjectUniqueName6 = GeoTransformer\\GeoTransformer.csproj
-		SccProjectName6 = GeoTransformer
-		SccLocalPath6 = GeoTransformer
-		SccProjectUniqueName7 = FieldNoteManager\\FieldNoteManager.csproj
-		SccProjectTopLevelParentUniqueName7 = GeoTransformer.sln
-		SccProjectName7 = FieldNoteManager
-		SccLocalPath7 = FieldNoteManager
-		SccProjectUniqueName8 = PersonalNoteManager\\PersonalNoteManager.csproj
-		SccProjectTopLevelParentUniqueName8 = GeoTransformer.sln
-		SccProjectName8 = PersonalNoteManager
-		SccLocalPath8 = PersonalNoteManager
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = GeoTransformer.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -150,5 +116,8 @@ Global
 		{699636E9-0B8C-4A70-8A72-EF962B9C9655} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
 		{88F4736E-FCB7-4AB6-9D5E-77CB46DD0CE9} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
 		{C8C63FA3-C87A-4C78-A338-1709054117EC} = {04E6A9DD-7E8E-4336-B5F6-23AFDFED5971}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = GeoTransformer.vsmdi
 	EndGlobalSection
 EndGlobal

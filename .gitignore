@@ -1,0 +1,8 @@
+﻿# Ignored files
+
+*.user
+*.suo
+/.vs/
+/*/obj/
+/*/bin/
+/Private Items/
