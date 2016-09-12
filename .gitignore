@@ -6,3 +6,6 @@
 /*/obj/
 /*/bin/
 /Private Items/
+/FetchStatistics.Web/App_Data/
+/FetchStatistics.Web/Properties/PublishProfiles/
+/FetchStatistics.Web/FetchStatistics.Web.Publish.xml
