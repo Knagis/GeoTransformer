@@ -42,7 +42,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             table-layout: fixed;
             border-collapse: collapse;
             position: absolute;
-            width: 2630px;
+            width: 2530px;
             z-index: 100;
         }
         
@@ -50,7 +50,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
         {
             table-layout: fixed;
             border-collapse: collapse;
-            width: 2630px;
+            width: 2530px;
         }
 
         table#table-left-header
@@ -283,7 +283,6 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.Updated)%>
                 <%= this.CreateHeader(o => o.UpdatedBy)%>
                 <%= this.CreateHeader(o => o.CacheFinds)%>
-                <%= this.CreateHeader(o => o.DistinctCacheFinds)%>
                 <%= this.CreateHeader(o => o.CacheFindsInCountry)%>
                 <%= this.CreateHeader(o => o.CountryCount)%>
                 <%= this.CreateHeader(o => o.CachesHidden)%>
@@ -315,7 +314,6 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.Updated)%>
                 <%= this.CreateHeader(o => o.UpdatedBy)%>
                 <%= this.CreateHeader(o => o.CacheFinds)%>
-                <%= this.CreateHeader(o => o.DistinctCacheFinds)%>
                 <%= this.CreateHeader(o => o.CacheFindsInCountry)%>
                 <%= this.CreateHeader(o => o.CountryCount)%>
                 <%= this.CreateHeader(o => o.CachesHidden)%>
@@ -347,7 +345,6 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             <td><%#Container.Value(o => o.Updated)%></td>
             <td><%#Container.Value(o => o.UpdatedBy)%></td>
             <td><%#Container.Value(o => o.CacheFinds)%></td>
-            <td><%#Container.Value(o => o.DistinctCacheFinds)%></td>
             <td><%#Container.Value(o => o.CacheFindsInCountry)%></td>
             <td><%#Container.Value(o => o.CountryCount)%></td>
             <td><%#Container.Value(o => o.CachesHidden)%></td>
