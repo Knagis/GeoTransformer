@@ -24,6 +24,11 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,6 +68,25 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="img\11.gif" />
+    <Content Include="img\12.gif" />
+    <Content Include="img\13.gif" />
+    <Content Include="img\1858.gif" />
+    <Content Include="img\2.gif" />
+    <Content Include="img\3.gif" />
+    <Content Include="img\3653.gif" />
+    <Content Include="img\3773.gif" />
+    <Content Include="img\4.gif" />
+    <Content Include="img\453.gif" />
+    <Content Include="img\4738.gif" />
+    <Content Include="img\5.gif" />
+    <Content Include="img\6.gif" />
+    <Content Include="img\7005.gif" />
+    <Content Include="img\8.gif" />
+    <Content Include="img\9.gif" />
+    <Content Include="img\earthcache.gif" />
+    <Content Include="img\labs.png" />
+    <Content Include="img\maze.gif" />
     <Content Include="Scripts\jquery.js" />
     <Content Include="Service.svc" />
     <Content Include="Styles\desc.png" />
