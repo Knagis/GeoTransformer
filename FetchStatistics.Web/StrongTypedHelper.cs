@@ -55,11 +55,18 @@ namespace FetchStatistics.Web
             return Value(container, selectorExpression, a => a.Value.ToString(), true);
         }
 
-        private static string Value<TValue>(this System.Web.UI.WebControls.RepeaterItem container, System.Linq.Expressions.Expression<Func<StatisticsData, TValue>> selectorExpression, Func<TValue, string> toString, bool isNullable)
+        private static string Value<TValue>(this System.Web.UI.WebControls.RepeaterItem container, System.Linq.Expressions.Expression<Func<StatisticsData, TValue>> selectorExpression, Func<TValue, string> toString, bool isNullable, string cacheKey = null)
         {
-            var me = (System.Linq.Expressions.MemberExpression)selectorExpression.Body;
-            var name = me.Member.Name;
-            var attr = Default._uiSettingsCache[name];
+            string name = selectorExpression.ToString();
+
+            UISettingsAttribute attr = null;
+            if (selectorExpression.Body is System.Linq.Expressions.MemberExpression)
+            {
+                var me = (System.Linq.Expressions.MemberExpression)selectorExpression.Body;
+                attr = Default._uiSettingsCache[me.Member.Name];
+            }
+
+
             Func<StatisticsData, TValue> selector;
             if (!Default._keySelectorCache.ContainsKey(name))
                 Default._keySelectorCache[name] = selector = selectorExpression.Compile();
@@ -77,7 +84,7 @@ namespace FetchStatistics.Web
                 var rep = (System.Web.UI.WebControls.Repeater)container.Parent;
                 var ds = (IEnumerable<StatisticsData>)rep.DataSource;
                 var q = ds.Select(selector);
-                if (isNullable) 
+                if (isNullable)
                     q = q.Where(o => o != null);
 
                 edge[selector] = Tuple.Create<object, object>(q.Min(), q.Max());
@@ -85,6 +92,7 @@ namespace FetchStatistics.Web
 
             var minmax = edge[selector];
             int barWidth = -1;
+
             try
             {
                 if (typeof(TValue).Equals(typeof(int)))
@@ -107,7 +115,7 @@ namespace FetchStatistics.Web
             if (barWidth == -1)
                 return "<span>" + toString(v) + "</span>";
 
-            if (!attr.OrderByDescendingFirst) barWidth = 100 - barWidth;
+            if (attr != null && !attr.OrderByDescendingFirst) barWidth = 100 - barWidth;
             var color = MiddleColor(barWidth / 100M);
 
             return "<span style=\"background:" + System.Drawing.ColorTranslator.ToHtml(color) + ";width:" + barWidth + "px\">" + toString(v) + "</span>";
@@ -175,7 +183,18 @@ namespace FetchStatistics.Web
                 return System.Drawing.Color.FromArgb(255, t, p, v);
             else
                 return System.Drawing.Color.FromArgb(255, v, p, q);
-        } 
+        }
 
+        public static TValue TryGetValue<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key, TValue @default) 
+        {
+            if (source == null)
+                return @default;
+
+            TValue res;
+            if (!source.TryGetValue(key, out res))
+                res = @default;
+
+            return res;
+        }
     }
 }

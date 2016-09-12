@@ -31,7 +31,18 @@ namespace FetchStatistics.Web
                 q.Select(o => o.StatisticsXml);
                 q.Where(o => o.StatisticsXml, GeoTransformer.Data.WhereOperator.NotIsNull, true);
 
-                return q.Execute().AsEnumerable().Select(o => StatisticsData.Deserialize(o.Value(t => t.StatisticsXml))).ToArray();
+                var temp = q.Execute().AsEnumerable()
+                    .Select(o => o.Value(t => t.StatisticsXml))
+                    .ToArray();
+
+                var temp1 = temp.Where(o => o.IndexOf("Traditional") > -1).ToArray();
+
+                var result = q
+                    .Execute()
+                    .AsEnumerable()
+                    .Select(o => StatisticsData.Deserialize(o.Value(t => t.StatisticsXml)))
+                    .ToArray();
+                return result;
             }
         }
 

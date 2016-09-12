@@ -42,7 +42,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             table-layout: fixed;
             border-collapse: collapse;
             position: absolute;
-            width: 2530px;
+            width: 3030px;
             z-index: 100;
         }
         
@@ -50,7 +50,7 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
         {
             table-layout: fixed;
             border-collapse: collapse;
-            width: 2530px;
+            width: 3030px;
         }
 
         table#table-left-header
@@ -94,6 +94,15 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             background-repeat: no-repeat;
             background-position: right bottom;
             width: 100px;
+        }
+
+        th.small {
+            width: 50px;
+            font-weight: normal;
+        }
+
+        th.small img {
+            margin: 0 10px 0 10px;
         }
         
         th.sort-asc
@@ -300,6 +309,26 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.DifficultyTerrainCombinations)%>
                 <%= this.CreateHeader(o => o.Difficulty5Caches)%>
                 <%= this.CreateHeader(o => o.Terrain5Caches)%>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/2.gif" title="Traditional Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3.gif" title="Multi-cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/8.gif" title="Unknown Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/earthcache.gif" title="Earthcache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/4.gif" title="Virtual Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/5.gif" title="Letterbox Hybrid" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/6.gif" title="Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/13.gif" title="Cache In Trash Out Event" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/453.gif" title="Mega-Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/7005.gif" title="Giga-Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/1858.gif" title="Wherigo Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/11.gif" title="Webcam Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/maze.gif" title="GPS Adventures Exhibit" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/4738.gif" title="Groundspeak Block Party" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3773.gif" title="Groundspeak HQ" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3773.gif" title="Groundspeak Lost and Found Celebration" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/12.gif" title="Locationless (Reverse) Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3653.gif" title="Lost and Found Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/9.gif" title="Project APE Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/labs.png" title="Lab Cache" /> found</a></th>
             </tr>
         </thead>
     </table>
@@ -331,6 +360,26 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
                 <%= this.CreateHeader(o => o.DifficultyTerrainCombinations)%>
                 <%= this.CreateHeader(o => o.Difficulty5Caches)%>
                 <%= this.CreateHeader(o => o.Terrain5Caches)%>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/2.gif" title="Traditional Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3.gif" title="Multi-cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/8.gif" title="Unknown Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/earthcache.gif" title="Earthcache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/4.gif" title="Virtual Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/5.gif" title="Letterbox Hybrid" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/6.gif" title="Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/13.gif" title="Cache In Trash Out Event" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/453.gif" title="Mega-Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/7005.gif" title="Giga-Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/1858.gif" title="Wherigo Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/11.gif" title="Webcam Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/maze.gif" title="GPS Adventures Exhibit" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/4738.gif" title="Groundspeak Block Party" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3773.gif" title="Groundspeak HQ" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3773.gif" title="Groundspeak Lost and Found Celebration" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/12.gif" title="Locationless (Reverse) Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/3653.gif" title="Lost and Found Event Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/9.gif" title="Project APE Cache" /> found</a></th>
+                <th class="small"><a onclick="sortTable(this, true, true); return false;"><img src="img/labs.png" title="Lab Cache" /> found</a></th>
             </tr>
         </thead>
         <tbody>
@@ -362,6 +411,26 @@ It is licensed under Microsoft Reciprocal License (Ms-RL).
             <td><%#Container.Value(o => o.DifficultyTerrainCombinations)%></td>
             <td><%#Container.Value(o => o.Difficulty5Caches)%></td>
             <td><%#Container.Value(o => o.Terrain5Caches)%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Traditional Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Multi-cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Unknown Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Earthcache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Virtual Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Letterbox Hybrid", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Event Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Cache In Trash Out Event", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Mega-Event Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Giga-Event Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Wherigo Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Webcam Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("GPS Adventures Exhibit", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak Block Party", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak HQ", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Groundspeak Lost and Found Celebration", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Locationless (Reverse) Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Lost and Found Event Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Project APE Cache", 0))%></td>
+            <td><%#Container.Value(o => o.CacheFindsByType.TryGetValue("Lab Cache", 0))%></td>
         </tr>
         </ItemTemplate>
         <FooterTemplate>
