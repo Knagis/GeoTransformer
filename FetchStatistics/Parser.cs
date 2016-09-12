@@ -2,7 +2,7 @@
  * This file is part of GeoTransformer project (http://geotransformer.codeplex.com/).
  * It is licensed under Microsoft Reciprocal License (Ms-RL).
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -147,14 +147,19 @@ namespace FetchStatistics
                 var basicInfo = doc.GetElementById("BasicFinds").InnerHtml;
                 TextAfter(ref basicInfo, "</strong>");
                 //data.DistinctCacheFinds = int.Parse(TextBetween(ref basicInfo, "(", " "), System.Globalization.CultureInfo.InvariantCulture);
-                data.FirstCacheDate = DateTime.ParseExact(TextBetween(ref basicInfo, "<strong>", "</strong>"), new [] { "dd/MMM/yyyy", "yyyy-MM-dd", "MM/dd/yyyy" }, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None);
+                data.FirstCacheDate = DateTime.ParseExact(TextBetween(ref basicInfo, "<strong>", "</strong>"), new[] { "dd/MMM/yyyy", "yyyy-MM-dd", "MM/dd/yyyy" }, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None);
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
             try
             {
                 var simpleStats = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_StatsChronologyControl1_FindStatistics").GetElementsByTagName("dd").Cast<HtmlElement>().GetEnumerator();
-                
+
                 simpleStats.MoveNext();
                 data.FindRate = decimal.Parse(TextBetween(simpleStats.Current.InnerHtml, "<strong>", "</strong>"), System.Globalization.CultureInfo.InvariantCulture);
 
@@ -181,7 +186,12 @@ namespace FetchStatistics
 
                 simpleStats.Dispose();
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
             try
             {
@@ -190,16 +200,68 @@ namespace FetchStatistics
                 var lastCell = lastRow.GetCells().Cast<HtmlElement>().Last();
                 data.CurrentYearFindRate = decimal.Parse(TextBetween(lastCell.InnerHtml, "<strong>", "</strong>"), System.Globalization.CultureInfo.InvariantCulture);
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
             try
             {
                 var days = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_StatsChronologyControl1_FindsForEachDayOfYear").GetElementsByTagName("p").Cast<HtmlElement>().First();
                 data.DaysInYearCached = int.Parse(TextBetween(days.InnerHtml, "<strong>", "</strong>"), System.Globalization.CultureInfo.InvariantCulture);
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
-            //cache types and sizes here
+            //cache types 
+            try
+            {
+                var typeElem = doc.GetElementsByClassName("ul", "CacheTypeDataList").Single().GetElementsByTagName("li").Cast<HtmlElement>().ToList();
+                var countElem = doc.GetElementsByClassName("ul", "CacheTypeCountList").Single().GetElementsByTagName("li").Cast<HtmlElement>().ToList();
+
+                data.CacheFindsByType = new Dictionary<string, int>(typeElem.Count);
+                for (var i = 0; i < typeElem.Count; i++)
+                {
+                    var cntText = countElem[i].InnerText;
+                    var cnt = int.Parse(cntText.Substring(0, cntText.IndexOf(' ')), System.Globalization.CultureInfo.InvariantCulture);
+
+                    data.CacheFindsByType[typeElem[i].InnerText.Trim()] = cnt;
+                }
+            }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
+
+            //cache sizes 
+            try
+            {
+                var typeElem = doc.GetElementsByClassName("ul", "ContainerTypeDataList").Single().GetElementsByTagName("li").Cast<HtmlElement>().ToList();
+                var countElem = doc.GetElementsByClassName("ul", "ContainerTypeCountList").Single().GetElementsByTagName("li").Cast<HtmlElement>().ToList();
+
+                data.CacheFindsBySize = new Dictionary<string, int>(typeElem.Count);
+                for (var i = 0; i < typeElem.Count; i++)
+                {
+                    var cntText = countElem[i].InnerText;
+                    var cnt = int.Parse(cntText.Substring(0, cntText.IndexOf(' ')), System.Globalization.CultureInfo.InvariantCulture);
+
+                    data.CacheFindsBySize[typeElem[i].InnerText.Trim()] = cnt;
+                }
+            }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
             try
             {
@@ -209,7 +271,12 @@ namespace FetchStatistics
                 var terElem = doc.GetElementById("ctl00_ContentBody_ProfilePanel1_StatsDifficultyTerrainControl1_uxAverageTerrainValueLabel");
                 data.AverageTerrain = decimal.Parse(terElem.InnerHtml, System.Globalization.CultureInfo.InvariantCulture);
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
             try
             {
@@ -227,7 +294,12 @@ namespace FetchStatistics
                 var d5 = d5row.GetCells().Last();
                 data.Difficulty5Caches = int.Parse(d5.InnerText, System.Globalization.CultureInfo.InvariantCulture);
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
 
             try
             {
@@ -241,7 +313,12 @@ namespace FetchStatistics
                     data.CacheFindsByCountry[country] = count;
                 }
             }
-            catch { }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
         }
     }
 }

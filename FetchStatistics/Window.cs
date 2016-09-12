@@ -155,7 +155,7 @@ namespace FetchStatistics
             }
 
             var id = this._toDo.Dequeue();
-            this._data[id] = new StatisticsData() { UserId = id };
+            this._data[id] = new StatisticsData() { Version = 2, UserId = id };
 
             this.webBrowser1.Navigate("http://www.geocaching.com/profile/?guid=" + id.ToString("D").ToLowerInvariant());
         }

@@ -35,6 +35,9 @@ namespace FetchStatistics
             }
         }
 
+        [DataMember]
+        public int? Version { get; set; }
+
         [DataMember] 
         public Guid UserId { get; set; }
 

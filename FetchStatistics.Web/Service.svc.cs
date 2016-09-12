@@ -96,8 +96,8 @@ namespace FetchStatistics.Web
             if (string.IsNullOrWhiteSpace(data.UserName))
                 return;
 
-            if (data.DetailedStatisticsAvailable && data.CacheFindsByCountry == null)
-                throw new ArgumentException("You are using an old version of FetchStatistics that do not parse the finds per country information.", "data");
+            if (data.Version == null || data.Version < 2)
+                throw new ArgumentException("You are using an old version of FetchStatistics. Please restart GeoTransformer so that the extension can update.", "data");
 
             data.Updated = DateTime.Now;
 
