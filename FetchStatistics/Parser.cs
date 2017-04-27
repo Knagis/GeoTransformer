@@ -303,15 +303,20 @@ namespace FetchStatistics
 
             try
             {
-                // parse coutry list
-                var table = doc.GetElementById("StatsFlagLists").GetElementsByTagName("table").Cast<HtmlElement>().Last();
-                foreach (var row in table.GetElementsByTagName("tr").Cast<HtmlElement>())
+                var disabled = !string.IsNullOrWhiteSpace(doc.GetElementById("ctl00_ContentBody_ProfilePanel1_uxMapsMessagePanel").InnerText);
+                if (!disabled)
                 {
-                    var country = row.GetCells().First().InnerText;
-                    var count = int.Parse(row.GetCells().Last().InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                    // parse coutry list
+                    var table = doc.GetElementById("StatsFlagLists").GetElementsByTagName("table").Cast<HtmlElement>().Last();
+                    foreach (var row in table.GetElementsByTagName("tr").Cast<HtmlElement>())
+                    {
+                        var country = row.GetCells().First().InnerText;
+                        var count = int.Parse(row.GetCells().Last().InnerText, System.Globalization.CultureInfo.InvariantCulture);
 
-                    data.CacheFindsByCountry[country] = count;
+                        data.CacheFindsByCountry[country] = count;
+                    }
                 }
+
             }
             catch
             {

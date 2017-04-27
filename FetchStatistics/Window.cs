@@ -25,20 +25,45 @@ namespace FetchStatistics
         {
             InitializeComponent();
 
-            this.webBrowser1.Navigate("http://www.geocaching.com/");
-            this.webBrowser1.DocumentCompleted += webBrowser1_DocumentCompleted;
+            this.webBrowser1.Navigate("https://www.geocaching.com/");
+            this.webBrowser1.Navigated += WebBrowser1_Navigated;
         }
 
-        void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        void WebBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             var url = e.Url.ToString(); //this.webBrowser1.Url.ToString();
-            if (!url.StartsWith("http://www.geocaching.com/profile/")
-                && !url.StartsWith("javascript:\"<html><body"))
+            if ((!url.StartsWith("https://www.geocaching.com/profile/")
+                || url.StartsWith("https://www.geocaching.com/profile/profilecontent.html")))
+            {
+                System.Diagnostics.Debugger.Log(0, "StatisticsParser", "Ignoring URL: " + url + Environment.NewLine);
                 return;
+            }
 
-            url = this.webBrowser1.Url.ToString();
+            System.Diagnostics.Debugger.Log(0, "StatisticsParser", "Loaded URL: " + url + Environment.NewLine);
 
-            System.Threading.Thread.Sleep(_random.Next(500, 2500));
+            this.QueueProcessDocument();
+        }
+
+        private void QueueProcessDocument(bool delay = false)
+        {
+            System.Threading.ThreadPool.QueueUserWorkItem(state => {
+                if (delay)
+                    System.Threading.Thread.Sleep(_random.Next(500, 2500));
+
+                this.Invoke((ProcessDocumentDelegate)this.ProcessDocument);
+            });
+        }
+
+        private delegate void ProcessDocumentDelegate();
+        private void ProcessDocument()
+        {
+            var url = this.webBrowser1.Url.ToString();
+
+            while (this.webBrowser1.IsBusy || this.webBrowser1.Document == null || this.webBrowser1.Document.GetElementById("fancybox-loading") == null)
+            {
+                this.QueueProcessDocument(true);
+                return;
+            }
 
             try
             {
@@ -64,7 +89,7 @@ namespace FetchStatistics
                     doc.GetElementById("ctl00_uxLocaleList_uxLocaleList_ctl00_uxLocaleItem").InvokeMember("click");
                     return;
                 }
-                
+
                 var links = doc.GetElementById("ProfileTabs").GetElementsByTagName("a").Cast<HtmlElement>();
 
                 if (doc.GetElementById("ctl00_ContentBody_ProfilePanel1_pnlProfile") != null)
@@ -84,6 +109,10 @@ namespace FetchStatistics
                     this.SubmitWork(obj);
 
                     this.StartNext();
+                }
+                else
+                {
+                    throw new Exception("Could not identify the currently open profile page.");
                 }
             }
             catch (Exception ex)
@@ -157,7 +186,7 @@ namespace FetchStatistics
             var id = this._toDo.Dequeue();
             this._data[id] = new StatisticsData() { Version = 2, UserId = id };
 
-            this.webBrowser1.Navigate("http://www.geocaching.com/profile/?guid=" + id.ToString("D").ToLowerInvariant());
+            this.webBrowser1.Navigate("https://www.geocaching.com/profile/?guid=" + id.ToString("D").ToLowerInvariant());
         }
 
         private void EnableButtons(bool enabled)
