@@ -17,6 +17,8 @@ namespace GeocachingService.OAuth
             // this line could be used to prevent certificate errors when using Fiddler
             ////System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
 
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+
             // create the OAuth consumer object
             var consumer = new DotNetOpenAuth.OAuth.WebConsumer(provider, tokenManager);
 
