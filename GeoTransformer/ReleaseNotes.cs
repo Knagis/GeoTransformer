@@ -20,6 +20,7 @@ namespace GeoTransformer
         /// </summary>
         private static Dictionary<Version, string> Notes = new Dictionary<Version, string>()
         {
+            { Version.Parse("4.6.2.0"), "Fixed Live API integration." }, 
             { Version.Parse("4.6.1.0"), "Waypoint enhancement now recognizes the new geocaching.com waypoint types and uses more symbols on GPS." }, 
             { Version.Parse("4.6.0.0"), "'Loading edited caches from Live API' now works much faster." + Environment.NewLine + 
                                         "Personal notes are now added as a log entry ('Refresh from Live API' must be enabled for this to work)." + Environment.NewLine +

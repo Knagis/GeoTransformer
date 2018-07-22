@@ -48,6 +48,7 @@ namespace GeoTransformer
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             
             System.Net.ServicePointManager.Expect100Continue = false;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
 
             if (AutoUpdater.PerformUpdate(args))
                 return;

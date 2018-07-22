@@ -223,6 +223,8 @@ namespace GeoTransformer
                         var psi = new ProcessStartInfo(@"GeoTransformer.exe", "update");
                         psi.WorkingDirectory = @"PendingUpdate\";
                         Process.Start(psi);
+
+                        MessageBox.Show("An update for GeoTransformer or one of its extension has been downloaded. Please restart the application to install it.", "Update", MessageBoxButtons.OK);
                     }
                 }
             }

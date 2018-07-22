@@ -14,7 +14,8 @@ GeoTransformer focuses on making it easier for geocachers to extend GPX files an
 
 # Installation
 
-* You must have [Microsoft .NET Framework 4 Client Profile][.net] installed.
-* Download the latest release, unzip to any folder and run _GeoTransformer.exe_.
+* You must have [Microsoft .NET Framework 4.5][.net] or newer installed.
+* Download the [latest release][download], unzip to any folder and run _GeoTransformer.exe_.
 
-[.net]: http://www.microsoft.com/downloads/en/details.aspx?FamilyID=5765d7a8-7722-4888-a970-ac39b33fd8ab
+[.net]: http://go.microsoft.com/fwlink/?LinkId=863262
+[download]: http://knagis.miga.lv/geotransformer/GeoTransformer.zip

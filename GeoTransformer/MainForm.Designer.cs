@@ -411,7 +411,7 @@
             this.onlineDocumentationToolStripMenuItem.Image = global::GeoTransformer.Properties.Resources.FAQ;
             this.onlineDocumentationToolStripMenuItem.Name = "onlineDocumentationToolStripMenuItem";
             this.onlineDocumentationToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.onlineDocumentationToolStripMenuItem.Tag = "http://geotransformer.codeplex.com/documentation";
+            this.onlineDocumentationToolStripMenuItem.Tag = "https://github.com/knagis/geotransformer";
             this.onlineDocumentationToolStripMenuItem.Text = "Online documentation";
             this.onlineDocumentationToolStripMenuItem.Click += new System.EventHandler(this.toolStripWebPage_Click);
             // 
